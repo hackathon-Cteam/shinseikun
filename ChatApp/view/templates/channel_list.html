@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title>申請くん</title>
+        <style>
+            table {
+                display: inline-block;
+                width : 500px;
+                height : 175px;
+                background-color : white;
+                border: 1px solid #646262;
+            }
+
+            td {
+                width : 250px;
+                height : 100px;
+            }
+
+            .channel_list{
+                width: 600px;
+                height: 500px;
+                background-color: white;
+                overflow: scroll;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>申請くん</h1>
+        <h2>チャンネル一覧</h2>
+        <form action="cgi-bin/example.cgi" method="post">
+            <p>チャンネルの検索</p>
+            <input type="search" name="search" placeholder="チャンネル名で検索">
+            <input type="submit" name="submit" value="検索">
+          </form>
+        
+        <div class="channel_list">
+
+        <table>
+            <h3>会議室</h3>
+            <td><h4>会議室１</h4><a href = "https://xxx.jp"><img src="images/kaigi.jpg"width="200" height="100"></a></td>
+            <td><h4>会議室２</h4><a href = "https://xxx.jp"><img src="images/kaigi.jpg"width="200" height="100"></a></td>
+        </table>
+        <table>
+            <h3>スポーツ</h3>
+            <td><h4>体育館</h4><a href = "https://xxx.jp"><img src="images/gym.jpg"width="200" height="100"></a></td>
+            <td><h4>テニス</h4><a href = "https://xxx.jp"><img src="images/tennis.png"width="200" height="100"></a></td>
+        </table>
+
+        </div>
+
+    </body>
+</html>
