@@ -1,0 +1,134 @@
+/* 申請フォームのCSS */
+
+.header-footer {
+  color: white;
+  background-color: #5250e0;
+  height: 80px;
+}
+
+/* スクロールバーの調整 */
+.listScroll {
+  /*テーブルの横幅が250px以上の場合スクロール*/
+  width: 250px;
+  /*テーブルの縦幅が100px以上の場合スクロール*/
+  height: 130px;
+  /*縦スクロール*/
+  overflow: scroll;
+  /*横スクロール*/
+  overflow-x: scroll;
+  margin-left: 5px;
+}
+
+/* 一覧表の調整 */
+td {
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  text-align: center;
+}
+th {
+  background-color: #9d9bef;
+  border-bottom: solid black;
+  border-left: solid black;
+  border-right: solid black;
+  border-top: solid black;
+  border-width: 2px;
+  position: sticky;
+  top: 0;
+}
+/* カラムの調整 */
+.column {
+  overflow: hidden;/*スクロール時にカラム名を固定*/
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+.table-label {
+  font-size: 14px;
+}
+
+.application-form input[type="text"],
+.application-form input[type="email"] {
+  width: 400px;
+  height: 22px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+.application-form input[type="search"] {
+  width: 200px;
+  height: 25px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+.application-form input[type="submit"][name="search"] {
+  width: 50px;
+  height: 25px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+.application-form input[type="submit"][name="apply"] {
+  width: 150px;
+  height: 40px;
+  font-size: 16px;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+.application-form select {
+  width: 70px;
+  height: 22px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  margin-right: 2px;
+}
+
+.application-form textarea {
+  width: 400px;
+  height: 150px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+.application-form label {
+  color: black;
+}
+
+.application-form-wrapper {
+  background-color: #E6E6FA;
+  width: 100%;
+  height: 1500px;
+  display: flex;
+  padding-left: 10px;
+}
+
+.application-form-title {
+  color: black;
+  font-size: 30px;
+  border-bottom: solid 3px black;
+  padding-bottom: 10px;
+}
+
+.application-form-category {
+  color: black;
+  font-size: 20px;
+  border-left: solid 8px #5250e0;
+  padding-left: 12px;
+  margin-top: 40px;
+}
+
+.application-form-category-message {
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+.application-form-flashes {
+  color: red;
+  display: inline;
+}
