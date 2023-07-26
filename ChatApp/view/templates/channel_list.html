@@ -4,50 +4,100 @@
         <meta charset = "utf-8">
         <title>申請くん</title>
         <style>
-            table {
-                display: inline-block;
-                width : 500px;
-                height : 175px;
-                background-color : white;
-                border: 1px solid #646262;
+            body{
+                background-color : #e5e3e3;
             }
 
-            td {
-                width : 250px;
-                height : 100px;
+            h3{
+                border-left :solid 5px #8dc3be;
+                border-bottom: solid 1px gray;
+                padding: 10px;
             }
 
-            .channel_list{
-                width: 600px;
-                height: 500px;
-                background-color: white;
+            .header{
+                width : 100% ;
+                height : 50px;
+                background-color : #8dc3be;
+            }
+
+            img.picture{
+                width:200px;
+                height:100px;
+            }
+
+            #myInput {
+                width: 100%; 
+                font-size: 16px; 
+                padding: 12px 20px 12px 40px; 
+                border: 1px solid #ddd; 
+                margin-bottom: 12px; 
+            }
+            
+            #myUL {
+                list-style-type: none;
+                padding: 1px;
+                margin: 1px;
                 overflow: scroll;
             }
+
+            ul#myUL li {
+                padding: 5px;
+            }
+            
+            #myUL li a {
+                border: 1px solid #ddd; 
+                margin-top: -1px; 
+                background-color: #f6f6f6; 
+                padding: 12px; 
+                font-size: 18px; 
+                color: black; 
+                display: block; 
+            }
+            
+            #myUL li a:hover {
+                background-color: #c8e4ff; 
+            }
+
         </style>
+        <script>
+            function myFunction() {
+                let input, filter, ul, li, a, i, txtValue;
+                input = document.getElementById('myInput');
+                filter = input.value.toUpperCase();
+                ul = document.getElementById("myUL");
+                li = ul.getElementsByTagName('li');
+                
+                for (i = 0; i < li.length; i++) {
+                  a = li[i].getElementsByTagName("a")[0];
+                  txtValue = a.textContent || a.innerText;
+                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                  } else {
+                    li[i].style.display = "none";
+                  }
+                }
+              }
+        </script>
     </head>
+
     <body>
-        <h1>申請くん</h1>
-        <h2>チャンネル一覧</h2>
-        <form action="cgi-bin/example.cgi" method="post">
-            <p>チャンネルの検索</p>
-            <input type="search" name="search" placeholder="チャンネル名で検索">
-            <input type="submit" name="submit" value="検索">
-          </form>
-        
-        <div class="channel_list">
-
-        <table>
-            <h3>会議室</h3>
-            <td><h4>会議室１</h4><a href = "https://xxx.jp"><img src="images/kaigi.jpg"width="200" height="100"></a></td>
-            <td><h4>会議室２</h4><a href = "https://xxx.jp"><img src="images/kaigi.jpg"width="200" height="100"></a></td>
-        </table>
-        <table>
-            <h3>スポーツ</h3>
-            <td><h4>体育館</h4><a href = "https://xxx.jp"><img src="images/gym.jpg"width="200" height="100"></a></td>
-            <td><h4>テニス</h4><a href = "https://xxx.jp"><img src="images/tennis.png"width="200" height="100"></a></td>
-        </table>
-
+        <div class="header">
+            <p>Header</p>
         </div>
+
+        <h2>タイトル</h2>
+
+        <h3>チャンネルの検索</h3>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="チャンネル名を入力してください">
+        
+        <h3>チャンネル一覧</h3>
+        
+        <ul id="myUL">
+            <li><a href = "https://xxx.jp">会議室１<img src="kaigi.jpg" class="picture"></a></li>
+            <li><a href = "https://xxx.jp">会議室２<img src="kaigi.jpg" class="picture"></a></li>
+            <li><a href = "https://xxx.jp">体育館<img src="gym.jpg" class="picture"></a></li>
+            <li><a href = "https://xxx.jp">テニス<img src="tennis.jpg" class="picture"></a></li>
+        </ul>
 
     </body>
 </html>
