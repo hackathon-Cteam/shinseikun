@@ -1,6 +1,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
         <link rel="stylesheet" href="{{url_for('static',filename='css/chat.css')}}">
         <script type="text/javascript">
             function proc() {
@@ -23,10 +24,21 @@
         </script>
     </head>
     <body onload="proc();">
-        <div id="channel-header" class="paga-main">
+        <div id="header" class="page-main">
+            <p>申請くん</p>
+            <div id="account">
+                <p>マイページ</p>
+                <p>ログアウト</p>
+            </div>
+        </div>
+        <div id="channel-header" class="page-main">
             <p id="channel-name">チャンネル名</p>
             <p id="channel-overview" class="page-sub">チャンネル概要</p>
-            <div id="button-channel-info"><p>・・・</p></div>
+            <div id="button-channel-info">
+                <svg width="35" height="35" viewBox="0 0 200 200.002">
+                    <path d="M114.684,264.059a100,100,0,1,0,100,100A100.1,100.1,0,0,0,114.684,264.059Zm0,12.49a87.511,87.511,0,1,1-87.51,87.512A87.414,87.414,0,0,1,114.684,276.549Zm0,25.915a17.391,17.391,0,1,0,17.392,17.392,17.391,17.391,0,0,0-17.392-17.392ZM94.926,345.943v5.806h5.637v67.92H94.926v5.985h39.513v-5.985h-4.891V345.943H94.926Z" transform="translate(-14.684 -264.059)"/>
+                </svg>
+            </div>
         </div>
         <div id="chat-area">
             <div class="chat-message user">
@@ -87,7 +99,7 @@
                 </div>
             </div>
         </div>
-        <div id="input-message" class="paga-main">
+        <div id="input-message" class="page-main">
             <textarea name="example" cols="50" rows="10" wrap="soft"></textarea>
             <svg width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M60.5 29.4378C65.1667 32.1321 65.1667 38.8679 60.5 41.5622L28.25 60.1817C23.5833 62.876 17.75 59.5081 17.75 54.1195L17.75 16.8805C17.75 11.4919 23.5833 8.12397 28.25 10.8183L60.5 29.4378Z" fill="#FE815A"></path>

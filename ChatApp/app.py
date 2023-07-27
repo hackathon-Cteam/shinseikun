@@ -119,11 +119,12 @@ def logout():
 
 @app.route('/')
 def index():
-    """チャンネル一覧ページの表示"""
-    userId = session.get('uid')
-    if userId is None:
-        return redirect('/login')
-    return render_template('index.html', channels = CHANNEL_SERVICE.getChannelList(), uid = userId)
+    return render_template('page/chat.html')
+    # """チャンネル一覧ページの表示"""
+    # userId = session.get('uid')
+    # if userId is None:
+    #     return redirect('/login')
+    # return render_template('index.html', channels = CHANNEL_SERVICE.getChannelList(), uid = userId)
 
 
 @app.post('/')
