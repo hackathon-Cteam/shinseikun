@@ -11,208 +11,217 @@
  <div class="header-footer">※ヘッダー※</div>
  <!----- /header ----->
 
- <!----- main ----->
-  <!----- 全体背景 ----->
-  <div class="application-form-background">
-    <!----- フォーム枠 ----->
-    <div class="application-form-wrapper">
-    <!----- ※フォーム適用※ ----->
+
+ <!----- 全体背景 ----->
+ <div class="application-form-background">
+
+  <!----- フォーム枠 ----->
+  <div class="application-form-wrapper">
+
+      <!----- ※フォーム適用※（いる？）----->
       <form class="application-form" method="post">
 
-      <!----- フォームタイトル ----->
-      <div class="application-form-area">
+          <!----- フォームエリア（タイトル） ----->
+          <div class="application-form-area">
+              <h1 class="application-form-title">申請フォーム</h1>
+          </div>
+          <!----- /フォームエリア（タイトル） ----->
 
-          <h1 class="application-form-title">申請フォーム</h1>
+          <!----- フォームエリア（利用施設・備品等） ----->
+          <div class="application-form-area">
+            <div>
+              <h2 class="application-form-category">利用施設・備品等</h2>
+                  <label for="purpose">■利用施設・備品等【必須】</label>
+                  <ul class="application-form-flashes">※利用施設・備品等を選択してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <p class="application-form-category-message">スクロールしていずれか一つを選択してください（キーワード検索で絞り込みができます）。</p>
+                  <input type="search" name="search" placeholder="キーワードを入力">
+                  <input type="submit" name="search" value="検索">
+                  <br>
+                  <div class="listScroll">
+                    <table>
+                        <tr>
+                          <!--テーブルの項目名作成-->
+                            <th class="table-label">選択</th>
+                            <th class="table-label">施設・備品等</th>
+                        </tr>
+                        <tr>
+                          <!--項目に沿って初期設定-->
+                            <td><input type="radio" name="facility"></td>
+                            <td class="column">会議室A</td>
+                        </tr>
+                        <tr>
+                          <!--項目に沿って初期設定-->
+                            <td><input type="radio" name="facility"></td>
+                            <td class="column">会議室B</td>
+                        </tr>
+                        <tr>
+                          <!--項目に沿って初期設定-->
+                            <td><input type="radio" name="facility"></td>
+                            <td class="column">会議室C</td>
+                        </tr>
+                        <tr>
+                          <!--項目に沿って初期設定-->
+                            <td><input type="radio" name="facility"></td>
+                            <td class="column">会議室D</td>
+                        </tr>
+                        <tr>
+                          <!--項目に沿って初期設定-->
+                            <td><input type="radio" name="facility"></td>
+                            <td class="column">体育館</td>
+                        </tr>
+                        <tr>
+                          <!--項目に沿って初期設定-->
+                            <td><input type="radio" name="facility"></td>
+                            <td class="column">多目的ホールああああああ</td>
+                        </tr>
+                    </table>
+                  </div>
+            </div>
+          </div>
+          <!----- フォームエリア（利用施設・備品等） ----->
 
-      </div>
+          <!----- フォームエリア（利用日時） ----->
+          <div class="application-form-area">
+            <div>
+              <h2 class="application-form-category">利用日時</h2>
+                  <label for="date">■利用日【必須】</label>
+                  <ul class="application-form-flashes">※利用日を選択してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <select name="date">
+                    <option hidden></option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                  </select>
+                  年
+                  <select name="date">
+                    <option hidden></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <!----- 追記必要 ----->
+                  </select>
+                  月
+                  <select name="date">
+                    <option hidden></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <!----- 追記必要 ----->
+                  </select>
+                  日
+                  <br>
+                  <label for="time">■利用時間【必須】</label>
+                  <ul class="application-form-flashes">※利用時間を選択してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <select name="time">
+                    <option hidden></option>
+                    <option value="1">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <!----- 追記必要 ----->
+                  </select>
+                  時
+                  <select name="time">
+                    <option hidden></option>
+                    <option value="1">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <!----- 追記必要 -----> 
+                  </select>
+                  分　〜　
+                  <select name="time">
+                    <option hidden></option>
+                    <option value="1">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <!----- 追記必要 ----->
+                  </select>
+                  時
+                  <select name="time">
+                    <option hidden></option>
+                    <option value="1">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <!----- 追記必要 -----> 
+                  </select>
+                  分
+            </div>
+          </div>
+          <!----- /フォームエリア（利用日時） ----->
 
-      <!----- 利用施設・備品等 ----->
-      <div class="application-form-area">
-        <div>
-          <h2 class="application-form-category">利用施設・備品等</h2>
-              <label for="purpose">■利用施設・備品等【必須】</label>
-              <ul class="application-form-flashes">※利用施設・備品等を選択してください</ul>　　<!----- 出し分け処理必要 ----->
-              <br>
-              <p class="application-form-category-message">スクロールしていずれか一つを選択してください（キーワード検索で絞り込みができます）。</p>
-              <input type="search" name="search" placeholder="キーワードを入力">
-              <input type="submit" name="search" value="検索">
-              <br>
-              <div class="listScroll">
-                <table>
-                    <tr>
-                      <!--テーブルの項目名作成-->
-                        <th class="table-label">選択</th>
-                        <th class="table-label">施設・備品等</th>
-                    </tr>
-                    <tr>
-                      <!--項目に沿って初期設定-->
-                        <td><input type="radio" name="facility"></td>
-                        <td class="column">会議室A</td>
-                    </tr>
-                    <tr>
-                      <!--項目に沿って初期設定-->
-                        <td><input type="radio" name="facility"></td>
-                        <td class="column">会議室B</td>
-                    </tr>
-                    <tr>
-                      <!--項目に沿って初期設定-->
-                        <td><input type="radio" name="facility"></td>
-                        <td class="column">会議室C</td>
-                    </tr>
-                    <tr>
-                      <!--項目に沿って初期設定-->
-                        <td><input type="radio" name="facility"></td>
-                        <td class="column">会議室D</td>
-                    </tr>
-                    <tr>
-                      <!--項目に沿って初期設定-->
-                        <td><input type="radio" name="facility"></td>
-                        <td class="column">体育館</td>
-                    </tr>
-                    <tr>
-                      <!--項目に沿って初期設定-->
-                        <td><input type="radio" name="facility"></td>
-                        <td class="column">多目的ホールああああああ</td>
-                    </tr>
-                </table>
-              </div>
-        </div>
-      </div>
-
-      <!----- 利用日時 ----->
-      <div class="application-form-area">
-        <div>
-          <h2 class="application-form-category">利用日時</h2>
-              <label for="date">■利用日【必須】</label>
-              <ul class="application-form-flashes">※利用日を選択してください</ul>　　<!----- 出し分け処理必要 ----->
-              <br>
-              <select name="date">
-                <option hidden></option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-              </select>
-              年
-              <select name="date">
-                <option hidden></option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <!----- 追記必要 ----->
-              </select>
-              月
-              <select name="date">
-                <option hidden></option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <!----- 追記必要 ----->
-              </select>
-              日
-              <br>
-              <label for="time">■利用時間【必須】</label>
-              <ul class="application-form-flashes">※利用時間を選択してください</ul>　　<!----- 出し分け処理必要 ----->
-              <br>
-              <select name="time">
-                <option hidden></option>
-                <option value="1">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <!----- 追記必要 ----->
-              </select>
-              時
-              <select name="time">
-                <option hidden></option>
-                <option value="1">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <!----- 追記必要 -----> 
-              </select>
-              分　〜　
-              <select name="time">
-                <option hidden></option>
-                <option value="1">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <!----- 追記必要 ----->
-              </select>
-              時
-              <select name="time">
-                <option hidden></option>
-                <option value="1">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <!----- 追記必要 -----> 
-              </select>
-              分
-        </div>
-      </div>
-
-      <!----- 利用目的等 ----->
-      <div class="application-form-area">
-          <div>
-            <h2 class="application-form-category">利用目的等</h2>
-                <label for="purpose">■利用目的等【必須】</label>
-                <ul class="application-form-flashes">※30文字以上200文字以内で入力してください</ul>　　<!----- 出し分け処理必要 ----->
-                <br>
-                <textarea id="purpose" name="purpose">
+          <!----- フォームエリア（利用目的等） ----->
+          <div class="application-form-area">
+            <div>
+              <h2 class="application-form-category">利用目的等</h2>
+                  <label for="purpose">■利用目的等【必須】</label>
+                  <ul class="application-form-flashes">※30文字以上200文字以内で入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <!----- 自由入力フォームにデフォルト表示させるテンプレート　 ----->
+                  <textarea id="purpose" name="purpose">
   【利用目的】
 
   【利用人数】
 
   【その他特記事項】
 
-                </textarea>
+                  </textarea>
+                  <!----- /自由入力フォームにデフォルト表示させるテンプレート　 ----->
+            </div>
           </div>
-      </div>
+          <!----- /フォームエリア（利用目的等） ----->
 
-      <!----- 利用者情報 ----->
-        <div class="application-form-area">
+          <!----- フォームエリア（利用者情報） ----->
+          <div class="application-form-area">
+            <div>
+              <h2 class="application-form-category">利用者情報</h2>
+                <p class="application-form-category-message">当日の利用者（代表者）の情報を入力してください。<br>
+                申請内容に関する問い合わせや当日の緊急連絡先として利用することがあります。</p>
+                  <label for="application-form-name-input">■利用者氏名【必須】</label>
+                  <ul class="application-form-flashes">※正しい氏名を入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <input
+                  type="text"
+                  placeholder="氏名を入力してください"
+                  name="name"
+                  id="application-form-name-input"
+                  />
+                  <br>
+                  <label for="application-form-email-input">■利用者メールアドレス【必須】</label>
+                  <ul class="application-form-flashes">※正しいメールアドレスを入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <input
+                  type="email"
+                  placeholder="メールアドレスを入力してください"
+                  name="email"
+                  id="application-form-email-input"
+                  />
+                  <br>
+                  <label for="application-form-phone-input">■利用者電話番号【必須】</label>
+                  <ul class="application-form-flashes">※正しい電話番号を入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <br>
+                  <input
+                  type="text"
+                  placeholder="電話番号を入力してください"
+                  name="phone"
+                  id="application-form-phone-input"
+                  />
+            </div>
+          </div>
+    <!----- /フォームエリア（利用者情報） ----->
+
+          <!----- 申請ボタン ----->
           <div>
-            <h2 class="application-form-category">利用者情報</h2>
-              <p class="application-form-category-message">当日の利用者（代表者）の情報を入力してください。<br>
-              申請内容に関する問い合わせや当日の緊急連絡先として利用することがあります。</p>
-                <label for="application-form-name-input">■利用者氏名【必須】</label>
-                <ul class="application-form-flashes">※正しい氏名を入力してください</ul>　　<!----- 出し分け処理必要 ----->
-                <br>
-                <input
-                type="text"
-                placeholder="氏名を入力してください"
-                name="name"
-                id="application-form-name-input"
-                />
-                <br>
-                <label for="application-form-email-input">■利用者メールアドレス【必須】</label>
-                <ul class="application-form-flashes">※正しいメールアドレスを入力してください</ul>　　<!----- 出し分け処理必要 ----->
-                <br>
-                <input
-                type="email"
-                placeholder="メールアドレスを入力してください"
-                name="email"
-                id="application-form-email-input"
-                />
-                <br>
-                <label for="application-form-phone-input">■利用者電話番号【必須】</label>
-                <ul class="application-form-flashes">※正しい電話番号を入力してください</ul>　　<!----- 出し分け処理必要 ----->
-                <br>
-                <input
-                type="text"
-                placeholder="電話番号を入力してください"
-                name="phone"
-                id="application-form-phone-input"
-                />
+            <div>
+              <input type="submit" name="apply" value="申請する">
+              <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　<!----- 出し分け処理必要 ----->
+            </div>
           </div>
-        </div>
 
-      <!----- 申請ボタン ----->
-        <div>
-          <div>
-            <input type="submit" name="apply" value="申請する">
-            <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　<!----- 出し分け処理必要 ----->
-          </div>
         </div>
-
-      </div>
-    </div>
+  </div>
+  <!----- /フォーム枠 ----->
  </div>
- <!----- /main ----->
+  <!----- 全体背景 ----->
+
 
  <!----- footer ----->
  <!----- /footer ----->
