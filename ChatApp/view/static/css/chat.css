@@ -1,0 +1,137 @@
+body { margin: 0px; }
+
+p { margin: 0px; }
+
+.paga-main { background-color: #DEDDFF; }
+
+.page-sub { background-color: #EFF2FF; }
+
+#channel-header, #input-message {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 70px;
+}
+
+#channel-name {
+    font-weight: bold;
+    font-size: 25px;
+    margin: auto 30px;
+    width: 20%;
+}
+
+#button-channel-info > p {
+    margin: 0;position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    color: #6b6b6b;
+}
+
+#button-channel-info {
+    margin: 10px auto;
+    margin-right: 20px;
+    height: 50px;
+    width: 50px;
+    border: 1px solid #6b6b6b;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    position: relative;
+}
+
+#button-channel-info p { font-size: 17px; margin: auto; }
+
+#button-channel-info > div { margin: auto; }
+
+#channel-overview {
+    margin: auto 20px;
+    width: 60%;
+    text-align: center;
+}
+
+.user {
+    margin: auto;
+    margin-right: 0px;
+    padding: 10px;
+    border-radius: 5px;
+    justify-content: flex-end;
+}
+
+.user .chat { background-color: #DDFFD8; }
+
+.chat-date > p { font-size: 13px; }
+
+.message .name { font-size: 15px; }
+
+.message { margin: 0px 5px; }
+
+.chat-message { display: flex; align-items: flex-end; }
+
+.chat { padding: 10px; border-radius: 5px; }
+
+.admin .chat { background-color: #AEF0FF; }
+
+.admin { justify-content: flex-start; }
+
+.date-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-line > div {
+    width: 45%;
+    height: 0px;
+    border: 1px solid #CACACA;
+}
+
+.date-line p.date {
+    margin: auto 10px;
+    color: #9a9a9a;
+}
+
+textarea {
+    width: 90%;
+    height: 60%;
+    margin: auto 20px;
+    font-size: 15px;
+}
+
+svg { width: 50px; }
+
+div#input-message { justify-content: center; bottom: 0; }
+
+#chat-area { padding: 70px 0px; overflow-y: scroll; }
+
+#channel-info {
+    background-color: #ffffff;
+    border-left: 2px solid #886fab;
+    position: fixed;
+    opacity: 1;
+    top: 0px;
+    width: 400px;
+    height: 100%;
+    right: 0px;
+}
+
+.close-channel-info { display: none; }
+
+#channel-info-heder {
+    background-color: #DEDDFF;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#channel-description {
+    width: 85%;
+    height: 70%;
+    border-radius: 15px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+#channel-info-heder > p { font-size: 30px; }
+
+#channel-info > #channel-id {float: right;margin-right: 15px;}
