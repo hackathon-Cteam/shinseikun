@@ -1,0 +1,196 @@
+/* ヘッダーとフッター（仮） */
+.header-footer {
+  color: white;
+  background-color: #5250e0;
+  height: 80px;
+}
+
+/* 全体背景 */
+.application-form-background {
+  background-color: #E6E6FA;
+  width: 100%;
+  height: 1800px;
+  display: flex;
+  padding-left: 10px;
+}
+
+/* フォーム格納コンテナ */
+.application-form-wrapper {
+  background-color: #E6E6FA;
+  width: 700px;
+  height: 1800px;
+  margin: auto;
+}
+
+/* フォームエリア（タイトル） */
+.application-form-area-title {
+  background-color: #FFFFFF;
+  width: 680px;
+  height: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 3px;
+  padding-bottom: 20px;
+  margin: auto;
+  margin-top: 30px;
+  border-top: solid 14px #5250e0;
+}
+
+/* フォームタイトル */
+.application-form-title {
+  color: black;
+  font-size: 30px;
+}
+
+/* フォームエリア（各カテゴリ） */
+.application-form-area-category {
+  background-color: #FFFFFF;
+  width: 680px;
+  height: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 3px;
+  padding-bottom: 20px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+/* フォームタイトル（各カテゴリ） */
+.application-form-category {
+  color: black;
+  font-size: 20px;
+  border-left: solid 8px #5250e0;
+  padding-left: 12px;
+}
+
+/* フォーム（各カテゴリ説明） */
+.application-form-category-message {
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+/* フォームタイトル（各項目）*/
+.application-form label {
+  color: black;
+}
+
+/* フォームタイトル（各項目）*/
+.application-form label::before {
+  font-family: "Font Awesome 5 Free";
+  content: "■";/*アイコンのユニコード*/
+  font-weight: 900;
+  font-size: 1em;/*サイズ*/
+  left: 0;/*アイコンの位置*/
+  top: 0;/*アイコンの位置*/
+  color: #5250e0;; /*アイコン色*/
+  font-weight: 900;
+}
+
+/* スクロールボックス（ボックス） */
+.listScroll {
+  /*テーブルの横幅が250px以上の場合スクロール*/
+  width: 250px;
+  /*テーブルの縦幅が100px以上の場合スクロール*/
+  height: 130px;
+  /*縦スクロール*/
+  overflow: scroll;
+  /*横スクロール*/
+  overflow-x: scroll;
+  margin-left: 5px;
+}
+
+/* スクロールボックス（一覧表） */
+td {
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  text-align: center;
+}
+
+/* スクロールボックス（項目名） */
+th {
+  background-color: #9d9bef;
+  border-bottom: solid black;
+  border-left: solid black;
+  border-right: solid black;
+  border-top: solid black;
+  border-width: 2px;
+  position: sticky;
+  top: 0;
+}
+
+/* スクロールボックス（項目名） */
+.table-label {
+  font-size: 14px;
+}
+
+/* スクロールボックス（カラム） */
+.column {
+  overflow: hidden;/*スクロール時にカラム名を固定*/
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+/* フォーム（テキスト、メール）*/
+.application-form input[type="text"],
+.application-form input[type="email"] {
+  width: 400px;
+  height: 22px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+/* フォーム（検索フォーム）*/
+.application-form input[type="search"] {
+  width: 200px;
+  height: 25px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+/* フォーム（プルダウン）*/
+.application-form select {
+  width: 70px;
+  height: 22px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  margin-right: 2px;
+}
+
+/* フォーム（テキストエリア）*/
+.application-form textarea {
+  width: 400px;
+  height: 150px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+/* フォーム（検索ボタン）*/
+.application-form input[type="submit"][name="search"] {
+  width: 50px;
+  height: 25px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+/* フォーム（送信ボタン）*/
+.application-form input[type="submit"][name="apply"] {
+  width: 160px;
+  height: 45px;
+  font-size: 16px;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  background-color: #918fdb;
+  border: solid 2px black;
+  font-weight: bold;
+}
+
+/* エラーメッセージ */
+.application-form-flashes {
+  color: red;
+  display: inline;
+}
