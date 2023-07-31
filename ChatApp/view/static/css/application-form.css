@@ -76,8 +76,14 @@
 
 /* フォームタイトル（各項目）*/
 .application-form label::before {
-  content: ■;
-  color: black;
+  font-family: "Font Awesome 5 Free";
+  content: "■";/*アイコンのユニコード*/
+  font-weight: 900;
+  font-size: 1em;/*サイズ*/
+  left: 0;/*アイコンの位置*/
+  top: 0;/*アイコンの位置*/
+  color: #5250e0;; /*アイコン色*/
+  font-weight: 900;
 }
 
 /* スクロールボックス（ボックス） */
