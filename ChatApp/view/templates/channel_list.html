@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title>申請くん</title>
+
+        <link rel="stylesheet" href="../static/css/channel_list.css"/>
+
+        <script>
+            function myFunction() {
+                let input, filter, ul, li, a, i, txtValue;
+                input = document.getElementById('myInput');
+                filter = input.value.toUpperCase();
+                ul = document.getElementById("myUL");
+                li = ul.getElementsByTagName('li');
+                
+                for (i = 0; i < li.length; i++) {
+                  a = li[i].getElementsByTagName("a")[0];
+                  txtValue = a.textContent || a.innerText;
+                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                  } else {
+                    li[i].style.display = "none";
+                  }
+                }
+              }
+        </script>
+        
+    </head>
+
+    <body>
+        <div class="header">
+            <p>Header</p>
+        </div>
+
+        <h2>タイトル</h2>
+
+        <h3>チャンネルの検索</h3>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="チャンネル名を入力してください">
+        
+        <h3>チャンネル一覧</h3>
+        
+        <ul id="myUL">
+            <li><a href = "https://xxx.jp">会議室１<img src="../static/img/channel_list/kaigi.jpg" class="picture"></a></li>
+            <li><a href = "https://xxx.jp">会議室２<img src="../static/img/channel_list/kaigi.jpg" class="picture"></a></li>
+            <li><a href = "https://xxx.jp">体育館<img src="../static/img/channel_list/gym.jpg" class="picture"></a></li>
+            <li><a href = "https://xxx.jp">テニス<img src="../static/img/channel_list/tennis.jpg" class="picture"></a></li>
+        </ul>
+
+    </body>
+</html>
