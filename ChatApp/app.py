@@ -56,11 +56,11 @@ def mypage():
 # ログイン処理のルート
 
 # 申請フォームのルート 
-@app.post('/apply')
+@app.route('/apply')
 def apply():
     # ユーザー情報
     # チャンネル情報
-    return ""
+    return render_template('page/application-form.html')
 
 # メッセージ投稿のアクション
 
