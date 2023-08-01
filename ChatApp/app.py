@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, render_template, session, flash, abort
+from datetime import timedelta
 import uuid
 
 # アプリの設定
