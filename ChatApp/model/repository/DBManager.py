@@ -37,17 +37,17 @@ class DBManager:
     def getDataAll(self):
         """全データを取得する"""
         with self.connection.cursor() as cursor:
-            cursor.execute(f'SELECT * FROM {self.tableName};')
+            cursor.execute(f'SELECT * FROM {self.tableName}')
             return cursor.fetchone()
 
     def getDataByColumns(self, columns):
         """指定されたカラムのデータを取得する
         
         Args:
-        * columns (String or list): 取得するカラム名で複数指定する場合はリストで指定
+        * columns (String or list): 単体の場合はカラム名、複数指定する場合はカラム名のリスト
         """
         with self.connection.cursor() as cursor:
-            cursor.execute(f'SELECT {columns if not isinstance(columns, list) else ", ".join(columns)} FROM {self.tableName};')
+            cursor.execute(f'SELECT {columns if not isinstance(columns, list) else ", ".join(columns)} FROM {self.tableName}')
             return cursor.fetchone()
 
     def addData(self, data):
