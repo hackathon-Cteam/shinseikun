@@ -95,6 +95,9 @@ class DBManager:
         * query (String): 実行するSQL文
 
         Return: keyがカラム名、valueにデータが入った辞書型の配列
+
+        Throws:
+        * Exception: クエリ実行に失敗した場合にスロー
         """
         try:
             with self.connection.cursor() as cursor:
@@ -109,6 +112,9 @@ class DBManager:
         
         Args:
         * query (String): 実行するSQL文
+
+        Throws:
+        * Exception: クエリ実行に失敗した場合にスロー
         """
         try:
             with self.connection.cursor() as cursor:
