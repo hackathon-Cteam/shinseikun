@@ -51,16 +51,22 @@ def mypage():
     # 通知情報の一覧
     return ""
 
+# 申請フォーム画面
+@app.route('/form')
+def form():
+    # ユーザー情報
+    # チャンネル情報
+    return render_template('page/application-form.html')
 
 # POST(処理の呼び出し)
 # ログイン処理のルート
 
-# 申請フォームのルート 
-@app.route('/apply')
+# 申請フォームのルート
+@app.post('/apply')
 def apply():
     # ユーザー情報
     # チャンネル情報
-    return render_template('page/application-form.html')
+    return ""
 
 # メッセージ投稿のアクション
 
