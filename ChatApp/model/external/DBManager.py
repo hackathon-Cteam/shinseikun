@@ -3,6 +3,24 @@ import pymysql
 class DBManager:
     """データベースを操作するクラス"""
 
+    """ホスト名"""
+    HOST = 'db'
+
+    """DB名"""
+    DB_NAME = 'chatapp'
+
+    """DBにログインするユーザー"""
+    DB_USER = 'testuser'
+
+    """使用するパスワード"""
+    DB_PASSWORD = 'testuser'
+
+    """使用する文字セット"""
+    CHARSET = 'utf8'
+
+    """SQLで使用する区切り文字"""
+    DELIMITER = ', '
+
     def __init__(self, tableName):
         """コンストラクタ
 
@@ -18,9 +36,10 @@ class DBManager:
         """
         self.tableName = tableName
         try:
-            print(f'calls the process of open {self.tableName}.')
+            print(f'call the process of open {self.tableName}.')
             self.connection = pymysql.connect(
-                host = "db", db = "chatapp", user = "testuser", password = "testuser", charset = "utf8", cursorclass = pymysql.cursors.DictCursor
+                host = self.HOST, db = self.DB_NAME, user = self.DB_USER, password = self.DB_PASSWORD, charset = self.CHARSET,
+                cursorclass = pymysql.cursors.DictCursor
             )
             print(f'open the connection with {self.tableName}.')
         except:
@@ -30,7 +49,7 @@ class DBManager:
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        print(f'calls the process of close {self.tableName}.')
+        print(f'call the process of close {self.tableName}.')
         self.connection.close()
         print(f'close the connection with {self.tableName}.')
 
@@ -51,7 +70,7 @@ class DBManager:
         * filterSql (String): WHERE句で指定する条件のSQL文。条件でデータを絞り込む場合に指定する。
         """
         whereSql = '' if filterSql is None else f' WHERE {filterSql}'
-        return self.execGetQuery(f'SELECT {columns if not isinstance(columns, list) else ", ".join(columns)} FROM {self.tableName}{whereSql}')
+        return self.execGetQuery(f'SELECT {columns if not isinstance(columns, list) else self.DELIMITER.join(columns)} FROM {self.tableName}{whereSql}')
 
     def addData(self, data):
         """データを追加する
@@ -65,7 +84,7 @@ class DBManager:
             columns.append(key)
             values.append(f'"{value}"')
 
-        self.execAlterQuery(f'INSERT INTO {self.tableName} ({", ".join(columns)}) VALUES ({", ".join(values)})')
+        self.execAlterQuery(f'INSERT INTO {self.tableName} ({self.DELIMITER.join(columns)}) VALUES ({self.DELIMITER.join(values)})')
 
     def updateData(self, data, condition):
         """データを更新する
@@ -78,7 +97,7 @@ class DBManager:
         for key, value in data.items():
             setValues.append(f'{key}="{value}"')
 
-        self.execAlterQuery(f'UPDATE {self.tableName} SET { ", ".join(setValues)} WHERE {condition}')
+        self.execAlterQuery(f'UPDATE {self.tableName} SET {self.DELIMITER.join(setValues)} WHERE {condition}')
 
     def deleteData(self, condition):
         """データを削除する
