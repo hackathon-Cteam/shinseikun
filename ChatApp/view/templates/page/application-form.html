@@ -39,40 +39,17 @@
                   <div class="listScroll">
                     <table>
                         <tr>
-                          <!--テーブルの項目名作成-->
-                            <th class="table-label">選択</th>
+                          <!--テーブルの項目名-->
+                            <th>選択</th>
                             <th class="table-label">施設・備品等</th>
                         </tr>
+                        {% for channel_name in channel_names %}
                         <tr>
-                          <!--項目に沿って初期設定-->
+                          <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
                             <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室A</td>
+                            <td class="column">{{channel_name}}</td>
                         </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室B</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室C</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室D</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">体育館</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">多目的ホールああああああ</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                   </div>
             </div>
@@ -155,11 +132,11 @@
                   <br>
                   <!----- 自由入力フォームにデフォルト表示させるテンプレート　 ----->
                   <textarea id="purpose" name="purpose">
-  【利用目的】
+【利用目的】
 
-  【利用人数】
+【利用人数】
 
-  【その他特記事項】
+【その他特記事項】
 
                   </textarea>
                   <!----- /自由入力フォームにデフォルト表示させるテンプレート　 ----->
@@ -178,7 +155,7 @@
                   <br>
                   <input
                   type="text"
-                  placeholder="氏名を入力してください"
+                  value={{user_name}}
                   name="name"
                   id="application-form-name-input"
                   />
@@ -188,7 +165,7 @@
                   <br>
                   <input
                   type="email"
-                  placeholder="メールアドレスを入力してください"
+                  value={{user_email}}
                   name="email"
                   id="application-form-email-input"
                   />
@@ -198,7 +175,7 @@
                   <br>
                   <input
                   type="text"
-                  placeholder="電話番号を入力してください"
+                  value={{user_phone_number}}
                   name="phone"
                   id="application-form-phone-input"
                   />

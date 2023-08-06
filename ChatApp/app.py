@@ -54,9 +54,13 @@ def mypage():
 # 申請フォーム画面
 @app.route('/form')
 def form():
-    # ユーザー情報
-    # チャンネル情報
-    return render_template('page/application-form.html')
+    # ログイン中のユーザーの情報　※ユーザーDBより「氏名」「メールアドレス」「パスワード」を抽出
+    user_name = "申請花子"
+    user_email = "shinsei.hanako@gmail.com"
+    user_phone_number = "09011111111"
+    # チャンネル情報（貸出対象となっている施設や備品の一覧）※チャンネルDBより「チャンネル名」を抽出
+    channel_names = ["会議室A","会議室B","会議室C","会議室D","会議室E","体育館","多目的ホール"]
+    return render_template('page/application-form.html', channel_names=channel_names, user_name=user_name, user_email=user_email, user_phone_number=user_phone_number)
 
 # POST(処理の呼び出し)
 # ログイン処理のルート
