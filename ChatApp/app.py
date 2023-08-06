@@ -54,7 +54,7 @@ def mypage():
 # 申請フォーム画面
 @app.route('/form')
 def form():
-    # ログイン中のユーザーの情報　※ユーザーDBより「氏名」「メールアドレス」「パスワード」を抽出
+    # ログイン中のユーザーの情報　※ユーザーDBより「氏名」「メールアドレス」「電話番号」を抽出
     user_name = "申請花子"
     user_email = "shinsei.hanako@gmail.com"
     user_phone_number = "09011111111"
