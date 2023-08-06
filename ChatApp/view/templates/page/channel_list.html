@@ -41,8 +41,11 @@
         <h3>チャンネル一覧</h3>
         
         <ul id="myUL">
-          {% for i in range(channels | length) %}
-            <li><a href = "https://xxx.jp">{{channels[i]}}<img src="../static/img/channel_list/kaigi.jpg" class="picture"></a></li>
+          {% for i in channels %}{% set channels_loop = loop %}
+          {% for j in images %}{% if loop.index==channels_loop.index %}
+          <li><a href = "https://xxx.jp">{{i}}<img src="../static/img/channel_list/{{j}}" class="picture"></a></li>
+          {% endif %}
+          {% endfor %}
           {% endfor %}
         </ul>
 

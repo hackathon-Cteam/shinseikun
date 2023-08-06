@@ -19,7 +19,8 @@ def login():
 def channel_list():
     
     channels = ["会議室１","会議室２","体育館","テニス"]
-    return render_template('/page/channel_list.html',channels=channels)
+    images = ['kaigi.jpg','kaigi.jpg','gym.jpg','tennis.jpg',]
+    return render_template('/page/channel_list.html',channels=channels,images=images)
 
 @app.route('/')
 def index():
@@ -30,7 +31,6 @@ def index():
     # チャンネルID
     # 画像データの情報（データ名とか）
     # チャンネル名とIDが紐づいた形式のデータ
-    return "画面の指定とテンプレート変数にデータを渡す記述"
     channels = ["会議室１","会議室２","体育館","テニス"]
     return render_template('channel_list.html',channels=channels)
 
