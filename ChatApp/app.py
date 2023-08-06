@@ -12,16 +12,27 @@ app.permanent_session_lifetime = timedelta(days=30)
 # ログイン画面のルート
 @app.route('/login')
 def login():
-    return ""
+    return render_template('/page/login.html')
 
 # チャンネル一覧ページのルート
+@app.route('/channel_list')
+def channel_list():
+    
+    channels = ["会議室１","会議室２","体育館","テニス"]
+    return render_template('/page/channel_list.html',channels=channels)
+
 @app.route('/')
 def index():
+    uid = session.get("uid")
+    if uid is None:
+        return redirect('/login')
     # チャンネル名の一覧を取得
     # チャンネルID
     # 画像データの情報（データ名とか）
     # チャンネル名とIDが紐づいた形式のデータ
     return "画面の指定とテンプレート変数にデータを渡す記述"
+    channels = ["会議室１","会議室２","体育館","テニス"]
+    return render_template('channel_list.html',channels=channels)
 
 # チャット画面ルート
 @app.route('/talk') ## /talk/channel-id

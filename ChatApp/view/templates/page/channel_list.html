@@ -41,10 +41,9 @@
         <h3>チャンネル一覧</h3>
         
         <ul id="myUL">
-            <li><a href = "https://xxx.jp">会議室１<img src="../static/img/channel_list/kaigi.jpg" class="picture"></a></li>
-            <li><a href = "https://xxx.jp">会議室２<img src="../static/img/channel_list/kaigi.jpg" class="picture"></a></li>
-            <li><a href = "https://xxx.jp">体育館<img src="../static/img/channel_list/gym.jpg" class="picture"></a></li>
-            <li><a href = "https://xxx.jp">テニス<img src="../static/img/channel_list/tennis.jpg" class="picture"></a></li>
+          {% for i in range(channels | length) %}
+            <li><a href = "https://xxx.jp">{{channels[i]}}<img src="../static/img/channel_list/kaigi.jpg" class="picture"></a></li>
+          {% endfor %}
         </ul>
 
     </body>
