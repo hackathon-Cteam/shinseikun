@@ -1,126 +1,67 @@
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
-        <link rel="stylesheet" href="{{url_for('static',filename='css/chat.css')}}">
-        <script type="text/javascript">
-            function proc() {
-                const buttonDelete = document.createElement('button');
-                buttonDelete.setAttribute('type', 'button');
-                buttonDelete.setAttribute('class', 'delete-chat');
-                buttonDelete.innerText = '削除';
-                document.querySelectorAll('.chat-message .chat').forEach((chat) => {
-                        chat.addEventListener('dblclick', (event) => {
-                        event.target.closest('.message').appendChild(buttonDelete);
-                    });
-                });
-                document.getElementById('button-channel-info').addEventListener('click', (event) => {
-                    document.getElementById('channel-info').classList.remove('close-channel-info');
-                });
-                document.getElementById('close-channel-info').addEventListener('click', (event) => {
-                    document.getElementById('channel-info').classList.toggle('close-channel-info');
-                });
-            }
-        </script>
-    </head>
-    <body onload="proc();">
-        <div id="header" class="page-main">
-            <p>申請くん</p>
-            <div id="account">
-                <p>マイページ</p>
-                <p>ログアウト</p>
+{% extends "base.html" %}
+
+{% macro parts_message(message, time) -%}
+    <div class="chat-message {{ message.senderType }}">
+        <div class="chat-date">
+            <p>{{ time }}</p>
+        </div>
+        <div class="message">
+            <p class="name">{{ message.senderName }}</p>
+            <div class="chat">
+                {% for line in  message.text.split('\n') %}
+                    <p class="text">{{ line }}</p>
+                {% endfor %}
             </div>
         </div>
-        <div id="channel-header" class="page-main">
-            <p id="channel-name">チャンネル名</p>
-            <p id="channel-overview" class="page-sub">チャンネル概要</p>
-            <div id="button-channel-info">
-                <svg width="35" height="35" viewBox="0 0 200 200.002">
-                    <path d="M114.684,264.059a100,100,0,1,0,100,100A100.1,100.1,0,0,0,114.684,264.059Zm0,12.49a87.511,87.511,0,1,1-87.51,87.512A87.414,87.414,0,0,1,114.684,276.549Zm0,25.915a17.391,17.391,0,1,0,17.392,17.392,17.391,17.391,0,0,0-17.392-17.392ZM94.926,345.943v5.806h5.637v67.92H94.926v5.985h39.513v-5.985h-4.891V345.943H94.926Z" transform="translate(-14.684 -264.059)"/>
+    </div>
+{%- endmacro %}
+
+{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/chat.css')}}">{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block content %}
+    <div id="channel-header" class="page-main">
+        <p id="channel-name">{{ channel.name }}</p>
+        <p id="channel-overview" class="page-sub">{{ channel.overview }}</p>
+        <div id="button-channel-info">
+            <svg width="35" height="35" viewBox="0 0 200 200.002">
+                <path d="M114.684,264.059a100,100,0,1,0,100,100A100.1,100.1,0,0,0,114.684,264.059Zm0,12.49a87.511,87.511,0,1,1-87.51,87.512A87.414,87.414,0,0,1,114.684,276.549Zm0,25.915a17.391,17.391,0,1,0,17.392,17.392,17.391,17.391,0,0,0-17.392-17.392ZM94.926,345.943v5.806h5.637v67.92H94.926v5.985h39.513v-5.985h-4.891V345.943H94.926Z" transform="translate(-14.684 -264.059)"/>
+            </svg>
+        </div>
+    </div>
+    <div id="chat-area">
+        {% for message in messages %}
+            {% set targetIndex = loop.index - 1 %}
+            {% set date, time = messages[targetIndex].date.split('T') %}
+            {% if loop.first or messages[targetIndex - 1].date.split('T')[0] != date %}
+                <div class="date-line">
+                    <div class="left"></div><p class="date">{{ date }}</p><div class="right"></div>
+                </div>
+            {% endif %}
+            {{ parts_message(message, time) }}
+        {% endfor %}
+    </div>
+    <div id="input-message" class="page-main">
+        <textarea name="example" cols="50" rows="10" wrap="soft"></textarea>
+        <svg width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60.5 29.4378C65.1667 32.1321 65.1667 38.8679 60.5 41.5622L28.25 60.1817C23.5833 62.876 17.75 59.5081 17.75 54.1195L17.75 16.8805C17.75 11.4919 23.5833 8.12397 28.25 10.8183L60.5 29.4378Z" fill="#FE815A"></path>
+            <line x1="19" y1="35.5" x2="38" y2="35.5" stroke="black"></line>
+        </svg>
+    </div>
+    <div id="channel-info" class="page-main close-channel-info">
+        <div id="channel-info-heder">
+            <p>Channel Info</p>
+            <div id="close-channel-info">
+                <svg width="34" height="36" viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line y1="-3.5" x2="40.9732" y2="-3.5" transform="matrix(0.681104 0.732187 -0.681104 0.732187 1 6)" stroke="#A39D9D" stroke-width="7"></line>
+                    <line y1="-3.5" x2="40.9732" y2="-3.5" transform="matrix(0.681104 -0.732187 0.681104 0.732187 5.0929 36)" stroke="#A39D9D" stroke-width="7"></line>
                 </svg>
             </div>
         </div>
-        <div id="chat-area">
-            <div class="chat-message user">
-                <div class="chat-date">
-                    <p>10:00</p>
-                </div>
-                <div class="message">
-                    <p class="name">ユーザー名</p>
-                    <div class="chat">
-                        <p class="text">申請内容(自動メッセージ)</p>
-                    </div>
-                </div>
-            </div>
-            <div class="chat-message admin">
-                <div class="message">
-                    <p class="name">管理者</p>
-                    <div class="chat">
-                        <p class="text">申請承認(自動メッセージ)</p>
-                    </div>
-                </div>
-                <div class="chat-date">
-                    <p>11:30</p>
-                </div>
-            </div><div class="date-line">
-                <div class="left"></div><p class="date">2023/07/07</p><div class="right"></div>
-            </div>
-            <div class="chat-message admin">
-                <div class="message">
-                    <p class="name">管理者</p>
-                    <div class="chat">
-                        <p class="text">ご利用ありがとうございました！</p>
-                    </div>
-                </div>
-                <div class="chat-date">
-                    <p>15:00</p>
-                </div>
-            </div>
-            <div class="chat-message user">
-                <div class="chat-date">
-                    <p>18:00</p>
-                </div>
-                <div class="message">
-                    <p class="name">ユーザー名</p>
-                    <div class="chat">
-                        <p class="text">とても良かったです！</p>
-                    </div>
-                </div>
-            </div>
-            <div class="chat-message user">
-                <div class="chat-date">
-                    <p>22:00</p>
-                </div>
-                <div class="message">
-                    <p class="name">ユーザー名</p>
-                    <div class="chat">
-                        <p class="text">クァw瀬drftgyふじこlp；＠</p>
-                    </div>
-                </div>
-            </div>
+        <div id="channel-description" class="page-sub">
+            {% for line in channel.description.split('\n') %}
+                <p>{{ line }}</p>
+            {% endfor %}
         </div>
-        <div id="input-message" class="page-main">
-            <textarea name="example" cols="50" rows="10" wrap="soft"></textarea>
-            <svg width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M60.5 29.4378C65.1667 32.1321 65.1667 38.8679 60.5 41.5622L28.25 60.1817C23.5833 62.876 17.75 59.5081 17.75 54.1195L17.75 16.8805C17.75 11.4919 23.5833 8.12397 28.25 10.8183L60.5 29.4378Z" fill="#FE815A"></path>
-                <line x1="19" y1="35.5" x2="38" y2="35.5" stroke="black"></line>
-            </svg>
-        </div>
-        <div id="channel-info" class="page-main close-channel-info">
-            <div id="channel-info-heder">
-                <p>Channel Info</p>
-                <div id="close-channel-info">
-                    <svg width="34" height="36" viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <line y1="-3.5" x2="40.9732" y2="-3.5" transform="matrix(0.681104 0.732187 -0.681104 0.732187 1 6)" stroke="#A39D9D" stroke-width="7"></line>
-                        <line y1="-3.5" x2="40.9732" y2="-3.5" transform="matrix(0.681104 -0.732187 0.681104 0.732187 5.0929 36)" stroke="#A39D9D" stroke-width="7"></line>
-                    </svg>
-                </div>
-            </div>
-            <div id="channel-description" class="page-sub">
-                <p>チャンネルの説明</p>
-                <p>利用方法について〜</p>
-            </div>
-            <div id="channel-id"><span>ID:</span><span>channel-id</span></div>
-        </div>
-    </body>
-</html>
+        <div id="channel-id"><span>ID:</span><span>{{ channel.id }}</span></div>
+    </div>
+{% endblock %}

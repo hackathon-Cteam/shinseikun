@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
+    {% block page_style required %}{% endblock %}
+    <title>申請くん</title>
+    {% endblock %}
+</head>
+<body>
+    <div id="header" class="page-main">
+        <p>申請くん</p>
+        <div id="account"><p>マイページ</p><p>ログアウト</p></div>
+    </div>
+    <div id="content">{% block content required %}{% endblock %}</div>
+</body>
+</html>
