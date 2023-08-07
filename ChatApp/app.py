@@ -15,24 +15,17 @@ def login():
     return render_template('/page/login.html')
 
 # チャンネル一覧ページのルート
+@app.route('/')
 @app.route('/channel_list')
 def channel_list():
-    
-    channels = ["会議室１","会議室２","体育館","テニス"]
-    images = ['kaigi.jpg','kaigi.jpg','gym.jpg','tennis.jpg',]
-    return render_template('/page/channel_list.html',channels=channels,images=images)
-
-@app.route('/')
-def index():
-    uid = session.get("uid")
-    if uid is None:
-        return redirect('/login')
     # チャンネル名の一覧を取得
     # チャンネルID
     # 画像データの情報（データ名とか）
     # チャンネル名とIDが紐づいた形式のデータ
     channels = ["会議室１","会議室２","体育館","テニス"]
-    return render_template('channel_list.html',channels=channels)
+    images = ['kaigi.jpg','kaigi.jpg','gym.jpg','tennis.jpg',]
+    return render_template('/page/channel_list.html',channels=channels,images=images)
+
 
 # チャット画面ルート
 @app.route('/talk') ## /talk/channel-id
