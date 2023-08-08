@@ -71,8 +71,15 @@ def form():
     user_email = "shinsei.hanako@gmail.com"
     user_phone_number = "09011111111"
     # チャンネル情報（貸出対象となっている施設や備品の一覧）※チャンネルDBより「チャンネル名」を抽出
-    channel_names = ["会議室A","会議室B","会議室C","会議室D","会議室E","体育館","多目的ホール"]
-    return render_template('page/application-form.html', channel_names=channel_names, user_name=user_name, user_email=user_email, user_phone_number=user_phone_number)
+    channels = [
+        ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
+    ]
+    return render_template('page/application-form.html', channels=channels, user_name=user_name, user_email=user_email, user_phone_number=user_phone_number)
 
 # POST(処理の呼び出し)
 # ログイン処理のルート

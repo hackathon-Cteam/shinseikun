@@ -43,11 +43,11 @@
                             <th>選択</th>
                             <th class="table-label">施設・備品等</th>
                         </tr>
-                        {% for channel_name in channel_names %}
+                        {% for channel in channels %}
                         <tr>
                           <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
                             <td><input type="radio" name="facility"></td>
-                            <td class="column">{{channel_name}}</td>
+                            <td class="column">{{channel.name}}</td>
                         </tr>
                         {% endfor %}
                     </table>
