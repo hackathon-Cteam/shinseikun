@@ -1,15 +1,7 @@
-<html lang="en">
- <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
-        <link rel="stylesheet" href="{{url_for('static',filename='css/application-form.css')}}">
- </head>
- <body>
- <!----- header----->
- <div class="header-footer">※ヘッダー（仮）※</div>
- <!----- /header ----->
-
-
+{% extends "base.html" %}
+{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/application-form.css')}}">{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block content %}
  <!----- 全体背景 ----->
  <div class="application-form-background">
   <!----- フォーム格納コンテナ ----->
@@ -198,10 +190,4 @@
   <!----- /フォーム格納コンテナ ----->
  </div>
   <!----- /全体背景 ----->
-
-
- <!----- footer ----->
- <div class="header-footer">※フッター（仮）※</div>
- <!----- /footer ----->
- </body>
-</html>
+{% endblock %}
