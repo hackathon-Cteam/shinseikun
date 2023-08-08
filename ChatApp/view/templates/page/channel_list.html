@@ -1,22 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset = "utf-8">
-        <title>申請くん</title>
+{% extends "base.html" %}
 
-        <link rel="stylesheet" href="../static/css/channel_list.css"/>
+{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/channel_list.css')}}">{% endblock %}
 
+{% block head %}
+{{ super() }}
         <script>
             function myFunction() {
-                let input, filter, ul, li, a, i, txtValue;
+                let input, filter, ul, li, i, txtValue;
                 input = document.getElementById('myInput');
                 filter = input.value.toUpperCase();
                 ul = document.getElementById("myUL");
                 li = ul.getElementsByTagName('li');
                 
                 for (i = 0; i < li.length; i++) {
-                  a = li[i].getElementsByTagName("a")[0];
-                  txtValue = a.textContent || a.innerText;
+                  txtValue = li[i].textContent;
                   if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     li[i].style.display = "";
                   } else {
@@ -25,15 +22,9 @@
                 }
               }
         </script>
-        
-    </head>
+{% endblock %}
 
-    <body>
-        <div class="header">
-            <p>Header</p>
-        </div>
-
-        <h2>タイトル</h2>
+{% block content %}
 
         <h3>チャンネルの検索</h3>
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="チャンネル名を入力してください">
@@ -41,13 +32,9 @@
         <h3>チャンネル一覧</h3>
         
         <ul id="myUL">
-          {% for i in channels %}{% set channels_loop = loop %}
-          {% for j in images %}{% if loop.index==channels_loop.index %}
-          <li><a href = "https://xxx.jp">{{i}}<img src="../static/img/channel_list/{{j}}" class="picture"></a></li>
-          {% endif %}
-          {% endfor %}
+          {% for i in channels %}
+          <li><a href = "https://xxx.jp">{{i.name}}<img src="../static/img/channel_list/{{i.description}}" class="picture"></a></li>
           {% endfor %}
         </ul>
 
-    </body>
-</html>
+ {% endblock %}

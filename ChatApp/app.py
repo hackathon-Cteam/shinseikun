@@ -24,9 +24,14 @@ def channel_list():
     # チャンネルID
     # 画像データの情報（データ名とか）
     # チャンネル名とIDが紐づいた形式のデータ
-    channels = ["会議室１","会議室２","体育館","テニス"]
-    images = ['kaigi.jpg','kaigi.jpg','gym.jpg','tennis.jpg',]
-    return render_template('/page/channel_list.html',channels=channels,images=images)
+    channels = [
+        ChannelEntity('ch-123', '会議室1', 'よもやまセンター 4F', 'kaigi.jpg'),
+        ChannelEntity('ch-456', '会議室2', '新ビル 2F', 'kaigi.jpg'),
+        ChannelEntity('ch-789', '体育館', 'グラウンド西', 'gym.jpg'),
+        ChannelEntity('ch-246', 'テニス', 'グラウンド東', 'tennis.jpg'),
+    ]
+    
+    return render_template('/page/channel_list.html',channels=channels)
 
 
 # チャット画面ルート
