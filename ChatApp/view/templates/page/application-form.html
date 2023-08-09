@@ -1,5 +1,25 @@
 {% extends "base.html" %}
-{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/application-form.css')}}">{% endblock %}
+{% block page_style %}
+  <link rel="stylesheet" href="{{url_for('static',filename='css/application-form.css')}}">
+
+  <script type="text/javascript">
+    function check(){
+        if (
+            application_form.purpose.value == "" ||
+            application_form.name.value == "" ||
+            application_form.email.value == "" ||
+            application_form.phone.value == ""
+        ){
+            //条件に一致する場合(メールアドレスが空の場合)
+            alert("空欄のある項目があります");    //エラーメッセージを出力
+            return false;    //送信ボタン本来の動作をキャンセルします
+        }else{
+            return true;    //送信ボタン本来の動作を実行します
+        }
+    }
+  </script>
+
+  {% endblock %}
 {% block head %}{{ super() }}{% endblock %}
 {% block content %}
  <!----- 全体背景 ----->
@@ -7,7 +27,7 @@
   <!----- フォーム格納コンテナ ----->
   <div class="application-form-wrapper">
       <!----- ここからフォーム適用　----->
-      <form class="application-form" method="post">
+      <form class="application-form" method="post" name="application_form">
 
           <!----- フォームエリア（タイトル） ----->
           <div class="application-form-area-title">
@@ -178,7 +198,7 @@
           <!----- 申請ボタン ----->
           <div>
             <div>
-              <input type="submit" name="apply" value="送 信">
+              <input type="submit" name="apply" value="送 信" onClick="return check();">
               <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　<!----- 出し分け処理必要 ----->
             </div>
           </div>
