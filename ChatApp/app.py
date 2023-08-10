@@ -60,7 +60,7 @@ def admin():
 @app.route('/admin-edit')
 def adminEdit():
     # 管理者情報
-    return ""
+    return render_template('page/kanrisya-edit.html')
 
 # ユーザー画面
 @app.route('/mypage')

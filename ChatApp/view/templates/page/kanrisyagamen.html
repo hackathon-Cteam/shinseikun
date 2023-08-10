@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>申請くん</title>
-    <link rel="stylesheet" href="../../static/css/kanrisyagamen.css">
-</head>
-    
-<body>
+{% extends "base.html" %}
+
+{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/kanrisyagamen.css')}}">{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block content %}
     <div class="header">
         <h1>申請くん（管理者画面）</h1>
         <ul class="main-nav">
             <li><a href="URL">管理者アカウント</a></li>
-            <li><a href="URL">ログアウト</a></li>
         </ul>
     </div>
 <!-- ステータス一覧というタイトル -->
@@ -75,30 +69,17 @@
 <!-- チャンネル一覧というタイトル -->
     <div class="subtitle2"><h2>チャンネル一覧</h2></div>
 
-<!-- チャンネル追加書き込み欄 -->    
-    <input type="text" name="search" placeholder="チャンネル名を記入">
 
 <!-- チャンネル追加ボタン -->
         <form method="post">
-        <label for="body">チャンネル追加</label>
-        <input type="text" name="body">
+        <input type="text" name="body" placeholder="追加するチャンネル名を記入">
         <input type="submit" value="チャンネル追加">
         </form>
-        
-        <!-- <a href="#" class="btn-square">チャンネル追加</a> 
-        <label class="btn-square"class="open" for="pop-up">チャンネル削除</label>
-        -->
-        <input type="checkbox" id="pop-up">
-        <div class="overlay">
-            <div class="window">
-                <label class="close" for="pop-up">×</label>
-                <p class="text">本当にチャンネルを削除しますか？</p>
-                <ul>
-                    <a href="#" class="btn-square">OK</a>
-                    <a href="#" class="btn-square">キャンセル</a>
-                </ul>
-            </div>
-        </div>
+
+<!-- チャンネル削除ボタン -->
+        <form method="post">
+        <input type="submit" value="チャンネル削除">
+        </form>
 
 <!-- アラート「削除するチャンネルを選択してください」 -->
         <p id="arart">削除するチャンネルを選択してください</p>
@@ -131,3 +112,4 @@
 </body>
 
 </html>
+{% endblock %}
