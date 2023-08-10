@@ -48,8 +48,7 @@ def talk():
         ChatMessageEntity('ユーザー名', 'user', 'とても良かったです！', '2023/07/07T18:00'),
         ChatMessageEntity('ユーザー名', 'user', 'クァw瀬drftgyふじこlp；＠', '2023/07/07T22:00'),
     ]
-
-    return render_template('page/chat.html', channel= channel, messages= messages)
+    return render_template('page/chat.html', userType= 'admin', channel= channel, messages= messages)
 
 # 管理者画面のルート
 @app.route('/admin')
