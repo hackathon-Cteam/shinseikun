@@ -5,13 +5,21 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
     {% block page_style required %}{% endblock %}
+    {% block page_script required %}{% endblock %}
     <title>申請くん</title>
     {% endblock %}
 </head>
 <body>
     <div id="header" class="page-main">
-        <p>申請くん</p>
-        <div id="account"><p>マイページ</p><p>ログアウト</p></div>
+        <p class="textlink" id="top-link"><a href="/">申請くん</a></p>
+        <div id="account">
+            <p class="textlink">
+                {% if userType == "admin" %}<a data-usertype="admin" href="/admin">管理者画面</a>
+                {% else %}<a data-usertype="user" href="/mypage">マイページ</a>
+                {% endif %}
+            </p>
+            <p class="textlink"><a href="/logout">ログアウト</a></p>
+        </div>
     </div>
     <div id="content">{% block content required %}{% endblock %}</div>
 </body>
