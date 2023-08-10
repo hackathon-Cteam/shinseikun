@@ -1,21 +1,15 @@
 
 body{
     width: 50%;
-    background-color : #e5e3e3;
+    margin-top: 10%;
     margin-left: auto;
     margin-right: auto;
 }
 
 h3{
-    border-left :solid 5px #8dc3be;
-    border-bottom: solid 1px gray;
+    border-left :solid 10px #DEDDFF;
+    border-bottom: solid 0.3px gray;
     padding: 10px;
-}
-
-.header{
-    width: 100%; 
-    height : 50px;
-    background-color : #8dc3be;
 }
 
 img.picture{
@@ -51,5 +45,5 @@ img.picture{
 }
 
 #myUL li a:hover {
-    background-color: #a4d3cb; 
+    background-color: #DEDDFF; 
 }

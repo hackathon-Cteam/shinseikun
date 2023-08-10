@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title>申請くん</title>
+        <style>
+            body{
+                background-color : #e5e3e3;
+            }
+            
+            .centering{
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            }
+ 
+            .width_alignment{
+                width: 100%;
+            }
+
+            .btn {
+                margin: 50px 50px;
+                padding: 8px 24px;
+                background-color: #58a190;
+                display: inline-block;
+                color: white;
+                cursor: pointer;
+              }
+
+              .modal-wrapper {
+                display: none;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, 0.6);
+                z-index: 100;
+              }
+
+              .modal {
+                position: absolute;
+                top: 20%;
+                left: 34%;
+                background-color: #e6ecf0;
+                padding: 20px 0 40px;
+                border-radius: 10px;
+                width: 450px;
+                height: auto;
+                text-align: center;
+              }
+
+              #close-modal{
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                color: rgba(128, 128, 128, 0.46);
+                cursor: pointer;
+              }
+
+              .form {
+                width: 100%;
+              }
+
+              .form h2 {
+                color: #5f5d60;
+                letter-spacing: 1px;
+                margin-bottom: 40px;
+              }
+
+              .form input {
+                width: 320px;
+                margin-bottom: 20px;
+                font-size: 12px;
+                padding: 12px 12px;
+                border: 1px solid #d0d5d8;
+                border-radius: 5px;
+              }
+              
+              .submit-btn {
+                display: inline-block;
+                padding: 14px 140px;
+                background-color: #58a190;
+                border: none;
+                border-radius: 3px;
+                color: white;
+                margin: 10px auto;
+                cursor: pointer;
+              }
+
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <div class="centering">
+            <h1>ようこそ、申請くんへ！</h1>
+
+            <div class="width_alignment">
+                <div>
+                    ユーザー名：
+                    <input type="email" name="email" placeholder="aaa@sample.com" >
+                </div>
+                <div>
+                    パスワード：
+                    <input input type="password" name="password" maxlength="16" value="12345678" >
+                </div>
+                <div>
+                  <input type="button" onclick="location.href='{{ url_for('channel_list')}}'" value="ログイン">
+                </div>
+            </div>
+
+            <div class="top-wrapper">
+                <div class="btn signup-show">新規登録はこちら</div>
+            </div>
+            <!-- サインアップ処理　モーダル -->
+            <div class="modal-wrapper" id="signup-modal">
+                <div class="modal">
+                <div id="close-modal">×</div>
+                <div class="form">
+                    <h2>ユーザー登録</h2>
+                    <form action="#">
+                    <input class="form-control" type="text" placeholder="お名前">
+                    <input class="form-control" type="text" placeholder="メールアドレス">
+                    <input class="form-control" type="password" placeholder="パスワード">
+                    <input class="form-control" type="text" placeholder="所属？">
+                    <div class="submit-btn">登録</div>
+                    </form>
+                </div>
+                </div>
+            </div>
+         
+
+            <h4>パスワード忘れた方はこちら</h4> <!-- Modaleへ -->
+        </div>
+
+        <script src="../static/js/login.js"></script>
+
+    </body>
+</html>
