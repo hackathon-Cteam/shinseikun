@@ -83,7 +83,11 @@ textarea {
     font-size: 15px;
 }
 
-svg { width: 50px; }
+svg {
+    width: 50px;
+    cursor: pointer;
+    cursor: hand;
+}
 
 #chat-area { margin-top: 30px; padding: 70px 0px; overflow-y: scroll; }
 
