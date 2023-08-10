@@ -15,53 +15,53 @@
 
 #header #account { display: flex; }
 
-#header #account > p {margin: 0px 20px;}
+#header #account > p { margin: 0px 20px; }
 
 .textlink a {
-	position: relative;
-	color: #333;
-	text-decoration: none;
+    position: relative;
+    color: #333;
+    text-decoration: none;
 }
 .textlink a:hover {
-	color: #6291f9;
+    color: #6291f9;
 }
 
 .textlink a::after {
-	content: '';
-	position: absolute;
-	bottom: -3px;
-	left: 0;
-	width: 100%;
-	height: 2px;
-	background-color: #ceb849;
-	transform: scaleX(0);
-	transition: transform 0.3s;
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ceb849;
+    transform: scaleX(0);
+    transition: transform 0.3s;
 }
 
 .textlink a:hover::after {
-	transform: scaleX(1);
+    transform: scaleX(1);
 }
 .textlink a {
-	position: relative;
-	color: #333;
-	text-decoration: none;
+    position: relative;
+    color: #333;
+    text-decoration: none;
 }
 .textlink a:hover {
-	color: #6291f9;
+    color: #6291f9;
 }
 
 .textlink a::after {
-	content: '';
-	position: absolute;
-	bottom: -3px;
-	left: 0;
-	width: 100%;
-	height: 2px;
-	background-color: #ceb849;
-	transform: scaleX(0);
-	transition: transform 0.3s;
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ceb849;
+    transform: scaleX(0);
+    transition: transform 0.3s;
 }
 
 .textlink a:hover::after {
-	transform: scaleX(1);
+    transform: scaleX(1);
 }

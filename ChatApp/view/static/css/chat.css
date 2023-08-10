@@ -122,7 +122,7 @@ svg {
 
 #channel-info-heder > p { font-size: 30px; }
 
-#channel-info > #channel-id {float: right;margin-right: 15px;}
+#channel-info > #channel-id { float: right; margin-right: 15px; }
 
 .delete-chat {
     position: relative;
