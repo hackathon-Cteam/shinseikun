@@ -32,9 +32,17 @@ def talk():
 # 管理者画面のルート
 @app.route('/admin')
 def admin():
+    applyID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #申請ID「チャンネルID*ユーザーID*申請日時」
+    channels = ["会議室1", "onoyamaさん", "2023/07/11/10:30", "予約", "利用目的〇〇〇", "承認"]
+    channelID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    channelnames = ["第１会議室", "第２会議室", "第５講義室", "体育館", "テニスコート"]
+    return render_template('page/kanrisyagamen.html', channels = channels, applyID=applyID, channelID=channelID, channelnames=channelnames)
+
+    
+
     # タスク一覧のデータ取得(チャンネル名, 申請者名, 申請日時, 申請内容, 利用目的, ステータス)
     # チャンネル一覧のデータ（チャンネル名）
-    return ""
+            
 
 # 管理者アカウント編集画面
 @app.route('/admin-edit')

@@ -8,9 +8,6 @@
 .main-nav li {
 	margin-left: 36px;
 }
-.main-nav a {
-	color: #432;
-}
 .main-nav a:hover {
 	color: #0bd;
 }
@@ -31,78 +28,61 @@
 .search-1 {
 	display: flex;
 }
-
-.status-btn {
+/* テーブル1のステータス選択ボタン */
+.status {
 	display: flex;
 	margin-left: 750px;
 }
 
+input[name="btn-square"] {
+	display: inline-block;
+	padding: 0.5em 1em;
+	text-decoration: none;
+	background: #668ad8;/*ボタン色*/
+	color: #FFF;
+	border-bottom: solid 4px #627295;
+	border-radius: 3px;
+	margin-top: 10px;
+	margin-left: 10px;
+  }
+input[name="btn-square"]:active {
+	/*ボタンを押したとき*/
+	-webkit-transform: translateY(4px);
+	transform: translateY(4px);/*下に動く*/
+	border-bottom: none;/*線を消す*/
+  }
+
+
+/*チャンネル一覧というタイトル*/
 .subtitle2 {
 	margin-top: 100px;
 }
 
-/* テーブル1-1 */
-/* テーブル1の範囲 */
-/* テーブル1自体 */
-.table-1 {
-	font-size      : 13pt;              /* 文字サイズ */
-	background     : #ffffff;
-	height: 300px;
-	table-layout: auto;
-	word-wrap: break-word;
-	margin-top: 10px;
-	width: 100%;
-	overflow-y: auto;
-	
+/* テーブル1 */
+#table-1 { 
+	overflow-y: scroll; 
+	height: 300px; 
 }
-.tsble-1 table {
-	margin: 0;
-    border-spacing: 0;
-}
-.table-1 table th {
-	position: sticky;
+
+thead {
+    background-color: rgb(0, 166, 255);
+    color: #fff;
+    position: sticky;
     top: 0;
     left: 0;
 }
 
+table { border-collapse: collapse; border: 3px solid #7d7d7d; width: 100%; margin-top: 10px;}
 
-/* テーブル1の縦幅を固定 */
-.table-sc{
-	height: 500px;	
-}
-/* テーブル1のヘッダーを固定 */
-th{
-	background: #f2f2f2;
-}
+td, th { border: 1px solid #7d7d7d; padding: 5px 10px; }
 
-/* テーブル1の列の幅を指定 */
-.a {
-	width: 30px;
-  }
-.b {
-	width: 100px;
-  }
-.c {
-	width: 100px;
-  }
-.d {
-	width: 50px;
-}
-.e {
-	width: 50px;
-  }
-.f {
-	width: 500px;
-  }
-.g {
-	width: 100px;
-}
+td { text-align: center; }
+
 /* テーブル1の一部のセルにスクロール設置、高さ指定 */
 .sc {
 	overflow-y:scroll;
-	height: 70px;
+	height: 3px;
 }
-
 
 
 /* チャンネル追加ボタン */
@@ -198,12 +178,21 @@ th{
 }
 
 /* テーブル2 */
-.table-2 {
-	font-size      : 13pt;              /* 文字サイズ */
-	background     : #ffffff;          /* テーブル全体の背景色 */
-	margin-top: 10px;
-	margin-bottom: 50px;
-	width: 500px;
-    table-layout: fixed;
-    word-wrap: break-word;
+.table-2 { 
+	overflow-y: scroll; 
+	height: 300px; 
 }
+
+thead {
+    background-color: rgb(0, 166, 255);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+table { border-collapse: collapse; border: 3px solid #7d7d7d; margin-top: 10px;}
+
+td, th { border: 1px solid #7d7d7d; padding: 5px 10px; }
+
+td { text-align: center; }
