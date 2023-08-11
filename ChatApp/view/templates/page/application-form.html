@@ -1,23 +1,33 @@
-<!DOCTYPE html>
-<html lang="ja">
- <head>
- <meta charset="utf-8">
- <title>申請フォーム</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="../static/css/application-form.css">
- </head>
- <body>
- <!----- header----->
- <div class="header-footer">※ヘッダー（仮）※</div>
- <!----- /header ----->
-
-
+{% extends "base.html" %}
+{% block page_style %}
+  <link rel="stylesheet" href="{{url_for('static',filename='css/application-form.css')}}">
+{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript">
+    function check(){
+        if (
+            application_form.purpose.value == "" ||
+            application_form.name.value == "" ||
+            application_form.email.value == "" ||
+            application_form.phone.value == ""
+        ){
+            //上記条件に一致する場合
+            alert("空欄のある項目があります");    //エラーメッセージを出力
+            return false;    //送信ボタン本来の動作をキャンセルします
+        }else{
+            return true;    //送信ボタン本来の動作を実行します
+        }
+    }
+  </script>
+{% endblock %}
+{% block content %}
  <!----- 全体背景 ----->
  <div class="application-form-background">
   <!----- フォーム格納コンテナ ----->
   <div class="application-form-wrapper">
       <!----- ここからフォーム適用　----->
-      <form class="application-form" method="post">
+      <form class="application-form" method="post" name="application_form">
 
           <!----- フォームエリア（タイトル） ----->
           <div class="application-form-area-title">
@@ -41,40 +51,17 @@
                   <div class="listScroll">
                     <table>
                         <tr>
-                          <!--テーブルの項目名作成-->
-                            <th class="table-label">選択</th>
+                          <!--テーブルの項目名-->
+                            <th>選択</th>
                             <th class="table-label">施設・備品等</th>
                         </tr>
+                        {% for channel in channels %}
                         <tr>
-                          <!--項目に沿って初期設定-->
+                          <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
                             <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室A</td>
+                            <td class="column">{{channel.name}}</td>
                         </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室B</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室C</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">会議室D</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">体育館</td>
-                        </tr>
-                        <tr>
-                          <!--項目に沿って初期設定-->
-                            <td><input type="radio" name="facility"></td>
-                            <td class="column">多目的ホールああああああ</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                   </div>
             </div>
@@ -157,11 +144,11 @@
                   <br>
                   <!----- 自由入力フォームにデフォルト表示させるテンプレート　 ----->
                   <textarea id="purpose" name="purpose">
-  【利用目的】
+【利用目的】
 
-  【利用人数】
+【利用人数】
 
-  【その他特記事項】
+【その他特記事項】
 
                   </textarea>
                   <!----- /自由入力フォームにデフォルト表示させるテンプレート　 ----->
@@ -180,7 +167,7 @@
                   <br>
                   <input
                   type="text"
-                  placeholder="氏名を入力してください"
+                  value={{user.name}}
                   name="name"
                   id="application-form-name-input"
                   />
@@ -190,7 +177,7 @@
                   <br>
                   <input
                   type="email"
-                  placeholder="メールアドレスを入力してください"
+                  value={{user.email}}
                   name="email"
                   id="application-form-email-input"
                   />
@@ -200,7 +187,7 @@
                   <br>
                   <input
                   type="text"
-                  placeholder="電話番号を入力してください"
+                  value={{user.phone}}
                   name="phone"
                   id="application-form-phone-input"
                   />
@@ -211,7 +198,7 @@
           <!----- 申請ボタン ----->
           <div>
             <div>
-              <input type="submit" name="apply" value="送 信">
+              <input type="submit" name="apply" value="送 信" onClick="return check();">
               <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　<!----- 出し分け処理必要 ----->
             </div>
           </div>
@@ -223,10 +210,4 @@
   <!----- /フォーム格納コンテナ ----->
  </div>
   <!----- /全体背景 ----->
-
-
- <!----- footer ----->
- <div class="header-footer">※フッター（仮）※</div>
- <!----- /footer ----->
- </body>
-</html>
+{% endblock %}
