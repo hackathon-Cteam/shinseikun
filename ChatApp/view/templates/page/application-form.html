@@ -4,15 +4,15 @@
 {% block head %}{{ super() }}{% endblock %}
 {% block content %}
  <!----- 全体背景 ----->
- <div class="application-form-background">
+ <div class="page-sub application-form-background">
   <!----- フォーム格納コンテナ ----->
-  <div class="application-form-wrapper">
+  <div class="page-sub application-form-wrapper">
       <!----- ここからフォーム適用　----->
       <form class="application-form" method="post" name="application_form">
 
           <!----- フォームエリア（タイトル） ----->
           <div class="application-form-area-title">
-              <h3 class="application-form-title">予約申請フォーム（●●大学学生組合）</h3>
+              <h3 class="application-form-title">予約申請フォーム</h3>
                 <p>必要事項を入力して送信してください。<br>
                 管理人が内容を確認のうえ承認いたします。</p>
           </div>
@@ -23,7 +23,7 @@
             <div>
               <h3 class="application-form-category">利用施設・備品等</h3>
                   <label for="purpose" class="application-form-category-label">利用施設・備品等【必須】</label>
-                  <ul class="application-form-flashes">※利用施設・備品等を選択してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※利用施設・備品等を選択してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <p class="application-form-category-message">スクロールしていずれか一つを選択してください（キーワード検索で絞り込みができます）。</p>
                   <input onkeyup="sortFacility()" id="sortKeyword" type="search" name="search" placeholder="キーワードを入力">
@@ -54,7 +54,7 @@
             <div>
               <h3 class="application-form-category">利用日時</h3>
                   <label for="date">利用日【必須】</label>
-                  <ul class="application-form-flashes">※利用日を選択してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※利用日を選択してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <select name="date" required>
                     <option hidden></option>
@@ -78,7 +78,7 @@
                   日
                   <br>
                   <label for="time">利用時間【必須】</label>
-                  <ul class="application-form-flashes">※利用時間を選択してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※利用時間を選択してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <select name="time" required>
                     <option hidden></option>
@@ -121,7 +121,7 @@
             <div>
               <h3 class="application-form-category">利用目的等</h3>
                   <label for="purpose">利用目的等【必須】</label>
-                  <ul class="application-form-flashes">※30文字以上200文字以内で入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※30文字以上200文字以内で入力してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <!----- 自由入力フォームにデフォルト表示させるテンプレート　 ----->
                   <textarea id="purpose" name="purpose" required>
@@ -144,7 +144,7 @@
                 <p class="application-form-category-message">当日の利用者（代表者）の情報を入力してください。<br>
                 申請内容に関する問い合わせや当日の緊急連絡先として利用することがあります。</p>
                   <label for="application-form-name-input">利用者氏名【必須】</label>
-                  <ul class="application-form-flashes">※正しい氏名を入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※正しい氏名を入力してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <input
                   type="text"
@@ -155,7 +155,7 @@
                   />
                   <br>
                   <label for="application-form-email-input">利用者メールアドレス【必須】</label>
-                  <ul class="application-form-flashes">※正しいメールアドレスを入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※正しいメールアドレスを入力してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <input
                   type="email"
@@ -166,7 +166,7 @@
                   />
                   <br>
                   <label for="application-form-phone-input">利用者電話番号【必須】</label>
-                  <ul class="application-form-flashes">※正しい電話番号を入力してください</ul>　　<!----- 出し分け処理必要 ----->
+                  <!-- <ul class="application-form-flashes">※正しい電話番号を入力してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <input
                   type="text"
@@ -183,7 +183,7 @@
           <div>
             <div>
               <input type="submit" name="apply" value="送 信">
-              <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　<!----- 出し分け処理必要 ----->
+              <!-- <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　--- 出し分け処理必要 --- -->
             </div>
           </div>
           <!----- /申請ボタン ----->
