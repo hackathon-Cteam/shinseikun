@@ -1,33 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/mypage.css">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マイページ</title>
-  </head>
-  <body>
-
-
-    <h2>マイページ</h2>  
+{% extends "base.html" %}
+{% block head %}  
+    {% block page_style %}<link rel="stylesheet" href="../static/css/mypage.css">{% endblock %}
+    {% block page_script %}{% endblock %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<h2>マイページ</h2>  
+<p>{{ test }}</p>
 <div class="mypage">
   <div class="aside">
-    <div class="message">メッセージ</div>
+    <div class="message">
+        メッセージ
+        <ul>     
+            {% for information in information_list %}
+                <li>{{information.info_time}} {{information.info_message}}</li>
+            {% endfor %}
+        </ul>
+    </div>
      <div id="account">
     <p>アカウント欄</p>
 
      <ul>
-         <li><b class="item-name">名前</b><input type="text" name="user name"></li>
+         <li><b class="item-name">名前</b>{{ user.name }}</li>
      </ul>
      <ul>
-         <li><b class="item-name">所属</b><input type="text" name="Affiliation"></li>
+         <li><b class="item-name">所属</b>{{ user.group }}</li>
      </ul>
      <ul>
-         <li><b class="item-name">電話番号</b><input type="text" name="phone namber"></li>
+         <li><b class="item-name">電話番号</b>{{ user.phone }}</li>
      </ul>
      <ul>
-      <li><b class="item-name">メールアドレス</b><input type="text" name="mail address"></li>
+      <li><b class="item-name">メールアドレス</b>{{ user.email}}</li>
      </ul>
      <ul>
       <li><b class="item-name"></b><input type="submit" value="アカウント編集"></li>
@@ -39,24 +42,27 @@
     <div class="caution">注意書き</div>    
     <h2>申請状況</h2>
     <div class="request">
-     <ul class="req">
-      <li>/8/3/14:00 承認申請中</li>
-      <li>2023/8/2/14:00  利用予約完了</li>
-      <li>2023/7/29/14:00 利用予約完了</li>
-      <li>2023/7/28/14:00 利用予約完了</li>
-     </ul>
+        <ul class="req">     
+        {% for reserinfo in reserinfo_list %}
+            <li>{{reserinfo.reserve_time}} {{reserinfo.message}}</li>
+        {% endfor %}
+        </ul>
     </div>
     <h2>過去利用歴</h2>
     <div class="log">
-      <ul class="req">
-          <li>/8/3/14:00 承認申請中</li>
-          <li>2023/8/2/14:00  利用予約完了</li>
-          <li>2023/7/29/14:00 利用予約完了</li>
-          <li>2023/7/28/14:00 利用予約完了</li>        
-      </ul>
+        <ul class="req">
+        {% for past in past_list %}
+            <li>{{past.past_usege}} {{past.result}}</li>
+        {% endfor %}
+        </ul>
     </div>
     <button type=“button” onclick="location.href='https://shinsei.net'">各施設の新規ご利用希望の申請はこちらから</button>
   </div>   
 </div>   
  </body>
 </html>
+{% endblock %}
+
+
+
+   

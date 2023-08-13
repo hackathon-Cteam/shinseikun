@@ -1,6 +1,9 @@
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
 from Entity.UserEntity import UserEntity
+from Entity.ReservationEntity import ReservationEntity
+from Entity. PastUsageEntity import PastUsageEntity
+from Entity. InformationEntity import InformationEntity
 from flask import Flask, request, redirect, render_template, session, flash, abort
 from datetime import timedelta
 import uuid
@@ -65,12 +68,39 @@ def adminEdit():
 
 # ユーザー画面
 @app.route('/mypage')
-def mypage():
+def mypage(): 
     # ユーザー情報
+    user = UserEntity('345', 'NRk', 'rrr@gmail', '', '000-1111-2222', '運動部')
+
     # 申請中の一覧
+    print(user.name)
+    test= 'こんにちわ'
+    reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
+    reserinfo2 = ReservationEntity('444', '2023/08/10', '予約キャンセル')
+    
+    reserinfo_list = [reserinfo,reserinfo2]
+
     # 過去の利用歴
+    past = PastUsageEntity('777','2022/6/2','キャンセル済')
+    past2 = PastUsageEntity('888','2022/4/2','ご利用済')
+    past3 = PastUsageEntity('999','2022/3/2','キャンセル済')
+    past4 = PastUsageEntity('123','2022/2/2','ご利用済')
+
+    past_list = [past,past2,past3,past4]
+
     # 通知情報の一覧
-    return ""
+
+    information = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
+    information2 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
+    information3 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
+
+    information_list = [information,information2,information3]
+
+
+    return render_template('/page/mypage.html',test=test, user=user, reserinfo_list= reserinfo_list, past_list=past_list, information_list=information_list)
+
+    
+
 
 # 申請フォーム画面
 @app.route('/form')
