@@ -8,7 +8,7 @@
   <!----- フォーム格納コンテナ ----->
   <div class="page-sub application-form-wrapper">
       <!----- ここからフォーム適用　----->
-      <form class="application-form" method="post" name="application_form">
+      <form id="form" class="application-form" name="application_form">
 
           <!----- フォームエリア（タイトル） ----->
           <div class="application-form-area-title">
@@ -27,7 +27,7 @@
                   <br>
                   <p class="application-form-category-message">スクロールしていずれか一つを選択してください（キーワード検索で絞り込みができます）。</p>
                   <input id="sortKeyword" type="search" name="search" placeholder="キーワードを入力">
-                  <button onclick="sortFacility()" class="sortButton" type="button">検索</button>
+                  <button id="sortButton" class="sortButton" type="button">検索</button>
                   <br>
                   <div class="listScroll">
                     <table>
