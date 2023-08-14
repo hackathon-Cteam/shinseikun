@@ -21,13 +21,13 @@
  */
 
 function sortFacility() {
-    const sortKeyword = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードを取得（大文字に揃える）
+    const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
     const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）を取得
     const facilityName = document.getElementsByClassName("facilityName");    //施設名を取得
 
       for (i = 0; i < facilityList.length; i++) {    //選択肢の個数分繰り返し
-        value = facilityName[i].textContent;    //施設名の値を変数に代入
-        if (value.toUpperCase().indexOf(sortKeyword) > -1) {    //施設名の値とキーワードが不一致でなければ（施設名は大文字に揃える）
+        facilityNameValue = facilityName[i].textContent;    //施設名の値を変数に代入
+        if (facilityNameValue.toUpperCase().indexOf(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
           facilityList[i].style.display = "";    //選択肢を表示
         } else {
           facilityList[i].style.display = "none";   //その他の場合は選択肢を非表示
