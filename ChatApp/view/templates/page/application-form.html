@@ -26,8 +26,8 @@
                   <!-- <ul class="application-form-flashes">※利用施設・備品等を選択してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
                   <p class="application-form-category-message">スクロールしていずれか一つを選択してください（キーワード検索で絞り込みができます）。</p>
-                  <input onkeyup="sortFacility()" id="sortKeyword" type="search" name="search" placeholder="キーワードを入力">
-                  <input type="submit" name="search" value="検索">
+                  <input id="sortKeyword" type="search" name="search" placeholder="キーワードを入力">
+                  <button onclick="sortFacility()" class="sortButton" type="button">検索</button>
                   <br>
                   <div class="listScroll">
                     <table>
@@ -37,10 +37,10 @@
                             <th class="table-label">施設・備品等</th>
                         </tr>
                         {% for channel in channels %}
-                        <tr id="facilityList">
+                        <tr class="facilityList">
                           <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
                             <td><input type="radio" name="facility" required></td>
-                            <td id="facilityName" class="column">{{channel.name}}</td>
+                            <td class="facilityName">{{channel.name}}</td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -182,7 +182,7 @@
           <!----- 申請ボタン ----->
           <div>
             <div>
-              <input type="submit" name="apply" value="送 信">
+              <button class="submitButton" type="submit">送 信</button>
               <!-- <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　--- 出し分け処理必要 --- -->
             </div>
           </div>

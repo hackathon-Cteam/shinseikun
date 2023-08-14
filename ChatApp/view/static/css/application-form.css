@@ -102,7 +102,7 @@ th {
   border-width: 1.5px;
   position: sticky; /* スクロール時項目を固定 */
   top: 0; /* スクロール時項目を固定 */
-  font-size: 14px;
+  font-size: 13px;
   font-weight:550;
   padding-left: 5px;
   padding-right: 5px;
@@ -114,13 +114,13 @@ td {
   border-left: 1px solid black;
   border-right: 1px solid black;
   text-align: center;
+  font-size: 14px;
 }
 
 /* スクロールボックスの要素 */
-.column {
+.facilityName {
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 14px;
 }
 
 /* フォーム（テキスト、メール）*/
@@ -161,7 +161,7 @@ td {
 }
 
 /* フォーム（検索ボタン）*/
-.application-form input[type="submit"][name="search"] {
+.sortButton {
   width: 50px;
   height: 25px;
   margin-bottom: 20px;
@@ -169,7 +169,7 @@ td {
 }
 
 /* フォーム（送信ボタン）*/
-.application-form input[type="submit"][name="apply"] {
+.submitButton {
   width: 160px;
   height: 45px;
   font-size: 16px;
