@@ -16,35 +16,45 @@
 //   }
 // }
 
-
-
 /**
  * ページ読み込み時の処理
  */
+window.addEventListener('load', () => {
+    //施設名の絞り込み検索機能の登録処理（別途記載）を実行
+    registerSortFacilityEvent();
+    //モーダル立ち上げ処理の登録処理（別途記載）を実行
+    registerFormSubmitEvent();
+})
 
-//検索ボタンとフォーム要素を取得
-window.addEventListener('load', function() {
+/**
+ * 施設名の絞り込み検索機能の登録処理
+ */
+function registerSortFacilityEvent() {
+  //検索ボタンを取得
   const sortButton = document.getElementById("sortButton");
-  const form = document.querySelector("#form");
-
-    //検索ボタンクリック時の処理を定義
-    sortButton.addEventListener("click", function() {
-      sortFacility();    //施設名の絞り込み検索を実行
+     //検索ボタンクリック時
+     sortButton.addEventListener("click", function() {
+      sortFacility();    //施設名の絞り込み検索処理（別途記載）を実行
       console.log("検索の実行");    //挙動確認用
     })
+}
 
-    //フォーム送信時の処理を定義
+/**
+ * モーダル立ち上げ処理の登録処理
+ */
+function registerFormSubmitEvent() {
+  //フォーム要素を取得
+  const form = document.querySelector("#form");
+    //フォーム送信時
     form.addEventListener("submit", function(event) {
       event.preventDefault();
       console.log("モーダルの立ち上げ");    //挙動確認用
       //※モーダル立ち上げ処理を実装予定
     })
-})
-
-
+}
 
 /**
- * 施設名の絞り込み検索機能
+ * 施設名の絞り込み検索処理
  */
 function sortFacility() {
   const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
