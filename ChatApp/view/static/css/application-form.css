@@ -186,3 +186,59 @@ td {
   color: red;
   display: inline;
 }
+
+/* 以下、モーダル */
+.modal-wrapper {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.modal {
+  position: absolute;
+  top: 20%;
+  left: 34%;
+  background-color: #e6ecf0;
+  padding: 20px 0 20px;
+  border-radius: 10px;
+  width: 450px;
+  height: auto;
+  text-align: center;
+}
+
+#confirm-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: rgba(128, 128, 128, 0.46);
+  cursor: pointer;
+}
+
+.modal-form {
+  width: 100%;
+}
+
+.modal-form h2 {
+  color: #5f5d60;
+  letter-spacing: 1px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.submit-btn {
+  width: 250px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: inline-block;
+  background-color: #DEDDFF;
+  border: none;
+  border-radius: 3px;
+  color: black;
+  margin: 10px auto;
+  cursor: pointer;
+}

@@ -22,8 +22,10 @@
 window.addEventListener('load', () => {
     //施設名の絞り込み検索機能の登録処理（別途記載）を実行
     registerSortFacilityEvent();
-    //モーダル立ち上げ処理の登録処理（別途記載）を実行
-    registerFormSubmitEvent();
+    //確認モーダル立ち上げ機能の登録処理（別途記載）を実行
+    registerCreateConfirmModalEvent();
+    //確認モーダルを閉じる機能の登録処理（別途記載）を実行
+    registerCloseConfirmModalEvent();
 })
 
 /**
@@ -40,16 +42,33 @@ function registerSortFacilityEvent() {
 }
 
 /**
- * モーダル立ち上げ処理の登録処理
+ * 確認モーダル立ち上げ機能の登録処理
  */
-function registerFormSubmitEvent() {
+function registerCreateConfirmModalEvent() {
   //フォーム要素を取得
   const form = document.querySelector("#form");
-    //フォーム送信時
+  //確認モーダル要素を取得
+  const confirmModal = document.getElementById('confirm-modal');
+    //フォーム送信時の処理
     form.addEventListener("submit", function(event) {
-      event.preventDefault();
-      console.log("モーダルの立ち上げ");    //挙動確認用
-      //※モーダル立ち上げ処理を実装予定
+      event.preventDefault();    //フォーム送信を一旦キャンセル
+      confirmModal.style.display = 'block';    //確認モーダルの立ち上げ
+      console.log("確認モーダルの立ち上げ");    //挙動確認用
+    })
+}
+
+/**
+ * 確認モーダル立ち上げ機能の登録処理
+ */
+function registerCloseConfirmModalEvent() {
+  //確認モーダル要素を取得
+  const confirmModal = document.getElementById('confirm-modal');
+  //確認モーダルを閉じるボタンを取得
+  const closeConfirmModalButton = document.getElementById('confirm-modal-close');
+  // ボタンがクリック時の処理
+    closeConfirmModalButton.addEventListener('click', function() {
+      confirmModal.style.display = 'none';   //確認モーダルを閉じる
+      console.log("確認モーダルを閉じる");    //挙動確認用
     })
 }
 

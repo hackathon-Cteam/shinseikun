@@ -82,33 +82,41 @@
                   <br>
                   <select name="time" required>
                     <option hidden></option>
-                    <option value="1">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <!----- 追記必要 ----->
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option>13</option>
+                    <option>14</option>
+                    <option>15</option>
+                    <option>16</option>
+                    <option>17</option>
                   </select>
                   時
                   <select name="time" required>
                     <option hidden></option>
-                    <option value="1">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <!----- 追記必要 ----->
+                    <option>00</option>
+                    <option>30</option>
                   </select>
                   分　〜　
                   <select name="time" required>
                     <option hidden></option>
-                    <option value="1">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option>13</option>
+                    <option>14</option>
+                    <option>15</option>
+                    <option>16</option>
+                    <option>17</option>
                     <!----- 追記必要 ----->
                   </select>
                   時
                   <select name="time" required>
                     <option hidden></option>
-                    <option value="1">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <option>00</option>
+                    <option>30</option>
                     <!----- 追記必要 ----->
                   </select>
                   分
@@ -194,4 +202,25 @@
   <!----- /フォーム格納コンテナ ----->
  </div>
   <!----- /全体背景 ----->
+
+
+ <!-- モーダル -->
+ <div class="modal-wrapper" id="confirm-modal">
+  <div class="modal">
+    <div id="confirm-modal-close">戻って修正する</div>
+    <div class="modal-form">
+        <h2>この内容で申請しますか？</h2>
+        <form>
+            <p>会議室A</p>     <!-- フォームの入力値を取得し表示させる -->
+            <p>2024年12月12日</p>
+            <p>13:00〜14:00</p>
+            <button class="submit-btn">申請する<br>（マイページへ遷移します）</button>
+            <p>申請の受理状況はマイページでご確認ください</p>
+        </form>
+    </div>
+  </div>
+</div>
+ <!-- /モーダル -->
+
+
 {% endblock %}
