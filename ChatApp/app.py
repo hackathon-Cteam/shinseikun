@@ -1,7 +1,7 @@
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
 from Entity.UserEntity import UserEntity
-from Entity.ReservationEntity import ReservationEntity
+from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
 from flask import Flask, request, redirect, render_template, session, flash, abort
@@ -56,15 +56,33 @@ def talk():
 # 管理者画面のルート
 @app.route('/admin')
 def admin():
+    # ユーザー情報
+    user = UserEntity('345', 'NRK', 'rrr@gmail', '', '000-1111-2222', '運動部')
+    applyID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #申請ID「チャンネルID*ユーザーID*申請日時」
+    #channelss = ["会議室5", "noyamaさん", "2023/08/11/10:30", "予約", "利用目的〇〇〇", "未受領"]
+    channelID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    channelnames = ["第１会議室", "第２会議室", "第５講義室", "体育館", "テニスコート"]
+    channels = [
+        ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
+    ]
+    return render_template('page/kanrisyagamen.html', channels=channels, user=user, applyID=applyID, channelID=channelID, channelnames=channelnames)
+
+    
+
     # タスク一覧のデータ取得(チャンネル名, 申請者名, 申請日時, 申請内容, 利用目的, ステータス)
     # チャンネル一覧のデータ（チャンネル名）
-    return ""
+            
 
 # 管理者アカウント編集画面
 @app.route('/admin-edit')
 def adminEdit():
     # 管理者情報
-    return ""
+    return render_template('page/kanrisya-edit.html')
 
 # ユーザー画面
 @app.route('/mypage')
@@ -116,7 +134,10 @@ def form():
         ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
         ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
     ]
-    return render_template('page/application-form.html', channels=channels, user=user)
+    # 申請情報（※ReserveInfoEntity適用のテストのため、後で削除）
+    reserveInfo = ReserveInfoEntity('usr-123456789', 'rsv-123456789', '会議室A', '2024/1/1/12:00', '2024/1/1/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999999', '2023/12/1/12:34', '予約', '未受領')
+
+    return render_template('page/application-form.html', channels=channels, user=user, reserveInfo=reserveInfo)
 
 # POST(処理の呼び出し)
 # ログイン処理のルート
