@@ -179,6 +179,7 @@ td {
   background-color: #DEDDFF;
   border: solid 1px black;
   font-weight: bold;
+  cursor: pointer;
 }
 
 /* エラーメッセージ */
@@ -241,4 +242,5 @@ td {
   color: black;
   margin: 10px auto;
   cursor: pointer;
+  font-weight: bold;
 }
