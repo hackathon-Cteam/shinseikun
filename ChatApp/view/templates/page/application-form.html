@@ -190,7 +190,7 @@
           <!----- 申請ボタン ----->
           <div>
             <div>
-              <button class="submitButton" type="submit">送 信</button>
+              <button class="submitButton" type="submit">確認画面へ</button>
               <!-- <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　--- 出し分け処理必要 --- -->
             </div>
           </div>
@@ -211,7 +211,7 @@
     <div class="modal-form">
         <h2>この内容で申請しますか？</h2>
         <form id="confirm-modal-form">
-            <p>会議室A※ベタ打ち</p>     <!-- フォームの入力値をjsで取得し表示させる -->
+            <p id="rsv-channel-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
             <p id="rsv-date-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
             <p id="rsv-time-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
             <button class="submit-btn">申請する<br>（マイページへ遷移します）</button>

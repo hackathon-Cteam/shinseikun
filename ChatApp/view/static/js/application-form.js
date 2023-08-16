@@ -122,6 +122,21 @@ function showSubmitInfo() {
   const endHour = document.getElementById("rsv-time-end-hour").value;
   const endMinute = document.getElementById("rsv-time-end-minute").value;
 
+  //ラジオボタンで選択されている要素の名前を取得
+  const facilityName = document.getElementsByClassName("facilityName");
+  const elements = document.getElementsByName('facility');
+  let len = elements.length;
+  let checkedValue = '';
+
+    for (let i = 0; i < len; i++){
+      if (elements.item(i).checked){
+          checkedValue = facilityName[i].textContent;
+      }
+    }
+    console.log(`ラジオボタンで選択されているのは「${checkedValue}」です`);    //挙動確認用
+
+      //モーダル画面へ値を表示
+      document.getElementById("rsv-channel-confirm").textContent = checkedValue;
       document.getElementById("rsv-date-confirm").textContent = `${year}年${month}月${day}日`;
       document.getElementById("rsv-time-confirm").textContent = `${startHour}:${startMinute}〜${endHour}:${endMinute}`;
 }

@@ -231,6 +231,10 @@ td {
   margin-bottom: 30px;
 }
 
+#rsv-channel-confirm {
+  font-weight: bold;
+}
+
 .submit-btn {
   width: 250px;
   padding-top: 5px;
@@ -243,4 +247,5 @@ td {
   margin: 10px auto;
   cursor: pointer;
   font-weight: bold;
+  font-size: 15px;
 }
