@@ -5,20 +5,22 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-<h2>マイページ</h2>  
-<p>{{ test }}</p>
+
+<p>{{ user.name }}</p>
 <div class="mypage">
   <div class="aside">
     <div class="message">
-        メッセージ
+        <div class="news">
+            <a href="#">お知らせ<span class="notice">3</span></a>
+        </div>          
         <ul>     
             {% for information in information_list %}
-                <li>{{information.info_time}} {{information.info_message}}</li>
+                <li>{{information.infor_time}} {{information.infor_message}}</li>
             {% endfor %}
         </ul>
     </div>
      <div id="account">
-    <p>アカウント欄</p>
+    <p></p>
 
      <ul>
          <li><b class="item-name">名前</b>{{ user.name }}</li>
@@ -31,15 +33,42 @@
      </ul>
      <ul>
       <li><b class="item-name">メールアドレス</b>{{ user.email}}</li>
-     </ul>
-     <ul>
-      <li><b class="item-name"></b><input type="submit" value="アカウント編集"></li>
-     </ul> 
+     </ul>  
+   
+    <div class="top-wrapper">
+        <div class="btn signup-show">アカウント編集はこちら</div>
+    </div>
+    <!-- モーダル -->
+    <div class="modal-wrapper" id="signup-modal">
+      <div class="modal">
+        <div id="close-modal">×</div>
+        <div class="form">
+            <h2>アカウント編集</h2>
+            <form action="#">
+                <input class="form-control" type="text" placeholder="name">
+                <input class="form-control" type="text" placeholder="phone">
+                <input class="form-control" type="text" placeholder="group">
+                <input class="form-control" type="text" placeholder="email">
+                <input class="form-control" type="password" placeholder="password1">
+                <input class="form-control" type="password" placeholder="password2">
+                <div class="submit-btn">登録</div>
+            </form>
+        </div>
+      </div>
+    </div>
+     
   </div>
- </div>
+</div>
 <div class="main">
  <h2>各施設利用申請状況</h2>
-    <div class="caution">注意書き</div>    
+    <div class="caution">
+        注意書き
+        <ul>
+         <li><img src="../static/img/mylist/icon_g.jpg">…ご利用可能か確認中です。通知をお待ちください。</li>
+         <li><img src="../static/img/mylist/icon_b.jpg">…予約が完了しています。予定の日時にご利用できます。</li>
+         <li><img src="../static/img/mylist/cancel.jpg">…利用予約・承認申請をキャンセルする場合はこちらからお手続きください。</li>
+        </ul>
+    </div>    
     <h2>申請状況</h2>
     <div class="request">
         <ul class="req">     
@@ -59,6 +88,7 @@
     <button type=“button” onclick="location.href='https://shinsei.net'">各施設の新規ご利用希望の申請はこちらから</button>
   </div>   
 </div>   
+  <script src="../static/js/mypage.js"></script>
  </body>
 </html>
 {% endblock %}

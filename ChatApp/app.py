@@ -74,7 +74,7 @@ def mypage():
 
     # 申請中の一覧
     print(user.name)
-    test= 'こんにちわ'
+    test= '  '
     reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
     reserinfo2 = ReservationEntity('444', '2023/08/10', '予約キャンセル')
     
