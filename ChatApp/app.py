@@ -1,6 +1,7 @@
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
 from Entity.UserEntity import UserEntity
+from Entity.ReserveInfoEntity import ReserveInfoEntity
 from flask import Flask, request, redirect, render_template, session, flash, abort
 from datetime import timedelta
 import uuid
@@ -104,7 +105,10 @@ def form():
         ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
         ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
     ]
-    return render_template('page/application-form.html', channels=channels, user=user)
+    # 申請情報（※ReserveInfoEntity適用のテストのため、後で削除）
+    reserveInfo = ReserveInfoEntity('usr-123456789', 'rsv-123456789', '会議室A', '2024/1/1/12:00', '2024/1/1/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999999', '2023/12/1/12:34', '予約', '未受領')
+
+    return render_template('page/application-form.html', channels=channels, user=user, reserveInfo=reserveInfo)
 
 # POST(処理の呼び出し)
 # ログイン処理のルート
