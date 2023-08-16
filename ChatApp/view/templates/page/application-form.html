@@ -56,23 +56,23 @@
                   <label for="date">利用日【必須】</label>
                   <!-- <ul class="application-form-flashes">※利用日を選択してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
-                  <select name="date" required>
+                  <select id="rsv-year" name="date" required>
                     <option hidden></option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
+                    <option>2023</option>
+                    <option>2024</option>
                   </select>
                   年
-                  <select name="date" required>
+                  <select id="rsv-month" name="date" required>
                     <option hidden></option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <option>1</option>
+                    <option>2</option>
                     <!----- 追記必要 ----->
                   </select>
                   月
-                  <select name="date" required>
+                  <select id="rsv-day" name="date" required>
                     <option hidden></option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <option>1</option>
+                    <option>2</option>
                     <!----- 追記必要 ----->
                   </select>
                   日
@@ -80,7 +80,7 @@
                   <label for="time">利用時間【必須】</label>
                   <!-- <ul class="application-form-flashes">※利用時間を選択してください</ul>　　--- 出し分け処理必要 --- -->
                   <br>
-                  <select name="time" required>
+                  <select id="rsv-time-start-hour" name="time" required>
                     <option hidden></option>
                     <option>9</option>
                     <option>10</option>
@@ -93,13 +93,13 @@
                     <option>17</option>
                   </select>
                   時
-                  <select name="time" required>
+                  <select id="rsv-time-start-minute" name="time" required>
                     <option hidden></option>
                     <option>00</option>
                     <option>30</option>
                   </select>
                   分　〜　
-                  <select name="time" required>
+                  <select id="rsv-time-end-hour" name="time" required>
                     <option hidden></option>
                     <option>9</option>
                     <option>10</option>
@@ -113,7 +113,7 @@
                     <!----- 追記必要 ----->
                   </select>
                   時
-                  <select name="time" required>
+                  <select id="rsv-time-end-minute" name="time" required>
                     <option hidden></option>
                     <option>00</option>
                     <option>30</option>
@@ -211,9 +211,9 @@
     <div class="modal-form">
         <h2>この内容で申請しますか？</h2>
         <form id="confirm-modal-form">
-            <p>会議室A</p>     <!-- フォームの入力値を取得し表示させる -->
-            <p>2024年12月12日</p>
-            <p>13:00〜14:00</p>
+            <p>会議室A※ベタ打ち</p>     <!-- フォームの入力値をjsで取得し表示させる -->
+            <p id="rsv-date-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
+            <p id="rsv-time-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
             <button class="submit-btn">申請する<br>（マイページへ遷移します）</button>
             <p>申請の受理状況はマイページでご確認ください</p>
         </form>

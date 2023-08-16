@@ -55,6 +55,7 @@ function registerCreateConfirmModalEvent() {
     form.addEventListener("submit", function(event) {
       event.preventDefault();    //親画面のフォームのsubmitを一旦キャンセル
       confirmModal.style.display = 'block';    //確認モーダルの立ち上げ
+      showSubmitInfo();    //親画面に入力した情報を確認モーダルに表示する処理（別途記載）を実行
       console.log("確認モーダルの立ち上げ");    //挙動確認用
     })
 }
@@ -107,4 +108,20 @@ function sortFacility() {
         facilityList[i].style.display = "none";   //その他の場合は選択肢の要素を非表示
       }
     }
+}
+
+/**
+ * 親画面に入力した情報を確認モーダルに表示する処理
+ */
+function showSubmitInfo() {
+  const year = document.getElementById("rsv-year").value;
+  const month = document.getElementById("rsv-month").value;
+  const day = document.getElementById("rsv-day").value;
+  const startHour = document.getElementById("rsv-time-start-hour").value;
+  const startMinute = document.getElementById("rsv-time-start-minute").value;
+  const endHour = document.getElementById("rsv-time-end-hour").value;
+  const endMinute = document.getElementById("rsv-time-end-minute").value;
+
+      document.getElementById("rsv-date-confirm").textContent = `${year}年${month}月${day}日`;
+      document.getElementById("rsv-time-confirm").textContent = `${startHour}:${startMinute}〜${endHour}:${endMinute}`;
 }
