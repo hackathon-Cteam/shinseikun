@@ -9,12 +9,12 @@ GRANT ALL PRIVILEGES ON chatapp.* TO 'testuser';
 
 CREATE TABLE users (
     uid varchar(255) PRIMARY KEY,
-    user_name varchar(255) UNIQUE NOT NULL,
+    user_name varchar(255) NOT NULL,
     email varchar(255) UNIQUE NOT NULL,
     password varchar(255) NOT NULL,
     phone varchar(255) UNIQUE NOT NULL,
-    user_type varchar(255) UNIQUE NOT NULL DEFAULT 'user',
-    group_name varchar(255) UNIQUE NOT NULL,
+    user_type varchar(255) NOT NULL DEFAULT 'user',
+    group_name varchar(255) NOT NULL,
     created_at DATETIME NOT NULL
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE channels (
     name varchar(255) UNIQUE NOT NULL,
     overview text,
     description text,
-    img varchar(255) UNIQUE NOT NULL,
+    img varchar(255) NOT NULL,
     created_at DATETIME NOT NULL
 );
 
