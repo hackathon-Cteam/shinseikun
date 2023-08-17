@@ -1,8 +1,7 @@
-from model.repository.UserRepository import UserRepository
 from common.ErrorMessage import ErrorMessage
 
-class UserService:
+class ReservationsService:
     """User情報を取得するためのサービスクラス"""
 
     """DBのチャンネルに関するテーブル名"""
-    USER_DB = 'users'
+    RESERVATION_DB = 'reservations'
