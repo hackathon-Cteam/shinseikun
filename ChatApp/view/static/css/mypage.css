@@ -216,3 +216,13 @@ button {
   margin: 10px auto;
   cursor: pointer;
 }
+
+img {
+  width: 18px;
+  height: 18px;
+}
+
+#cancelbtn {
+  width: 48px;
+  height: 20px;
+}
