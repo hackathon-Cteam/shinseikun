@@ -1,8 +1,8 @@
 from model.external.DBManager import DBManager
 from common.ErrorMessage import ErrorMessage
 
-class ChannelService :
-    """チャンネルに関する情報を取得するサービスクラス"""
+class ReservationsService:
+    """User情報を取得するためのサービスクラス"""
 
     """DBのチャンネルに関するテーブル名"""
-    CHANNEL_DB = 'channels'
+    RESERVATION_DB = 'reservations'
