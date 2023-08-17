@@ -1,3 +1,5 @@
+from Entity.ChatMessageEntity import ChatMessageEntity
+from model.external.DBManager import DBManager
 from model.repository.MessageRepository import MessageRepository
 
 class MessageService:

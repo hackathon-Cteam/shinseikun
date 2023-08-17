@@ -1,3 +1,4 @@
+from model.external.DBManager import DBManager
 from common.ErrorMessage import ErrorMessage
 
 class ReservationsService:

@@ -1,4 +1,4 @@
-from model.repository.UserRepository import UserRepository
+from model.external.DBManager import DBManager
 from common.ErrorMessage import ErrorMessage
 
 class UserService:
