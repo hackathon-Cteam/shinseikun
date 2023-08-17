@@ -121,22 +121,8 @@ def mypage():
 
 
 # 申請フォーム画面
-@app.route('/form', methods=['GET', 'POST'])
+@app.route('/form')
 def form():
-    if request.method == 'POST':    #POSTメソッド（フォーム送信）であれば
-
-        # #下記のように、フォーム要素のname属性から値を取得し変数に代入する
-        # test = request.form.get('test')
-        # test2 = request.form.get('test2')
-        # test3 = request.form.get('test3')
-
-        # #下記のように、変数に代入した値をDBに格納する処理を行う
-        # post = Post(test=test, test2=test2, test3=test3)
-        # dbConnect.Test(post)
-
-        return redirect('/mypage')    #マイページにリダイレクト
-
-    else:    #GETメソッド（申請フォームページ読み込み）であれば
         # ログイン中のユーザーの情報　
         user = UserEntity('usr-123456789', '申請花子', 'shinsei@gmail.com', 'User12345', '09012345678', 'グループA')
         # チャンネル情報
@@ -159,9 +145,17 @@ def form():
 # 申請フォームのルート
 @app.post('/apply')
 def apply():
-    # ユーザー情報
-    # チャンネル情報
-    return ""
+  #POSTメソッド（フォーム送信）であれば
+
+        # #下記のように、フォーム要素のname属性から値を取得し変数に代入する
+        # test = request.form.get('test')
+        # test2 = request.form.get('test2')
+        # test3 = request.form.get('test3')
+
+        # #下記のように、変数に代入した値をDBに格納する処理を行う
+        # post = Post(test=test, test2=test2, test3=test3)
+        # dbConnect.Test(post)
+    return redirect ('/mypage')    #マイページにリダイレクト
 
 # メッセージ投稿のアクション
 
