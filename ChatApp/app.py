@@ -4,9 +4,10 @@ from Entity.UserEntity import UserEntity
 from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
-from flask import Flask, request, redirect, render_template, session, flash, abort
+from flask import Flask, request, redirect, render_template, session, flash, abort,url_for
 from datetime import timedelta
 import uuid
+from model.external.DBManager import DBManager
 
 # アプリの設定
 app = Flask(__name__, static_folder='view/static', template_folder='view/templates')
@@ -15,27 +16,85 @@ app.permanent_session_lifetime = timedelta(days=30)
 
 # 画面表示の呼び出し
 
+
 # ログイン画面のルート
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        userid = request.form.get('userid')
+        password = request.form.get('password')
+        
+        
+        with DBManager('users') as userDB:
+            users = userDB.getData()
+            
+        for user in users:
+            uid = user['uid']
+            pass_word = user['password']
+            
+        if userid == uid and password == pass_word:
+            user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
+            session['uid'] = user_id  # セッションにユーザー情報を保存
+            return redirect(url_for('index'))
+        else:
+            return "Invalid credentials. Please try again."  # 画面にエラーを表示して再入力を促すよう修正したい
+
     return render_template('/page/login.html')
+
+# ログアウト
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('login')
 
 # チャンネル一覧ページのルート
 @app.route('/')
-@app.route('/channel_list')
-def channel_list():
-    # チャンネル名の一覧を取得
-    # チャンネルID
-    # 画像データの情報（データ名とか）
-    # チャンネル名とIDが紐づいた形式のデータ
-    channels = [
-        ChannelEntity('ch-123', '会議室1', 'よもやまセンター 4F', 'kaigi.jpg'),
-        ChannelEntity('ch-456', '会議室2', '新ビル 2F', 'kaigi.jpg'),
-        ChannelEntity('ch-789', '体育館', 'グラウンド西', 'gym.jpg'),
-        ChannelEntity('ch-246', 'テニス', 'グラウンド東', 'tennis.jpg'),
-    ]
+def index():
+    uid = session.get('uid')
+    if uid is None:
+        return redirect('/login')
+    else:
+        try:
+            with DBManager('channels') as channelDB:
+                channels = channelDB.getData()
+        except ValueError:
+            print('エラー')
+       
+        return render_template('/page/channel_list.html',channels=channels)
+
+# サインアップ
+@app.route('/signup',methods=['POST'])
+def signup():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
     
-    return render_template('/page/channel_list.html',channels=channels)
+    # user_data = {
+    #     'uid': ,
+    #     'user_name': name,
+    #     'email': email,
+    #     'password': password1
+    #     'phone': ,  
+    #     'user_type': ,  
+    #     'group_name': ,  
+    #     'created_at': 
+    # }
+    
+    # with DBManager('users') as userDB:
+    #     userDB.addData(user_data)
+    
+    # 仮でユーザー情報をセッションに保存 
+    session['new_user_info'] = {
+        'name': name,
+        'email': email,
+        'password1': password1,
+        'password2': password2
+    }
+    
+    user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
+    session['uid'] = user_id  # セッションにユーザー情報を保存
+    return redirect('/')
 
 
 # チャット画面ルート
