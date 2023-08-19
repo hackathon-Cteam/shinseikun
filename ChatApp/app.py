@@ -4,10 +4,10 @@ from Entity.UserEntity import UserEntity
 from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
-from flask import Flask, request, redirect, render_template, session, flash, abort,url_for
+from flask import Flask, request, redirect, render_template, session, flash, abort
 from datetime import timedelta
 import uuid
-from model.external.DBManager import DBManager
+
 
 # アプリの設定
 app = Flask(__name__, static_folder='view/static', template_folder='view/templates')
