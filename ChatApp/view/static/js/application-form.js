@@ -102,7 +102,7 @@ function sortFacility() {
 
     for (i = 0; i < facilityList.length; i++) {    //選択肢の要素の個数分繰り返し
       facilityNameValue = facilityName[i].textContent;    //施設名の要素から値を抽出し変数に代入
-      if (facilityNameValue.toUpperCase().indexOf(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
+      if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
         facilityList[i].style.display = "";    //選択肢の要素を表示
       } else {
         facilityList[i].style.display = "none";   //その他の場合は選択肢の要素を非表示
