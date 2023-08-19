@@ -1,37 +1,16 @@
-//クリックした時の処理
-document.querySelector('#modal-button').addEventListener('click', openModalWindow);
+// ページが読み込まれたときの処理
+document.addEventListener('DOMContentLoaded', function() {
+  const signupShowButton = document.querySelector('.signup-show');
+  const signupModal = document.getElementById('signup-modal');
+  const closeModalButton = document.getElementById('close-modal');
 
-//モーダルウィンドウを表示する
-function openModalWindow(){
-
-  //モーダルを生成する→新しいタグを生成
-  const modalElement = document.createElement('div');
-  
-  // 作ったdivの中にcss→modalを付与する
-  modalElement.classList.add('modal');
-
-  //モーダルウィンドウの中身を作る
-  //新しいdivタグを生成する
-  const innerElement = document.createElement('div');
-  //作ったdivの中にcss→innerを付与する
-  innerElement.classList.add('inner');
-  innerElement.innerHTML =
-  `<p>モーダルの中身です</p>
-  <p>テキストや画像も入るよ</p>`
-  ;
-  //モーダルの中身に要素を配置する
-  modalElement.appendChild(innerElement);
-  //body要素にモーダルを配置する
-  document.body.appendChild(modalElement);
-
-
-  //中身をクリックしたらモーダルウインドウを削除する
-  innerElement.addEventListener('click',() => {
-    closeModalWindow(modalElement);
+  // モーダル表示ボタンがクリックされたときの処理
+  signupShowButton.addEventListener('click', function() {
+      signupModal.style.display = 'block';
   });
-}
 
-//モーダルウインドウを閉じる
-function closeModalWindow(modalElement){
-  document.body.removeChild(modalElement);
-}
+  // モーダル閉じるボタンがクリックされたときの処理
+  closeModalButton.addEventListener('click', function() {
+      signupModal.style.display = 'none';
+  });
+})
