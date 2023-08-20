@@ -39,7 +39,7 @@
                         {% for channel in channels %}
                         <tr class="facilityList">
                           <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
-                            <td><input type="radio" name="facility" required></td>
+                            <td><input type="radio" name="facility" value="{{channel.name}}"></td>
                             <td class="facilityName">{{channel.name}}</td>
                         </tr>
                         {% endfor %}

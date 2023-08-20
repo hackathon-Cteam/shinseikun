@@ -143,17 +143,28 @@ def form():
 # 申請フォームのルート
 @app.post('/apply')
 def apply():
-    test = "申請しました"
-        # #下記のように、フォーム要素のname属性から値を取得し変数に代入する
-        # test = request.form.get('test')
-        # test2 = request.form.get('test2')
-        # test3 = request.form.get('test3')
+    #フォーム要素のname属性の指定により値を取得し変数に代入する(uid,cidの受け渡しも必要??)
+    facility = request.form.get('facility')
+    year, month, day = request.form.getlist('date')
+    start_hour, start_minute, end_hour, end_minute = request.form.getlist('time')
+    purpose = request.form.get('purpose')
+    name = request.form.get('name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
 
-        # #下記のように、変数に代入した値をDBに格納する処理を行う
-        # post = Post(test=test, test2=test2, test3=test3)
-        # dbConnect.Test(post)
-    return (test)
+    #取得したデータの加工
+    start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute
+    end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute
+    reserve_data = facility + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
+
+    # #データベースへの追加処理
+    # with DBManager('reservations') as reservationDB:
+    #     reservationDB.addData({id:1, uid:1111, cid:2222})
+
+    #挙動確認用
+    return (reserve_data)
     # return redirect ('/mypage')    #マイページにリダイレクト（あとから有効化する）
+
 # メッセージ投稿のアクション
 
 # チャンネル削除のアクション
