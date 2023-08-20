@@ -4,9 +4,12 @@ from Entity.UserEntity import UserEntity
 from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
+from common.util.DataTimeConverter import DataTimeConverter
 from flask import Flask, request, redirect, render_template, session, flash, abort
 from datetime import timedelta
 import uuid
+
+from model.external.DBManager import DBManager # TODO: コンフリクトするので削除予定
 
 # アプリの設定
 app = Flask(__name__, static_folder='view/static', template_folder='view/templates')
@@ -39,19 +42,31 @@ def channel_list():
 
 
 # チャット画面ルート
-@app.route('/talk') ## /talk/channel-id
-def talk():
-    # チャンネル情報
-    channel = ChannelEntity('ch-123456789', '会議室', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-    # メッセージ情報のリスト
-    messages = [
-        ChatMessageEntity('ユーザー名', 'user', '申請内容(自動メッセージ)', '2023/07/01T10:00'),
-        ChatMessageEntity('管理者', 'admin', '申請承認(自動メッセージ)', '2023/07/01T11:30'),
-        ChatMessageEntity('管理者', 'admin', 'ご利用ありがとうございました！', '2023/07/07T15:00'),
-        ChatMessageEntity('ユーザー名', 'user', 'とても良かったです！', '2023/07/07T18:00'),
-        ChatMessageEntity('ユーザー名', 'user', 'クァw瀬drftgyふじこlp；＠', '2023/07/07T22:00'),
-    ]
-    return render_template('page/chat.html', userType= 'admin', channel= channel, messages= messages)
+@app.route('/talk/<channelId>')
+def talk(channelId):
+    channel = None
+    with DBManager('channels') as channelDB:
+        channel = channelDB.getDataByColumns(['id', 'name', 'overview', 'description'], f'id="{channelId}"')[0]
+
+    messages = None
+    with DBManager('messages') as messageDB:
+        messages = messageDB.getData(f'cid="{channelId}"')
+
+    userList = None
+    with DBManager('users') as usersDB:
+        userList = usersDB.getDataByColumns(['uid', 'user_name', 'user_type'])
+    
+    chatList = []
+    for message in messages:
+        user = list(filter(lambda user : user['uid'] == message['uid'], userList))[0]
+        chatList.append(
+            ChatMessageEntity(message['id'], user['user_name'], user['user_type'], message['message'], DataTimeConverter.convertStr(message['created_at']))
+        )
+
+    return render_template(
+        'page/chat.html', userType= 'admin', channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description']), messages= chatList
+    )
+
 
 # 管理者画面のルート
 @app.route('/admin')
