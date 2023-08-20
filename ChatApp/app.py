@@ -123,7 +123,7 @@ def mypage():
 # 申請フォーム画面
 @app.route('/form')
 def form():
-    # ログイン中のユーザーの情報　
+    # ログイン中のユーザーの情報（ログイン中のユーザーと一致した一件をDBから引用する処理が必要）
     user = UserEntity('usr-123456789', '申請花子', 'shinsei@gmail.com', 'User12345', '09012345678', 'グループA')
     # チャンネル情報
     channels = [
@@ -134,6 +134,13 @@ def form():
         ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
         ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
     ]
+
+    # チャンネルDBからチャンネル名を引用（DBManagerのimport必要）
+    # try:
+    #     with DBManager('channels') as channelDB:
+    #         channels = channelDB.getData()
+    # except ValueError:
+    #     print('エラー')
 
     return render_template('page/application-form.html', channels=channels, user=user)
 
@@ -157,7 +164,7 @@ def apply():
     end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute
     reserve_data = facility + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
 
-    # #データベースへの追加処理
+    # #データベースへの追加処理（DBManagerのimport必要）
     # with DBManager('reservations') as reservationDB:
     #     reservationDB.addData({id:1, uid:1111, cid:2222})
 
