@@ -67,15 +67,34 @@
         <ul>
          <li><img src="../static/img/mypage/icon_g.jpg">…ご利用可能か確認中です。通知をお待ちください。</li>
          <li><img src="../static/img/mypage/icon_b.jpg">…予約が完了しています。予定の日時にご利用できます。</li>
-         <li><img src="../static/img/mypage/cancel.jpg" id="cancelbtn">…利用予約・承認申請をキャンセルする場合はこちらからお手続きください。</li>
+        </li>
         </ul>
     </div>    
     <h2>申請状況</h2>
     <div class="request">
+        
+        {# 画像のマッピングを定義 #}
+        {% set image_mapping = {
+            '利用予約完了': '../static/img/mypage/icon_b.jpg',
+            '利用予約申請中': '../static/img/mypage/icon_g.jpg',
+        } %}
+        
         <ul class="req">     
-        {% for reserinfo in reserinfo_list %}
-            <li>{{reserinfo.reserve_time}} {{reserinfo.message}}</li>
-        {% endfor %}
+            {% for reserinfo in reserinfo_list %}
+                <li>
+                    {{reserinfo.reserve_time}} {{reserinfo.message}}
+                    
+                    {# 各単語について画像の存在をチェック #}
+                    {% for word, img_path in image_mapping.items() %}
+                        {% if word in reserinfo.message %}
+                            <img src="{{ img_path }}" alt="{{ word }}" />
+                        {% endif %}
+                    {% endfor %}
+                    {% if 'キャンセル済' not in reserinfo.message %}
+                <button id="cancelbtn">キャンセルする場合はこちらから</button>
+            {% endif %}
+                </li>
+            {% endfor %}
         </ul>
     </div>
     <h2>過去利用歴</h2>

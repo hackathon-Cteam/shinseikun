@@ -223,6 +223,13 @@ img {
 }
 
 #cancelbtn {
-  width: 48px;
-  height: 20px;
+  background-color: #ffffff;
+    height: auto;
+    width: auto;
+    color: black;
+    padding: 3px 5px;
+    font-size: 2px;
+    box-shadow: #5f5d60;
+    border: 1px solid #5f5d60;
+
 }
