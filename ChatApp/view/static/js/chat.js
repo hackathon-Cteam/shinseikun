@@ -50,12 +50,12 @@ function sendMessage(messageText, channelId) {
 
 /**
  * チャット画面からのメッセージ投稿のイベント処理
- * @param {Element} input 入力欄要素
+ * @param {String} messageText メッセージテキスト
  * @param {String} channelId チャンネルID
  */
-function sendMessageEvent(input, channelId) {
-  sendMessage(input.value, channelId);
-  input.value = '';
+function sendMessageEvent(messageText, channelId) {
+  sendMessage(messageText, channelId);
+  location.reload()
 }
 
 /**
@@ -66,13 +66,13 @@ function registerMessageSendEvent() {
   const channelId = document.getElementById('channel-name').getAttribute('data-channel-id');
   // 送信ボタンクリック時
   messageInput.querySelector('svg path').addEventListener('click', () => {
-    sendMessageEvent(messageInput.getElementsByTagName('textarea')[0], channelId);
+    sendMessageEvent(messageInput.getElementsByTagName('textarea')[0].value, channelId);
   });
 
   // control + Enterもしくはcommand + Enterのキーの組み合わせが入力欄で押された時
   messageInput.querySelector('textarea').addEventListener('keydown', (event) => {
     if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.code === "Enter")  {
-      sendMessageEvent(messageInput.getElementsByTagName('textarea')[0], channelId);
+      sendMessageEvent(messageInput.getElementsByTagName('textarea')[0].value, channelId);
     }
   });
 }
