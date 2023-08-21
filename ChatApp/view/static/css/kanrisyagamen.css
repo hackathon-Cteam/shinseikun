@@ -19,6 +19,7 @@
 /* 検索機能1 */
 .iroiro {
 	display: flex;
+	width: 100%;
 }
 .input {
 	display: flex;
@@ -35,7 +36,7 @@
 	margin-left: 750px;
 }
 
-input[name="btn-square"] {
+input[name="btnsquare"] {
 	display: inline-block;
 	padding: 0.5em 1em;
 	text-decoration: none;
@@ -46,7 +47,7 @@ input[name="btn-square"] {
 	margin-top: 10px;
 	margin-left: 10px;
   }
-input[name="btn-square"]:active {
+input[name="btnsquare"]:active {
 	/*ボタンを押したとき*/
 	-webkit-transform: translateY(4px);
 	transform: translateY(4px);/*下に動く*/
@@ -60,7 +61,7 @@ input[name="btn-square"]:active {
 }
 
 /* テーブル1 */
-.table-1 { 
+.tableA { 
 	overflow-y: scroll; 
 	height: 300px; 
 }
@@ -101,7 +102,7 @@ input[name="add"] {
 }
 
 /* チャンネル削除ボタン */
-input[name="delete"] {
+input[name="click"] {
 	width: 450px;
 	margin-top: 10px;
 }

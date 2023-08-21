@@ -1,34 +1,79 @@
+/*テーブル1のステータス選択ボタン（受領ボタン）*/
+function statusbtn1() {
+	const statuscheck = document.getElementsByName("statuscheck");
+		for (let j = 0; j < statuscheck.length; j++) {
+		  if (statuscheck[j].checked) {
+			console.log('受領')
+			let statusbtn1 = document.getElementById("statusbtn1").value;
+			let tableA = document.getElementById("sort_table");
+			let c = j+1
+			console.log(c)
+			tableA.rows[c].cells[6].innerHTML = statusbtn1;
+		  }
+		}
+	}
+/*テーブル1のステータス選択ボタン（承認ボタン）*/
+function statusbtn2() {
+  const statuscheck = document.getElementsByName("statuscheck");
+    for (let j = 0; j < statuscheck.length; j++) {
+    if (statuscheck[j].checked) {
+      console.log('承認')
+      let statusbtn2 = document.getElementById("statusbtn2").value;
+      let tableA = document.getElementById("sort_table");
+      let c = j+1
+      console.log(c)
+      tableA.rows[c].cells[6].innerHTML = statusbtn2;
+    }
+    }
+ }
+/*テーブル1のステータス選択ボタン（否認ボタン）*/
+function statusbtn3() {
+	const statuscheck = document.getElementsByName("statuscheck");
+		for (let j = 0; j < statuscheck.length; j++) {
+		  if (statuscheck[j].checked) {
+			console.log('否認')
+			let statusbtn3 = document.getElementById("statusbtn3").value;
+			let tableA = document.getElementById("sort_table");
+			let c = j+1
+			console.log(c)
+			tableA.rows[c].cells[6].innerHTML = statusbtn3;
+		  }
+		}
+	}
+
+
+
 window.addEventListener('load', () => {
     //施設名の絞り込み検索機能の登録処理（別途記載）を実行
-    registerSortFacilityEvent();
+    registerSortFacilityEvent1();
 })
 
 /**
- * 施設名の絞り込み検索機能の登録処理
+ * 検索機能1  施設名の絞り込み検索機能の登録処理
  */
-function registerSortFacilityEvent() {
+function registerSortFacilityEvent1() {
   //検索ボタンを取得
-  const sortButton = document.getElementById("sortButton");
+  const sortButton1 = document.getElementById("sortButton1");
      //検索ボタンクリック時
-     sortButton.addEventListener("click", function() {
-      sortFacility();    //施設名の絞り込み検索処理（別途記載）を実行
+     sortButton1.addEventListener("click", function() {
+      sortFacility1();    //施設名の絞り込み検索処理（別途記載）を実行
       console.log("検索の実行");    //挙動確認用
     })
 }
 /**
  * 施設名の絞り込み検索処理
  */
-function sortFacility() {
-	const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
-	const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
-	const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
+function sortFacility1() {
+	const sortKeywordValue1 = document.getElementById("sortKeyword1").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
+	const facilityList1 = document.getElementsByClassName("facilityList1");    //選択肢（選択ボタン＋施設名）の要素を取得
+	const facilityName1 = document.getElementsByClassName("facilityName1");    //施設名の要素を取得
   
-	  for (i = 0; i < facilityList.length; i++) {    //選択肢の要素の個数分繰り返し
-		facilityNameValue = facilityName[i].textContent;    //施設名の要素から値を抽出し変数に代入
-		if (facilityNameValue.toUpperCase().indexOf(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
-		  facilityList[i].style.display = "";    //選択肢の要素を表示
+	  for (i = 0; i < facilityList1.length; i++) {    //選択肢の要素の個数分繰り返し
+		facilityNameValue1 = facilityName1[i].textContent;    //施設名の要素から値を抽出し変数に代入
+		if (facilityNameValue1.toUpperCase().search(sortKeywordValue1) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
+		  facilityList1[i].style.display = "";    //選択肢の要素を表示
 		} else {
-		  facilityList[i].style.display = "none";   //その他の場合は選択肢の要素を非表示
+		  facilityList1[i].style.display = "none";   //その他の場合は選択肢の要素を非表示
 		}
 	  }
   }
@@ -110,34 +155,77 @@ function compareStringDesc(a, b) {
 	return 0;
 }
 
-//チャンネル追加機能
-function coladd() {
-	var table = document.getElementById("table");
-	// 行を行末に追加
-	var row = table.insertRow(-1);
-	//td分追加
-	var cell1 = row.insertCell(-1);
-	var cell2 = row.insertCell(-1);
-	// セルの内容入力
-	cell1.innerHTML = '<input type="checkbox" name="facility" required>';
-	cell2.innerHTML = 'この行を削除しますか？<input type="button" value="削除" id="coladd" onclick="coldel(this)">';
-}
-function coldel(obj) {
-	// 削除ボタンを押下された行を取得
-	tr = obj.parentNode.parentNode;
-	// trのインデックスを取得して行を削除する
-	tr.parentNode.deleteRow(tr.sectionRowIndex);
+//ステータスに合わせてセルに色をつける
+/*function cellcolor() {
+	const row = document.getElementsByClassName("facilityName").rows.item(0);    // 行の取得
+	const cell = row.cells.item(-1);
+	facilityNameValue = facilityName[i].textContent;    //施設名の要素から値を抽出し変数に代入
+		if (facilityNameValue === "受領") {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
+		  facilityList1[i].style.display = "";    //選択肢の要素を表示
 }
 
-//チャンネル追加機能で入力したテキストを反映
-/*
-function butotnClick(){
-	msg.innerText = 'お名前は' + channelName.value + 'さんですね';
+// 行の取得
+var row = document.getElementById("tableId").rows.item(0);
+// セルの取得
+var cell = row.cells.item(-1);
+// 背景色の変更
+cell.style.backgroundColor = "#A52A2A";
+*/
+
+//チャンネル追加機能
+function coladd() {
+	let addname = document.getElementById("channelName").value;
+	let table = document.getElementById("table");
+	// 行を行末に追加
+	let row = table.insertRow(-1);
+	//td分追加
+	let cell1 = row.insertCell(-1);
+	let cell2 = row.insertCell(-1);
+	// セルの内容入力
+	cell1.innerHTML = '<input type="checkbox" name="facility">';
+	cell2.innerHTML = addname;
+    }
+
+//チャンネル削除機能
+function deleatRow() {
+		const facility = document.getElementsByName("facility");
+		for (let i = 0; i < facility.length; i++) {
+		  if (facility[i].checked) {
+			console.log('削除')
+			facility[i].closest(".facilityList").remove();
+		  }
+		}
+	}
+
+window.addEventListener('load', () => {
+		//施設名の絞り込み検索機能の登録処理（別途記載）を実行
+	registerSortFacilityEvent();
+	})
+/**
+ * 検索機能2  施設名の絞り込み検索機能の登録処理
+ */
+function registerSortFacilityEvent() {
+	//検索ボタンを取得
+	const sortButtonB = document.getElementById("sortButton");
+	   //検索ボタンクリック時
+	   sortButtonB.addEventListener("click", function() {
+		sortFacility();    //施設名の絞り込み検索処理（別途記載）を実行
+		console.log("検索の実行です。");    //挙動確認用
+	  })
   }
-  
-  let channelName = document.getElementById('channelName');
-  let msg = document.getElementById('msg');
-  
-  let coladd = document.getElementById('coladd');
-  coladd.addEventListener('click', butotnClick);
-  */
+  /**
+   * 施設名の絞り込み検索処理
+   */
+  function sortFacility() {
+	  const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
+	  const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
+	  const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
+		for (h = 0; h < facilityList.length; h++) {    //選択肢の要素の個数分繰り返し
+		  facilityNameValue = facilityName[h].textContent;    //施設名の要素から値を抽出し変数に代入
+		  if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
+			facilityList[h].style.display = "";    //選択肢の要素を表示
+		  } else {
+			facilityList[h].style.display = "none";   //その他の場合は選択肢の要素を非表示
+		  }
+		}
+	}
