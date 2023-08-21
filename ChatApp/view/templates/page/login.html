@@ -5,46 +5,49 @@
 
 {% block head %}
 {{ super() }}
-<title>申請くん</title>
 {% endblock %}
 
 {% block content %}
 <div class="centering">
   <h1>ようこそ、申請くんへ！</h1>
 
-  <div class="width_alignment">
-      <div>
-          ユーザー名：
-          <input type="email" name="email" placeholder="aaa@sample.com" >
-      </div>
-      <div>
-          パスワード：
-          <input input type="password" name="password" maxlength="16" value="12345678" >
-      </div>
-      <div>
-        <input type="button" onclick="location.href='{{ url_for('channel_list')}}'" value="ログイン">
-      </div>
-  </div>
-
-  <div class="top-wrapper">
-      <div class="btn signup-show">新規登録はこちら</div>
-  </div>
-  <!-- モーダル -->
-  <div class="modal-wrapper" id="signup-modal">
-    <div class="modal">
-      <div id="close-modal">×</div>
-      <div class="form">
-          <h2>ユーザー登録</h2>
-          <form action="#">
-              <input class="form-control" type="text" placeholder="name">
-              <input class="form-control" type="text" placeholder="email">
-              <input class="form-control" type="password" placeholder="password1">
-              <input class="form-control" type="password" placeholder="password2">
-              <div class="submit-btn">登録</div>
-          </form>
-      </div>
+   <!--ログインフォーム-->
+   <form method="POST">
+    <div class="width_alignment">
+        <div>
+            ユーザー名：
+            <input type="text" name="userid" value="{{userid}}">
+        </div>
+        <div>
+            パスワード：
+            <input type="password" name="password" maxlength="65">
+        </div>
+        <div>
+          <input type="submit" value="ログイン">
+        </div>
     </div>
-  </div>
+
+    <div class="top-wrapper">
+        <div class="btn signup-show">新規登録はこちら</div>
+</form>
+</div>
+
+        <!-- モーダル -->
+        <div class="modal-wrapper" id="signup-modal">
+          <div class="modal">
+              <div id="close-modal">×</div>
+              <div class="form">
+                  <h2>ユーザー登録</h2>
+                  <form action="{{ url_for('signup') }}" method="POST">
+                      <input class="form-control" type="text" name="name" placeholder="name">
+                      <input class="form-control" type="text" name="email" placeholder="email">
+                      <input class="form-control" type="password" name="password1" placeholder="password1">
+                      <input class="form-control" type="password" name="password2" placeholder="password2">
+                      <button type="submit" class="submit-btn">登録</button>
+                  </form>
+              </div>
+           </div>
+        </div>
 
 
   <h4>パスワード忘れた方はこちら</h4> <!-- Modaleへ -->
