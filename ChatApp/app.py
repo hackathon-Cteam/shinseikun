@@ -6,6 +6,7 @@ from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
 from flask import Flask, request, redirect, render_template, session, flash, abort
 from datetime import timedelta
+from jinja2 import Template
 import uuid
 
 # アプリの設定
@@ -94,9 +95,10 @@ def mypage():
     print(user.name)
     test= '  '
     reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
-    reserinfo2 = ReservationEntity('444', '2023/08/10', '予約キャンセル')
+    reserinfo2 = ReservationEntity('444', '2023/08/10', 'キャンセル済')
+    reserinfo3 = ReservationEntity('555', '2023/09/26', '利用予約申請中')
     
-    reserinfo_list = [reserinfo,reserinfo2]
+    reserinfo_list = [reserinfo,reserinfo2,reserinfo3]
 
     # 過去の利用歴
     past = PastUsageEntity('777','2022/6/2','キャンセル済')
@@ -116,6 +118,13 @@ def mypage():
 
 
     return render_template('/page/mypage.html',test=test, user=user, reserinfo_list= reserinfo_list, past_list=past_list, information_list=information_list)
+
+    template_str = """申請ステータスアイコン"""
+    template = Template(template_str)
+
+    list_items = ["利用予約完了", "利用予約申請中"]
+    print(template.render(list_items=list_items))
+
 
     
 
