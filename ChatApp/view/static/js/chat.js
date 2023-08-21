@@ -101,25 +101,39 @@ function createOverlay() {
 }
 
 /**
+ * メッセージ削除の処理
+ * @param {Element} message チャットメッセージ要素
+ * @param {Element} overlay 表示しているオーバーレイ要素
+ */
+function deleteMessageEvent(message, overlay) {
+  const messageId = message.getAttribute('data-message-id');
+  try {
+    requestPost('/delete-message', { messageId });
+  } catch (error) {
+    console.log(error.message);
+  }
+  const dateLineStyleClassName = 'date-line';
+  // 不要な日時ラインを削除
+  if ((dateLineStyleClassName === message.previousElementSibling.className
+    && message.nextElementSibling && dateLineStyleClassName === message.nextElementSibling.className)
+    || !message.nextElementSibling
+  ) {
+    message.previousElementSibling.remove();
+  }
+  message.remove();
+  overlay.remove();
+}
+
+/**
  * メッセージ削除イベントの登録
  */
 function registerDeleteMessageEvent() {
-  const dateLineStyleClassName = 'date-line';
   document.querySelectorAll('.chat-message .chat').forEach((chat) => {
     chat.addEventListener('dblclick', (event) => {
       const message = event.target.closest('.chat-message');
       message.appendChild(createDeleteButton());
       message.querySelector('button').addEventListener('click', () => {
-        // TODO: 削除ボタン押下後の処理
-        console.log('メッセージ削除の処理呼び出し');
-
-        // 不要な日時ラインを削除
-        if (dateLineStyleClassName === message.previousElementSibling.className
-            && dateLineStyleClassName === message.nextElementSibling.className) {
-          message.previousElementSibling.remove();
-        }
-        message.remove();
-        document.getElementById('overlay').remove();
+        deleteMessageEvent(message, document.getElementById('overlay'));
       });
 
       // 削除ボタン以外をクリックした時

@@ -223,6 +223,17 @@ def postMessage():
         return Response(response= json.dumps({'message': error}), status= 500)
 
 
+# メッセージ削除
+@app.post('/delete-message')
+def deleteMessage():
+    try:
+        with DBManager('messages') as messageDB:
+            messageDB.deleteData(f'id={request.json["messageId"]}')
+            print(messageDB.getData())
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
 # チャンネル削除のアクション
 
 # チャンネル追加のアクション

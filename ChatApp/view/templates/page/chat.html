@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% macro parts_message(message, time) -%}
-    <div class="chat-message {{ message.senderType }}" id="{{message.id}}">
+    <div class="chat-message {{ message.senderType }}" data-message-id="{{message.id}}">
         <div class="chat-date">
             <p>{{ time }}</p>
         </div>
