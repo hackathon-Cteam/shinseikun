@@ -5,7 +5,7 @@ class ReservationEntity:
         """コンストラクタ
         
         Args:
-        * id (String): ユーザーID
+        * id (String): 予約ID
         * reserve_time(String):メッセージ受信した日
         * message(String):申請状況についてのメッセージ
         """

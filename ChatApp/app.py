@@ -1,5 +1,6 @@
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
+from Entity.ReservationEntity import ReservationEntity # TODO: コンフリクトするので削除予定
 from Entity.UserEntity import UserEntity
 from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
@@ -52,13 +53,13 @@ def talk(channelId):
     with DBManager('messages') as messageDB:
         messages = messageDB.getData(f'cid="{channelId}"')
 
-    userList = None
+    users = None
     with DBManager('users') as usersDB:
-        userList = usersDB.getDataByColumns(['uid', 'user_name', 'user_type'])
+        users = usersDB.getDataByColumns(['uid', 'user_name', 'user_type'])
     
     chatList = []
     for message in messages:
-        user = list(filter(lambda user : user['uid'] == message['uid'], userList))[0]
+        user = list(filter(lambda user : user['uid'] == message['uid'], users))[0]
         chatList.append(
             ChatMessageEntity(message['id'], user['user_name'], user['user_type'], message['message'], DataTimeConverter.convertStr(message['created_at']))
         )
@@ -91,7 +92,7 @@ def admin():
     reservationList = []
     for reservation in reservations:
         user = list(filter(lambda user : user['uid'] == reservation['uid'], userList))[0]
-        channel = list(filter(lambda channel : channel['cid'] == reservation['cid'], channelList))[0]
+        channel = list(filter(lambda channel : channel['id'] == reservation['cid'], channelList))[0]
 
         status = '承認' if reservation['approval_at'] is None else 'キャンセル' if reservation['cancel_at'] is None else '受領'
         # TODO: 渡す情報をもっと絞ってもいいかもしれない。htmlはまだ未反映なので必要な情報が不明確
@@ -110,37 +111,57 @@ def adminEdit():
     return render_template('page/kanrisya-edit.html')
 
 # ユーザー画面
-@app.route('/mypage')
-def mypage(): 
+@app.route('/mypage/<userId>')
+def mypage(userId):
+    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
     # ユーザー情報
-    user = UserEntity('345', 'NRk', 'rrr@gmail', '', '000-1111-2222', '運動部')
+    userInfo = None
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{userId}"')[0]
+        userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
+
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getDataByColumns(['id', 'name'])
 
     # 申請中の一覧
-    print(user.name)
-    test= '  '
-    reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
-    reserinfo2 = ReservationEntity('444', '2023/08/10', '予約キャンセル')
-    
-    reserinfo_list = [reserinfo,reserinfo2]
+    reservations = None
+    with DBManager('reservations') as reservationDB:
+        reservations = reservationDB.getData(f'uid="{userId}"')
 
-    # 過去の利用歴
-    past = PastUsageEntity('777','2022/6/2','キャンセル済')
-    past2 = PastUsageEntity('888','2022/4/2','ご利用済')
-    past3 = PastUsageEntity('999','2022/3/2','キャンセル済')
-    past4 = PastUsageEntity('123','2022/2/2','ご利用済')
+    reserinfo_list = []
+    past_list = []
+    for reservation in reservations:
+        targetName = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]['name']
+        cancelDate = reservation['cancel_at']
+        # 過去の利用歴
+        if DataTimeConverter.createDatetimeNow() > reservation['end_use']:
+            past_list.append(PastUsageEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}を利用しました' if cancelDate is None else f'{targetName}をキャンセルしました'))
+            continue
 
-    past_list = [past,past2,past3,past4]
+        # 申請情報
+        reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}の予約を申請しました'))
+
+        # キャンセル情報
+        if cancelDate is not None:
+            reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(cancelDate), f'{targetName}の予約がキャンセルされました'))
+            
+        # 承認情報
+        approvaldate = reservation['approval_at'] 
+        if approvaldate is not None:
+            reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(approvaldate), f'{targetName}の予約が承認されました'))
+
+    reserinfo_list.sort(key= lambda reserinfo: reserinfo.reserve_time, reverse=True)
+    past_list.sort(key= lambda past: past.past_usege, reverse=True)
 
     # 通知情報の一覧
-
     information = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
     information2 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
     information3 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
 
     information_list = [information,information2,information3]
 
-
-    return render_template('/page/mypage.html',test=test, user=user, reserinfo_list= reserinfo_list, past_list=past_list, information_list=information_list)
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list)
 
     
 

@@ -3,6 +3,10 @@ import datetime
 class DataTimeConverter:
     """日時データ変換クラス"""
 
+    def createDatetimeNow():
+        """現在時刻のdatetimeオブジェクトを生成する"""
+        return datetime.datetime.now()
+
     def convertDatetime(str):
         """文字列からDatatimeオブジェクトに変換する
         
