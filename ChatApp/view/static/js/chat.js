@@ -15,13 +15,14 @@ function registerChannelInfoEvent() {
 
 /**
  * リクエスト送信
- * @param {*} bodyData リクエストデータ
+ * @param {*} data リクエストデータ
  * @returns json形式のリクエスト結果
  */
-async function requestPost(bodyData) {
+async function requestPost(url, data) {
   let responseData = null;
-  await fetch('url', { method: 'POST', body: bodyData }).then((response) => {
-    if (response.ok) {
+  await fetch(url,
+  { method: 'POST', headers : { 'Content-type' : 'application/json; charset=utf-8' }, body : JSON.stringify(data) }).then((response) => {
+    if (!response.ok) {
       return Promise.reject(new Error(`status code: ${response.status}`));
     }
     return response.json();
@@ -34,12 +35,13 @@ async function requestPost(bodyData) {
 /**
  * メッセージを投稿
  * @param {String} messageText メッセージテキスト
+ * @param {String} channelId メッセージテキスト
  */
-function sendMessage(messageText) {
+function sendMessage(messageText, channelId) {
   message = messageText.trim();
   if (message.length) {
     try {
-      requestPost(message);
+      requestPost('/post-message', { message, channelId });
     } catch (error) {
       console.log(error.message);
     }
@@ -47,19 +49,30 @@ function sendMessage(messageText) {
 }
 
 /**
+ * チャット画面からのメッセージ投稿のイベント処理
+ * @param {Element} input 入力欄要素
+ * @param {String} channelId チャンネルID
+ */
+function sendMessageEvent(input, channelId) {
+  sendMessage(input.value, channelId);
+  input.value = '';
+}
+
+/**
  * メッセージ投稿イベントの登録
  */
 function registerMessageSendEvent() {
   const messageInput = document.getElementById('input-message');
+  const channelId = document.getElementById('channel-name').getAttribute('data-channel-id');
   // 送信ボタンクリック時
   messageInput.querySelector('svg path').addEventListener('click', () => {
-    sendMessage(messageInput.querySelector('textarea').value);
+    sendMessageEvent(messageInput.getElementsByTagName('textarea')[0], channelId);
   });
 
   // control + Enterもしくはcommand + Enterのキーの組み合わせが入力欄で押された時
   messageInput.querySelector('textarea').addEventListener('keydown', (event) => {
     if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.code === "Enter")  {
-      sendMessage(messageInput.querySelector('textarea').value);
+      sendMessageEvent(messageInput.getElementsByTagName('textarea')[0], channelId);
     }
   });
 }

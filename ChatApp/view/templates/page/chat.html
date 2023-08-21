@@ -21,7 +21,7 @@
 {% block head %}{{ super() }}{% endblock %}
 {% block content %}
     <div id="channel-header" class="page-main">
-        <p id="channel-name">{{ channel.name }}</p>
+        <p id="channel-name" data-channel-id="{{channel.id}}">{{ channel.name }}</p>
         <p id="channel-overview" class="page-sub">{{ channel.overview }}</p>
         <div id="button-channel-info">
             <svg width="35" height="35" viewBox="0 0 200 200.002">

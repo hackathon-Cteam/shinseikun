@@ -1,3 +1,4 @@
+import json
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
 from Entity.ReservationEntity import ReservationEntity # TODO: コンフリクトするので削除予定
@@ -6,7 +7,7 @@ from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
 from common.util.DataTimeConverter import DataTimeConverter
-from flask import Flask, request, redirect, render_template, session, flash, abort
+from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta
 import uuid
 
@@ -210,6 +211,17 @@ def apply():
     return ""
 
 # メッセージ投稿のアクション
+@app.post('/post-message')
+def postMessage():
+    # TODO: userIDはセッション情報から取得する予定
+    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
+    try:
+        with DBManager('messages') as messageDB:
+            messageDB.addData({ 'uid': userId, 'cid': request.json['channelId'], 'message': request.json['message'] })
+        return Response(response= json.dumps({'message': 'successfully posted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
 
 # チャンネル削除のアクション
 
