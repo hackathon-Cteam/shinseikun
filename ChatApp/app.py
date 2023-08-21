@@ -64,34 +64,44 @@ def talk(channelId):
         )
 
     return render_template(
-        'page/chat.html', userType= 'admin', channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description']), messages= chatList
+        'page/chat.html', userType= 'admin', channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], ''), messages= chatList
     )
 
 
 # 管理者画面のルート
 @app.route('/admin')
 def admin():
-    # ユーザー情報
-    user = UserEntity('345', 'NRK', 'rrr@gmail', '', '000-1111-2222', '運動部')
-    applyID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #申請ID「チャンネルID*ユーザーID*申請日時」
-    #channelss = ["会議室5", "noyamaさん", "2023/08/11/10:30", "予約", "利用目的〇〇〇", "未受領"]
-    channelID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    channelnames = ["第１会議室", "第２会議室", "第５講義室", "体育館", "テニスコート"]
-    channels = [
-        ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-    ]
-    return render_template('page/kanrisyagamen.html', channels=channels, user=user, applyID=applyID, channelID=channelID, channelnames=channelnames)
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getData()
 
+    userList = None
+    with DBManager('users') as usersDB:
+        userList = usersDB.getData()
+
+    channelList = []
+    for channel in channels:
+        channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
     
+    reservations = None
+    with DBManager('reservations') as reservationDB:
+        reservations = reservationDB.getData()
 
-    # タスク一覧のデータ取得(チャンネル名, 申請者名, 申請日時, 申請内容, 利用目的, ステータス)
-    # チャンネル一覧のデータ（チャンネル名）
-            
+    # TODO: htmlに予約情報が反映できる状態になったらテンプレートへ渡すようにする
+    reservationList = []
+    for reservation in reservations:
+        user = list(filter(lambda user : user['uid'] == reservation['uid'], userList))[0]
+        channel = list(filter(lambda channel : channel['cid'] == reservation['cid'], channelList))[0]
+
+        status = '承認' if reservation['approval_at'] is None else 'キャンセル' if reservation['cancel_at'] is None else '受領'
+        # TODO: 渡す情報をもっと絞ってもいいかもしれない。htmlはまだ未反映なので必要な情報が不明確
+        reservationList.append(ReserveInfoEntity(
+            user['uid'], reservation['id'], channel['name'], DataTimeConverter.convertStr(reservation['start_use']), DataTimeConverter.convertStr(reservation['end_use']),
+            reservation['purpose'], user['name'], user['email'], user['phone'],  DataTimeConverter.convertStr(reservation['created_at']), '', status
+        ))
+
+    return render_template('page/kanrisyagamen.html', channels=channelList, userType= 'admin')
+
 
 # 管理者アカウント編集画面
 @app.route('/admin-edit')
