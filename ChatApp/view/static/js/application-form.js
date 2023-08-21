@@ -28,6 +28,8 @@ window.addEventListener('load', () => {
     registerCloseConfirmModalEvent();
     //確認モーダルをsubmitした際の処理の登録（別途記載）を実行
     registerSubmitConfirmModalEvent();
+    //日付選択ボックスの選択肢の生成（別途記載）を実行
+    createDateSelectBoxOption();
 })
 
 /**
@@ -88,7 +90,6 @@ function registerSubmitConfirmModalEvent() {
       event.preventDefault();    //確認モーダルのフォームのsubmitは行わない
       form.submit()    //停止していた親画面のフォームのsubmitを実施
       console.log("親画面のフォームを送信しマイページへ遷移");    //挙動確認用
-      //マイページへ遷移させる処理を書く
     })
 }
 
@@ -102,7 +103,7 @@ function sortFacility() {
 
     for (i = 0; i < facilityList.length; i++) {    //選択肢の要素の個数分繰り返し
       facilityNameValue = facilityName[i].textContent;    //施設名の要素から値を抽出し変数に代入
-      if (facilityNameValue.toUpperCase().indexOf(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
+      if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
         facilityList[i].style.display = "";    //選択肢の要素を表示
       } else {
         facilityList[i].style.display = "none";   //その他の場合は選択肢の要素を非表示
@@ -139,4 +140,93 @@ function showSubmitInfo() {
       document.getElementById("rsv-channel-confirm").textContent = checkedValue;
       document.getElementById("rsv-date-confirm").textContent = `${year}年${month}月${day}日`;
       document.getElementById("rsv-time-confirm").textContent = `${startHour}:${startMinute}〜${endHour}:${endMinute}`;
+}
+
+
+/**
+ * 日付選択ボックスの選択肢の生成
+ */
+function createDateSelectBoxOption() {
+  // ライブラリ
+  /**
+   * 任意の年が閏年であるかをチェックする
+   * @param {number} チェックしたい西暦年号
+   * @return {boolean} 閏年であるかを示す真偽値
+   */
+  const isLeapYear = year => (year % 4 === 0) && (year % 100 !== 0) || (year % 400 === 0);
+
+  /**
+   * 任意の年の2月の日数を数える
+   * @param {number} チェックしたい西暦年号
+   * @return {number} その年の2月の日数
+   */
+  const countDatesOfFeb = year => isLeapYear(year) ? 29 : 28;
+
+  /**
+   * セレクトボックスの中にオプションを生成する
+   * @param {string} セレクトボックスのDOMのid属性値
+   * @param {number} オプションを生成する最初の数値
+   * @param {number} オプションを生成する最後の数値
+   * @param {number} 現在の日付にマッチする数値
+   */
+  const createOption = (id, startNum, endNum, current) => {
+    const selectDom = document.getElementById(id);
+    let optionDom = '';
+    for (let i = startNum; i <= endNum; i++) {
+      if (i === current) {
+        option = '<option value="' + i + '" selected>' + i + '</option>';
+      } else {
+        option = '<option value="' + i + '">' + i + '</option>';
+      }
+      optionDom += option;
+    }
+    selectDom.insertAdjacentHTML('beforeend', optionDom);
+  }
+
+  // DOM
+  const yearBox = document.getElementById('rsv-year');
+  const monthBox = document.getElementById('rsv-month');
+  const dateBox = document.getElementById('rsv-day');
+
+  // 日付データ
+  const today = new Date();
+  const thisYear = today.getFullYear();
+  const thisMonth = today.getMonth() + 1;
+  const thisDate = today.getDate();
+
+  let datesOfYear= [31, countDatesOfFeb(thisYear), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  // イベント（選択肢の変更）
+  monthBox.addEventListener('change', (e) => {
+    dateBox.innerHTML = '';
+    const selectedMonth = e.target.value;
+
+    if (selectedMonth == thisMonth && yearBox.value == thisYear) {   //当月(かつ当年)への変更の場合の処理（ロード時の選択肢状態とする）
+      monthBox.innerHTML = '';
+      createOption('rsv-month', thisMonth, 12, thisMonth);
+      createOption('rsv-day', thisDate, datesOfYear[thisMonth - 1], thisDate);
+    } else {    //当月以外への変更の場合の処理
+      createOption('rsv-day', 1, datesOfYear[selectedMonth - 1], 1);
+    }
+  });
+
+  yearBox.addEventListener('change', e => {
+    monthBox.innerHTML = '';
+    dateBox.innerHTML = '';
+    const updatedYear = e.target.value;
+    datesOfYear = [31, countDatesOfFeb(updatedYear), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    if (updatedYear == thisYear) {    //当年への変更の場合の処理（ロード時の選択肢状態とする）
+      createOption('rsv-month', thisMonth, 12, thisMonth);
+      createOption('rsv-day', thisDate, datesOfYear[thisMonth - 1], thisDate);
+    } else {    //当年以外への変更の場合の処理
+      createOption('rsv-month', 1, 12, 1);
+      createOption('rsv-day', 1, datesOfYear[0], 1);
+    }
+  });
+
+  // ロード時の選択肢
+  createOption('rsv-year', thisYear, thisYear + 1, thisYear);  // 最小値＝当年、最大値＝翌年、デフォルト＝当年
+  createOption('rsv-month', thisMonth, 12, thisMonth);  // 最小値＝当月、最大値＝12、デフォルト＝当月
+  createOption('rsv-day', thisDate, datesOfYear[thisMonth - 1], thisDate);    // 最小値＝当月、最大値＝その月により設定、デフォルト＝当日
 }
