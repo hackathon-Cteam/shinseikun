@@ -266,21 +266,19 @@ def form():
     # ログイン中のユーザーの情報（ログイン中のユーザーと一致した一件をDBから引用する処理が必要）
     user = UserEntity('usr-123456789', '申請花子', 'shinsei@gmail.com', 'User12345', '09012345678', 'グループA')
     # チャンネル情報
-    channels = [
-        ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-    ]
-
-    # チャンネルDBからチャンネル名を引用（DBManagerのimport必要）
-    # try:
-    #     with DBManager('channels') as channelDB:
-    #         channels = channelDB.getData()
-    # except ValueError:
-    #     print('エラー')
+    # channels = [
+    #     ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+    #     ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+    #     ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+    #     ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+    #     ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+    #     ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
+    # ]
+    try:
+        with DBManager('channels') as channelDB:
+            channels = channelDB.getData()
+    except ValueError:
+        print('エラー')
 
     return render_template('page/application-form.html', channels=channels, user=user)
 
@@ -291,18 +289,18 @@ def form():
 @app.post('/apply')
 def apply():
     #フォーム要素のname属性の指定により値を取得し変数に代入する(uid,cidの受け渡しも必要??)
-    facility = request.form.get('facility')
+    cid = request.form.get('facility')
     year, month, day = request.form.getlist('date')
     start_hour, start_minute, end_hour, end_minute = request.form.getlist('time')
     purpose = request.form.get('purpose')
-    name = request.form.get('name')
-    email = request.form.get('email')
-    phone = request.form.get('phone')
+    name = request.form.get('name')    #当日の利用者名（フォームで編集された場合はログイン中のユーザー名とイコールでない）
+    email = request.form.get('email')    #当日の利用者のメールアドレス（フォームで編集された場合はログイン中のユーザーのメールアドレスとイコールでない）
+    phone = request.form.get('phone')    #当日の利用者の電話番号（フォームで編集された場合はログイン中のユーザーの電話番号とイコールでない）
 
     #取得したデータの加工
     start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute
     end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute
-    reserve_data = facility + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
+    reserve_data = cid + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
 
     # #データベースへの追加処理（DBManagerのimport必要）
     # with DBManager('reservations') as reservationDB:
