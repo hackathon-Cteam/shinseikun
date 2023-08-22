@@ -15,13 +15,14 @@ function registerChannelInfoEvent() {
 
 /**
  * リクエスト送信
- * @param {*} bodyData リクエストデータ
+ * @param {*} data リクエストデータ
  * @returns json形式のリクエスト結果
  */
-async function requestPost(bodyData) {
+async function requestPost(url, data) {
   let responseData = null;
-  await fetch('url', { method: 'POST', body: bodyData }).then((response) => {
-    if (response.ok) {
+  await fetch(url,
+  { method: 'POST', headers : { 'Content-type' : 'application/json; charset=utf-8' }, body : JSON.stringify(data) }).then((response) => {
+    if (!response.ok) {
       return Promise.reject(new Error(`status code: ${response.status}`));
     }
     return response.json();
@@ -34,12 +35,13 @@ async function requestPost(bodyData) {
 /**
  * メッセージを投稿
  * @param {String} messageText メッセージテキスト
+ * @param {String} channelId メッセージテキスト
  */
-function sendMessage(messageText) {
+function sendMessage(messageText, channelId) {
   message = messageText.trim();
   if (message.length) {
     try {
-      requestPost(message);
+      requestPost('/post-message', { message, channelId });
     } catch (error) {
       console.log(error.message);
     }
@@ -47,19 +49,30 @@ function sendMessage(messageText) {
 }
 
 /**
+ * チャット画面からのメッセージ投稿のイベント処理
+ * @param {String} messageText メッセージテキスト
+ * @param {String} channelId チャンネルID
+ */
+function sendMessageEvent(messageText, channelId) {
+  sendMessage(messageText, channelId);
+  location.reload()
+}
+
+/**
  * メッセージ投稿イベントの登録
  */
 function registerMessageSendEvent() {
   const messageInput = document.getElementById('input-message');
+  const channelId = document.getElementById('channel-name').getAttribute('data-channel-id');
   // 送信ボタンクリック時
   messageInput.querySelector('svg path').addEventListener('click', () => {
-    sendMessage(messageInput.querySelector('textarea').value);
+    sendMessageEvent(messageInput.getElementsByTagName('textarea')[0].value, channelId);
   });
 
   // control + Enterもしくはcommand + Enterのキーの組み合わせが入力欄で押された時
   messageInput.querySelector('textarea').addEventListener('keydown', (event) => {
     if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.code === "Enter")  {
-      sendMessage(messageInput.querySelector('textarea').value);
+      sendMessageEvent(messageInput.getElementsByTagName('textarea')[0].value, channelId);
     }
   });
 }
@@ -88,25 +101,39 @@ function createOverlay() {
 }
 
 /**
+ * メッセージ削除の処理
+ * @param {Element} message チャットメッセージ要素
+ * @param {Element} overlay 表示しているオーバーレイ要素
+ */
+function deleteMessageEvent(message, overlay) {
+  const messageId = message.getAttribute('data-message-id');
+  try {
+    requestPost('/delete-message', { messageId });
+  } catch (error) {
+    console.log(error.message);
+  }
+  const dateLineStyleClassName = 'date-line';
+  // 不要な日時ラインを削除
+  if ((dateLineStyleClassName === message.previousElementSibling.className
+    && message.nextElementSibling && dateLineStyleClassName === message.nextElementSibling.className)
+    || !message.nextElementSibling
+  ) {
+    message.previousElementSibling.remove();
+  }
+  message.remove();
+  overlay.remove();
+}
+
+/**
  * メッセージ削除イベントの登録
  */
 function registerDeleteMessageEvent() {
-  const dateLineStyleClassName = 'date-line';
   document.querySelectorAll('.chat-message .chat').forEach((chat) => {
     chat.addEventListener('dblclick', (event) => {
       const message = event.target.closest('.chat-message');
       message.appendChild(createDeleteButton());
       message.querySelector('button').addEventListener('click', () => {
-        // TODO: 削除ボタン押下後の処理
-        console.log('メッセージ削除の処理呼び出し');
-
-        // 不要な日時ラインを削除
-        if (dateLineStyleClassName === message.previousElementSibling.className
-            && dateLineStyleClassName === message.nextElementSibling.className) {
-          message.previousElementSibling.remove();
-        }
-        message.remove();
-        document.getElementById('overlay').remove();
+        deleteMessageEvent(message, document.getElementById('overlay'));
       });
 
       // 削除ボタン以外をクリックした時

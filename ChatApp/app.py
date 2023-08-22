@@ -1,14 +1,18 @@
+import json
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
+from Entity.ReservationEntity import ReservationEntity
 from Entity.UserEntity import UserEntity
 from Entity.ReserveInfoEntity import ReserveInfoEntity
 from Entity. PastUsageEntity import PastUsageEntity
 from Entity. InformationEntity import InformationEntity
-from flask import Flask, request, redirect, render_template, session, flash, abort
+from common.util.DataTimeConverter import DataTimeConverter
+from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta
 from jinja2 import Template
 import uuid
 
+from model.external.DBManager import DBManager
 
 # アプリの設定
 app = Flask(__name__, static_folder='view/static', template_folder='view/templates')
@@ -42,11 +46,13 @@ def login():
 
     return render_template('/page/login.html')
 
+
 # ログアウト
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('login')
+
 
 # チャンネル一覧ページのルート
 @app.route('/')
@@ -99,37 +105,43 @@ def signup():
 
 
 # チャット画面ルート
-@app.route('/talk') ## /talk/channel-id
-def talk():
-    # チャンネル情報
-    channel = ChannelEntity('ch-123456789', '会議室', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-    # メッセージ情報のリスト
-    messages = [
-        ChatMessageEntity('ユーザー名', 'user', '申請内容(自動メッセージ)', '2023/07/01T10:00'),
-        ChatMessageEntity('管理者', 'admin', '申請承認(自動メッセージ)', '2023/07/01T11:30'),
-        ChatMessageEntity('管理者', 'admin', 'ご利用ありがとうございました！', '2023/07/07T15:00'),
-        ChatMessageEntity('ユーザー名', 'user', 'とても良かったです！', '2023/07/07T18:00'),
-        ChatMessageEntity('ユーザー名', 'user', 'クァw瀬drftgyふじこlp；＠', '2023/07/07T22:00'),
-    ]
-    return render_template('page/chat.html', userType= 'admin', channel= channel, messages= messages)
+@app.route('/talk/<channelId>')
+def talk(channelId):
+    channel = None
+    with DBManager('channels') as channelDB:
+        channel = channelDB.getDataByColumns(['id', 'name', 'overview', 'description'], f'id="{channelId}"')[0]
+
+    messages = None
+    with DBManager('messages') as messageDB:
+        messages = messageDB.getData(f'cid="{channelId}"')
+
+    users = None
+    with DBManager('users') as usersDB:
+        users = usersDB.getDataByColumns(['uid', 'user_name', 'user_type'])
+    
+    chatList = []
+    for message in messages:
+        user = list(filter(lambda user : user['uid'] == message['uid'], users))[0]
+        chatList.append(
+            ChatMessageEntity(message['id'], user['user_name'], user['user_type'], message['message'], DataTimeConverter.convertStr(message['created_at']))
+        )
+
+    return render_template(
+        'page/chat.html', userType= 'admin', channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], ''), messages= chatList
+    )
+
 
 # 管理者画面のルート
 @app.route('/admin')
 def admin():
-    # ユーザー情報
-    #user = UserEntity('345', 'NRK', 'rrr@gmail', '', '000-1111-2222', '運動部')
-    #applyID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #申請ID「チャンネルID*ユーザーID*申請日時」
-    #channelss = ["会議室5", "noyamaさん", "2023/08/11/10:30", "予約", "利用目的〇〇〇", "未受領"]
-    #channelID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    #channelnames = ["第１会議室", "第２会議室", "第５講義室", "体育館", "テニスコート"]
-    channels = [
-        ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-        ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-    ]
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getData()
+
+    users = None
+    with DBManager('users') as usersDB:
+        users = usersDB.getData()
+
     reserveInfos = [
         ReserveInfoEntity('usr-123456710', 'rsv-123456710', '会議室A', '2024/1/2/12:00', '2024/1/3/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
         ReserveInfoEntity('usr-123456711', 'rsv-123456711', '会議室B', '2024/1/3/12:00', '2024/1/4/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
@@ -144,13 +156,30 @@ def admin():
         ReserveInfoEntity('usr-123456712', 'rsv-123456713', '会議室K', '2024/1/12/12:00', '2024/1/13/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
         ReserveInfoEntity('usr-123456713', 'rsv-123456714', '会議室M', '2024/1/13/12:00', '2024/1/14/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領')
     ]
-    return render_template('page/kanrisyagamen.html', channels=channels, reserveInfos=reserveInfos)
 
+    channelList = []
+    for channel in channels:
+        channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
     
+    reservations = None
+    with DBManager('reservations') as reservationDB:
+        reservations = reservationDB.getData()
 
-    # タスク一覧のデータ取得(チャンネル名, 申請者名, 申請日時, 申請内容, 利用目的, ステータス)
-    # チャンネル一覧のデータ（チャンネル名）
-            
+    # TODO: htmlに予約情報が反映できる状態になったらテンプレートへ渡すようにする
+    reservationList = []
+    for reservation in reservations:
+        user = list(filter(lambda user : user['uid'] == reservation['uid'], users))[0]
+        channel = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]
+
+        status = '承認' if reservation['approval_at'] is None else 'キャンセル' if reservation['cancel_at'] is None else '受領'
+        # TODO: 渡す情報をもっと絞ってもいいかもしれない。htmlはまだ未反映なので必要な情報が不明確
+        reservationList.append(ReserveInfoEntity(
+            user['uid'], reservation['id'], channel['name'], DataTimeConverter.convertStr(reservation['start_use']), DataTimeConverter.convertStr(reservation['end_use']),
+            reservation['purpose'], user['user_name'], user['email'], user['phone'],  DataTimeConverter.convertStr(reservation['created_at']), '', status
+        ))
+
+    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reserveInfos)
+
 
 # 管理者アカウント編集画面
 #@app.route('/admin-edit')
@@ -158,39 +187,68 @@ def admin():
     # 管理者情報
 #    return render_template('page/kanrisya-edit.html')
 
+
 # ユーザー画面
-@app.route('/mypage')
-def mypage(): 
+@app.route('/mypage/<userId>')
+def mypage(userId):
+    # TODO: userIDはリクエストurlに含めるようにする
+    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
     # ユーザー情報
-    user = UserEntity('345', 'NRk', 'rrr@gmail', '', '000-1111-2222', '運動部')
+    userInfo = None
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{userId}"')[0]
+        userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
 
     # 申請中の一覧
-    print(user.name)
-    test= '  '
     reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
     reserinfo2 = ReservationEntity('444', '2023/08/10', 'キャンセル済')
     reserinfo3 = ReservationEntity('555', '2023/09/26', '利用予約申請中')
     
-    reserinfo_list = [reserinfo,reserinfo2,reserinfo3]
+    reserinfo_list_sample = [reserinfo,reserinfo2,reserinfo3]
 
-    # 過去の利用歴
-    past = PastUsageEntity('777','2022/6/2','キャンセル済')
-    past2 = PastUsageEntity('888','2022/4/2','ご利用済')
-    past3 = PastUsageEntity('999','2022/3/2','キャンセル済')
-    past4 = PastUsageEntity('123','2022/2/2','ご利用済')
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getDataByColumns(['id', 'name'])
 
-    past_list = [past,past2,past3,past4]
+    # 申請中の一覧
+    reservations = None
+    with DBManager('reservations') as reservationDB:
+        reservations = reservationDB.getData(f'uid="{userId}"')
+
+    reserinfo_list = []
+    past_list = []
+    if reservations:
+        for reservation in reservations:
+            targetName = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]['name']
+            cancelDate = reservation['cancel_at']
+            # 過去の利用歴
+            if DataTimeConverter.createDatetimeNow() > reservation['end_use']:
+                past_list.append(PastUsageEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}を利用しました' if cancelDate is None else f'{targetName}をキャンセルしました'))
+                continue
+
+            # 申請情報
+            reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}の予約を申請しました'))
+
+            # キャンセル情報
+            if cancelDate is not None:
+                reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(cancelDate), f'{targetName}の予約がキャンセルされました'))
+                
+            # 承認情報
+            approvaldate = reservation['approval_at'] 
+            if approvaldate is not None:
+                reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(approvaldate), f'{targetName}の予約が承認されました'))
+
+        reserinfo_list.sort(key= lambda reserinfo: reserinfo.reserve_time, reverse=True)
+        past_list.sort(key= lambda past: past.past_usege, reverse=True)
 
     # 通知情報の一覧
-
     information = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
     information2 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
     information3 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
 
     information_list = [information,information2,information3]
 
-
-    return render_template('/page/mypage.html',test=test, user=user, reserinfo_list= reserinfo_list, past_list=past_list, information_list=information_list)
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list_sample, past_list= past_list, information_list=information_list)
 
     template_str = """申請ステータスアイコン"""
     template = Template(template_str)
@@ -255,6 +313,27 @@ def apply():
     # return redirect ('/mypage')    #マイページにリダイレクト（あとから有効化する）
 
 # メッセージ投稿のアクション
+@app.post('/post-message')
+def postMessage():
+    # TODO: userIDはセッション情報から取得する予定
+    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
+    try:
+        with DBManager('messages') as messageDB:
+            messageDB.addData({ 'uid': userId, 'cid': request.json['channelId'], 'message': request.json['message'] })
+        return Response(response= json.dumps({'message': 'successfully posted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+
+# メッセージ削除
+@app.post('/delete-message')
+def deleteMessage():
+    try:
+        with DBManager('messages') as messageDB:
+            messageDB.deleteData(f'id={request.json["messageId"]}')
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
 
 # チャンネル削除のアクション
 

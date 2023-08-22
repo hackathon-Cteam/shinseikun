@@ -38,7 +38,6 @@ p { margin: 0px; }
 .user {
     margin: auto;
     margin-right: 0px;
-    padding: 10px;
     border-radius: 5px;
     justify-content: flex-end;
 }
@@ -51,7 +50,7 @@ p { margin: 0px; }
 
 .message { margin: 0px 5px; }
 
-.chat-message { display: flex; align-items: flex-end; }
+.chat-message { display: flex; align-items: flex-end; padding: 10px;}
 
 .chat { padding: 10px; border-radius: 5px; }
 

@@ -19,7 +19,7 @@ class ReserveInfoEntity:
         """コンストラクタ
         
         Args:
-        * userId (String): ユーザー（ログイン中のユーザー）のID
+        * userId (String): 申請をしたユーザーのID
         * rsvId (String): 申請ID
         * channelName (String): 申請対象のチャンネル（施設等）の名称
         * rsvTimeStart (String): 予約時間（開始時間）

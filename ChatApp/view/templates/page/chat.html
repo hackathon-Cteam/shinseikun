@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% macro parts_message(message, time) -%}
-    <div class="chat-message {{ message.senderType }}">
+    <div class="chat-message {{ message.senderType }}" data-message-id="{{message.id}}">
         <div class="chat-date">
             <p>{{ time }}</p>
         </div>
@@ -21,7 +21,7 @@
 {% block head %}{{ super() }}{% endblock %}
 {% block content %}
     <div id="channel-header" class="page-main">
-        <p id="channel-name">{{ channel.name }}</p>
+        <p id="channel-name" data-channel-id="{{channel.id}}">{{ channel.name }}</p>
         <p id="channel-overview" class="page-sub">{{ channel.overview }}</p>
         <div id="button-channel-info">
             <svg width="35" height="35" viewBox="0 0 200 200.002">
@@ -32,8 +32,8 @@
     <div id="chat-area">
         {% for message in messages %}
             {% set targetIndex = loop.index - 1 %}
-            {% set date, time = messages[targetIndex].date.split('T') %}
-            {% if loop.first or messages[targetIndex - 1].date.split('T')[0] != date %}
+            {% set date, time = messages[targetIndex].date.split(' ') %}
+            {% if loop.first or messages[targetIndex - 1].date.split(' ')[0] != date %}
                 <div class="date-line">
                     <div class="left"></div><p class="date">{{ date }}</p><div class="right"></div>
                 </div>

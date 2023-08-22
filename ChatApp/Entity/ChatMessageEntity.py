@@ -1,7 +1,7 @@
 class ChatMessageEntity:
     """チャットメッセージ情報を保持するEntityクラス"""
 
-    def __init__(self, senderName, senderType, text, date):
+    def __init__(self, id, senderName, senderType, text, date):
         """コンストラクタ
         
         Args:
@@ -10,6 +10,7 @@ class ChatMessageEntity:
         * text (String): メッセージテキスト
         * date (String): 投稿日時
         """
+        self.id = id
         self.senderName = senderName
         self.senderType = senderType
         self.text= text

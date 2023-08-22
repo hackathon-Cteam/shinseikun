@@ -120,6 +120,7 @@ class DBManager:
         """
         try:
             with self.connection.cursor() as cursor:
+                print(f'exec sql: {query}')
                 cursor.execute(query)
                 return cursor.fetchall()
         except Exception as error:

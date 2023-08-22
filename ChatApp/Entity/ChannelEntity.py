@@ -1,7 +1,7 @@
 class ChannelEntity:
     """チャンネル情報を保持するEntityクラス"""
 
-    def __init__(self, id, name, overview, description):
+    def __init__(self, id, name, overview, description, img):
         """コンストラクタ
         
         Args:
@@ -14,3 +14,4 @@ class ChannelEntity:
         self.name = name
         self.overview = overview
         self.description = description
+        self.img = img
