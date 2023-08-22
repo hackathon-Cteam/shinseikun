@@ -288,27 +288,28 @@ def form():
 # 申請フォームのルート
 @app.post('/apply')
 def apply():
-    #フォーム要素のname属性の指定により値を取得し変数に代入する(uid,cidの受け渡しも必要??)
+    # TODO: userIDはリクエストurlに含めるようにする(？)
+    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
     cid = request.form.get('facility')
     year, month, day = request.form.getlist('date')
     start_hour, start_minute, end_hour, end_minute = request.form.getlist('time')
     purpose = request.form.get('purpose')
-    name = request.form.get('name')    #当日の利用者名（フォームで編集された場合はログイン中のユーザー名とイコールでない）
-    email = request.form.get('email')    #当日の利用者のメールアドレス（フォームで編集された場合はログイン中のユーザーのメールアドレスとイコールでない）
-    phone = request.form.get('phone')    #当日の利用者の電話番号（フォームで編集された場合はログイン中のユーザーの電話番号とイコールでない）
+    name = request.form.get('name')    #当日の利用者名（フォームで編集された場合は、ログイン中のユーザー名とイコールでない）
+    email = request.form.get('email')    #当日の利用者のメールアドレス（フォームで編集された場合は、ログイン中のユーザーのメールアドレスとイコールでない）
+    phone = request.form.get('phone')    #当日の利用者の電話番号（フォームで編集された場合は、ログイン中のユーザーの電話番号とイコールでない）
 
-    #取得したデータの加工
-    start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute
-    end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute
-    reserve_data = cid + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
+    #日時データの加工（かわりにDataTimeConverterが使えるか？）
+    start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute + ":00"
+    end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute +":00"
+    # reserve_data = cid + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
 
-    # #データベースへの追加処理（DBManagerのimport必要）
-    # with DBManager('reservations') as reservationDB:
-    #     reservationDB.addData({id:1, uid:1111, cid:2222})
-
-    #挙動確認用
-    return (reserve_data)
-    # return redirect ('/mypage')    #マイページにリダイレクト（あとから有効化する）
+    #reservationデータベースへの追加処理
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.addData({ 'uid': userId, 'cid': cid, 'purpose': purpose, 'start_use': start_use , 'end_use': end_use })
+        return redirect ('/mypage/<userId>')    #マイページにリダイレクト
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
 
 # メッセージ投稿のアクション
 @app.post('/post-message')
