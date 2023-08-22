@@ -78,9 +78,9 @@ def admin():
     with DBManager('channels') as channelDB:
         channels = channelDB.getData()
 
-    userList = None
+    users = None
     with DBManager('users') as usersDB:
-        userList = usersDB.getData()
+        users = usersDB.getData()
 
     channelList = []
     for channel in channels:
@@ -93,14 +93,14 @@ def admin():
     # TODO: htmlに予約情報が反映できる状態になったらテンプレートへ渡すようにする
     reservationList = []
     for reservation in reservations:
-        user = list(filter(lambda user : user['uid'] == reservation['uid'], userList))[0]
-        channel = list(filter(lambda channel : channel['id'] == reservation['cid'], channelList))[0]
+        user = list(filter(lambda user : user['uid'] == reservation['uid'], users))[0]
+        channel = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]
 
         status = '承認' if reservation['approval_at'] is None else 'キャンセル' if reservation['cancel_at'] is None else '受領'
         # TODO: 渡す情報をもっと絞ってもいいかもしれない。htmlはまだ未反映なので必要な情報が不明確
         reservationList.append(ReserveInfoEntity(
             user['uid'], reservation['id'], channel['name'], DataTimeConverter.convertStr(reservation['start_use']), DataTimeConverter.convertStr(reservation['end_use']),
-            reservation['purpose'], user['name'], user['email'], user['phone'],  DataTimeConverter.convertStr(reservation['created_at']), '', status
+            reservation['purpose'], user['user_name'], user['email'], user['phone'],  DataTimeConverter.convertStr(reservation['created_at']), '', status
         ))
 
     return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin')
