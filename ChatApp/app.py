@@ -9,6 +9,7 @@ from Entity. InformationEntity import InformationEntity
 from common.util.DataTimeConverter import DataTimeConverter
 from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta
+from jinja2 import Template
 import uuid
 
 from model.external.DBManager import DBManager
@@ -20,28 +21,87 @@ app.permanent_session_lifetime = timedelta(days=30)
 
 # 画面表示の呼び出し
 
+
 # ログイン画面のルート
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        userid = request.form.get('userid')
+        password = request.form.get('password')
+        
+        
+        with DBManager('users') as userDB:
+            users = userDB.getData()
+            
+        for user in users:
+            uid = user['uid']
+            pass_word = user['password']
+            
+        if userid == uid and password == pass_word:
+            user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
+            session['uid'] = user_id  # セッションにユーザー情報を保存
+            return redirect(url_for('index'))
+        else:
+            return "Invalid credentials. Please try again."  # 画面にエラーを表示して再入力を促すよう修正したい
+
     return render_template('/page/login.html')
+
+
+# ログアウト
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('login')
 
 
 # チャンネル一覧ページのルート
 @app.route('/')
-@app.route('/channel_list')
-def channel_list():
-    # チャンネル名の一覧を取得
-    # チャンネルID
-    # 画像データの情報（データ名とか）
-    # チャンネル名とIDが紐づいた形式のデータ
-    channels = [
-        ChannelEntity('ch-123', '会議室1', 'よもやまセンター 4F', 'kaigi.jpg'),
-        ChannelEntity('ch-456', '会議室2', '新ビル 2F', 'kaigi.jpg'),
-        ChannelEntity('ch-789', '体育館', 'グラウンド西', 'gym.jpg'),
-        ChannelEntity('ch-246', 'テニス', 'グラウンド東', 'tennis.jpg'),
-    ]
+def index():
+    uid = session.get('uid')
+    if uid is None:
+        return redirect('/login')
+    else:
+        try:
+            with DBManager('channels') as channelDB:
+                channels = channelDB.getData()
+        except ValueError:
+            print('エラー')
+       
+        return render_template('/page/channel_list.html',channels=channels)
+
+# サインアップ
+@app.route('/signup',methods=['POST'])
+def signup():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
     
-    return render_template('/page/channel_list.html',channels=channels)
+    # user_data = {
+    #     'uid': ,
+    #     'user_name': name,
+    #     'email': email,
+    #     'password': password1
+    #     'phone': ,  
+    #     'user_type': ,  
+    #     'group_name': ,  
+    #     'created_at': 
+    # }
+    
+    # with DBManager('users') as userDB:
+    #     userDB.addData(user_data)
+    
+    # 仮でユーザー情報をセッションに保存 
+    session['new_user_info'] = {
+        'name': name,
+        'email': email,
+        'password1': password1,
+        'password2': password2
+    }
+    
+    user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
+    session['uid'] = user_id  # セッションにユーザー情報を保存
+    return redirect('/')
 
 
 # チャット画面ルート
@@ -82,6 +142,21 @@ def admin():
     with DBManager('users') as usersDB:
         users = usersDB.getData()
 
+    reserveInfos = [
+        ReserveInfoEntity('usr-123456710', 'rsv-123456710', '会議室A', '2024/1/2/12:00', '2024/1/3/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456711', 'rsv-123456711', '会議室B', '2024/1/3/12:00', '2024/1/4/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456712', 'rsv-123456712', '会議室C', '2024/1/4/12:00', '2024/1/5/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456713', 'rsv-123456713', '会議室D', '2024/1/5/12:00', '2024/1/6/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456714', 'rsv-123456714', '会議室E', '2024/1/6/12:00', '2024/1/7/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456715', 'rsv-123456715', '会議室F', '2024/1/7/12:00', '2024/1/8/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456716', 'rsv-123456716', '会議室G', '2024/1/8/12:00', '2024/1/9/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456717', 'rsv-123456717', '会議室H', '2024/1/9/12:00', '2024/1/10/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456718', 'rsv-123456718', '会議室I', '2024/1/10/12:00', '2024/1/11/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456719', 'rsv-123456719', '会議室J', '2024/1/11/12:00', '2024/1/12/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456712', 'rsv-123456713', '会議室K', '2024/1/12/12:00', '2024/1/13/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
+        ReserveInfoEntity('usr-123456713', 'rsv-123456714', '会議室M', '2024/1/13/12:00', '2024/1/14/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領')
+    ]
+
     channelList = []
     for channel in channels:
         channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
@@ -103,14 +178,14 @@ def admin():
             reservation['purpose'], user['user_name'], user['email'], user['phone'],  DataTimeConverter.convertStr(reservation['created_at']), '', status
         ))
 
-    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin')
+    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reserveInfos)
 
 
 # 管理者アカウント編集画面
-@app.route('/admin-edit')
-def adminEdit():
+#@app.route('/admin-edit')
+#def adminEdit():
     # 管理者情報
-    return render_template('page/kanrisya-edit.html')
+#    return render_template('page/kanrisya-edit.html')
 
 
 # ユーザー画面
@@ -123,6 +198,13 @@ def mypage(userId):
     with DBManager('users') as usersDB:
         user = usersDB.getData(f'uid="{userId}"')[0]
         userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
+
+    # 申請中の一覧
+    reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
+    reserinfo2 = ReservationEntity('444', '2023/08/10', 'キャンセル済')
+    reserinfo3 = ReservationEntity('555', '2023/09/26', '利用予約申請中')
+    
+    reserinfo_list_sample = [reserinfo,reserinfo2,reserinfo3]
 
     channels = None
     with DBManager('channels') as channelDB:
@@ -166,43 +248,41 @@ def mypage(userId):
 
     information_list = [information,information2,information3]
 
-    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list)
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list_sample, past_list= past_list, information_list=information_list)
+
+    template_str = """申請ステータスアイコン"""
+    template = Template(template_str)
+
+    list_items = ["利用予約完了", "利用予約申請中"]
+    print(template.render(list_items=list_items))
+
 
     
 
 
 # 申請フォーム画面
-@app.route('/form', methods=['GET', 'POST'])
+@app.route('/form')
 def form():
-    if request.method == 'POST':    #POSTメソッド（フォーム送信）であれば
+    # ログイン中のユーザーの情報（ログイン中のユーザーと一致した一件をDBから引用する処理が必要）
+    user = UserEntity('usr-123456789', '申請花子', 'shinsei@gmail.com', 'User12345', '09012345678', 'グループA')
+    # チャンネル情報
+    channels = [
+        ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
+        ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
+    ]
 
-        # #下記のように、フォーム要素のname属性から値を取得し変数に代入する
-        # test = request.form.get('test')
-        # test2 = request.form.get('test2')
-        # test3 = request.form.get('test3')
+    # チャンネルDBからチャンネル名を引用（DBManagerのimport必要）
+    # try:
+    #     with DBManager('channels') as channelDB:
+    #         channels = channelDB.getData()
+    # except ValueError:
+    #     print('エラー')
 
-        # #下記のように、変数に代入した値をDBに格納する処理を行う
-        # post = Post(test=test, test2=test2, test3=test3)
-        # dbConnect.Test(post)
-
-        return redirect('/mypage')    #マイページにリダイレクト
-
-    else:    #GETメソッド（申請フォームページ読み込み）であれば
-        # ログイン中のユーザーの情報　
-        user = UserEntity('usr-123456789', '申請花子', 'shinsei@gmail.com', 'User12345', '09012345678', 'グループA')
-        # チャンネル情報
-        channels = [
-            ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-            ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-            ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-            ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-            ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-            ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-        ]
-        # 申請情報（※ReserveInfoEntity適用のテストのため、後で削除）
-        reserveInfo = ReserveInfoEntity('usr-123456789', 'rsv-123456789', '会議室A', '2024/1/1/12:00', '2024/1/1/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999999', '2023/12/1/12:34', '予約', '未受領')
-
-        return render_template('page/application-form.html', channels=channels, user=user, reserveInfo=reserveInfo)
+    return render_template('page/application-form.html', channels=channels, user=user)
 
 # POST(処理の呼び出し)
 # ログイン処理のルート
@@ -210,9 +290,27 @@ def form():
 # 申請フォームのルート
 @app.post('/apply')
 def apply():
-    # ユーザー情報
-    # チャンネル情報
-    return ""
+    #フォーム要素のname属性の指定により値を取得し変数に代入する(uid,cidの受け渡しも必要??)
+    facility = request.form.get('facility')
+    year, month, day = request.form.getlist('date')
+    start_hour, start_minute, end_hour, end_minute = request.form.getlist('time')
+    purpose = request.form.get('purpose')
+    name = request.form.get('name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+
+    #取得したデータの加工
+    start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute
+    end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute
+    reserve_data = facility + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
+
+    # #データベースへの追加処理（DBManagerのimport必要）
+    # with DBManager('reservations') as reservationDB:
+    #     reservationDB.addData({id:1, uid:1111, cid:2222})
+
+    #挙動確認用
+    return (reserve_data)
+    # return redirect ('/mypage')    #マイページにリダイレクト（あとから有効化する）
 
 # メッセージ投稿のアクション
 @app.post('/post-message')
