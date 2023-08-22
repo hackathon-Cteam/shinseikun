@@ -263,24 +263,24 @@ def mypage(userId):
 # 申請フォーム画面
 @app.route('/form')
 def form():
-    # ログイン中のユーザーの情報（ログイン中のユーザーと一致した一件をDBから引用する処理が必要）
-    user = UserEntity('usr-123456789', '申請花子', 'shinsei@gmail.com', 'User12345', '09012345678', 'グループA')
     # チャンネル情報
-    # channels = [
-    #     ChannelEntity('ch-123456789', '会議室A', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-    #     ChannelEntity('ch-123456789', '会議室B', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-    #     ChannelEntity('ch-123456789', '会議室C', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-    #     ChannelEntity('ch-123456789', '会議室D', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-    #     ChannelEntity('ch-123456789', '多目的ホール', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。'),
-    #     ChannelEntity('ch-123456789', '体育館', 'よもやまセンター 4F', '少人数用の会議室で数名〜15数名程度を収容できるクローズドな空間です。\n顧客との商談や部署の報告会議、あるいはグループワークや簡易的なブレインストーミングの場として適しています。')
-    # ]
-    try:
-        with DBManager('channels') as channelDB:
-            channels = channelDB.getData()
-    except ValueError:
-        print('エラー')
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getData()
 
-    return render_template('page/application-form.html', channels=channels, user=user)
+    channelList = []
+    for channel in channels:
+        channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
+
+    # TODO: userIDはリクエストurlに含めるようにする(？)
+    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
+    # ユーザー情報
+    userInfo = None
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{userId}"')[0]
+        userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
+
+    return render_template('page/application-form.html', channels=channelList, user=userInfo)
 
 # POST(処理の呼び出し)
 # ログイン処理のルート
