@@ -1,3 +1,5 @@
+import requestPost from './common/request.js';
+
 /**
  * Channel Info表示イベントの登録
  */
@@ -14,34 +16,15 @@ function registerChannelInfoEvent() {
 }
 
 /**
- * リクエスト送信
- * @param {*} data リクエストデータ
- * @returns json形式のリクエスト結果
- */
-async function requestPost(url, data) {
-  let responseData = null;
-  await fetch(url,
-  { method: 'POST', headers : { 'Content-type' : 'application/json; charset=utf-8' }, body : JSON.stringify(data) }).then((response) => {
-    if (!response.ok) {
-      return Promise.reject(new Error(`status code: ${response.status}`));
-    }
-    return response.json();
-  }).then((data) => {
-    responseData = data;
-  });
-  return responseData;
-}
-
-/**
  * メッセージを投稿
  * @param {String} messageText メッセージテキスト
  * @param {String} channelId メッセージテキスト
  */
-function sendMessage(messageText, channelId) {
-  message = messageText.trim();
+async function sendMessage(messageText, channelId) {
+  const message = messageText.trim();
   if (message.length) {
     try {
-      requestPost('/post-message', { message, channelId });
+      await requestPost('/post-message', { message, channelId });
     } catch (error) {
       console.log(error.message);
     }
@@ -53,9 +36,14 @@ function sendMessage(messageText, channelId) {
  * @param {String} messageText メッセージテキスト
  * @param {String} channelId チャンネルID
  */
-function sendMessageEvent(messageText, channelId) {
-  sendMessage(messageText, channelId);
-  location.reload()
+async function sendMessageEvent(messageText, channelId) {
+  try {
+    await sendMessage(messageText, channelId);
+    location.reload();
+  } catch (error) {
+    console.log(error.message);
+    alert('メッセージを投稿できませんでした');
+  }
 }
 
 /**
@@ -105,23 +93,25 @@ function createOverlay() {
  * @param {Element} message チャットメッセージ要素
  * @param {Element} overlay 表示しているオーバーレイ要素
  */
-function deleteMessageEvent(message, overlay) {
+async function deleteMessageEvent(message, overlay) {
   const messageId = message.getAttribute('data-message-id');
   try {
-    requestPost('/delete-message', { messageId });
+    await requestPost('/delete-message', { messageId });
+    // 不要な日時ラインを削除
+    const dateLineStyleClassName = 'date-line';
+    if (!message.nextElementSibling && message.previousElementSibling.className === dateLineStyleClassName) {
+        message.previousElementSibling.remove();
+    }
+    if (message.previousElementSibling.className === dateLineStyleClassName && message.nextElementSibling.className  === dateLineStyleClassName) {
+        message.previousElementSibling.remove();
+    }
+
+    message.remove();
+    overlay.remove();
   } catch (error) {
     console.log(error.message);
+    alert('メッセージを削除できませんでした');
   }
-  const dateLineStyleClassName = 'date-line';
-  // 不要な日時ラインを削除
-  if ((dateLineStyleClassName === message.previousElementSibling.className
-    && message.nextElementSibling && dateLineStyleClassName === message.nextElementSibling.className)
-    || !message.nextElementSibling
-  ) {
-    message.previousElementSibling.remove();
-  }
-  message.remove();
-  overlay.remove();
 }
 
 /**
@@ -147,8 +137,6 @@ function registerDeleteMessageEvent() {
 }
 
 window.addEventListener('load', () => {
-  // チャットエリアが下までスクロールされた状態で表示する
-  document.getElementById('chat-area').scrollIntoView(false);
   // チャンネル情報表示の処理を登録
   registerChannelInfoEvent();
   // メッセージ投稿の処理を登録
@@ -158,4 +146,7 @@ window.addEventListener('load', () => {
   if (document.querySelector('#header #account a').dataset.usertype === 'admin') {
     registerDeleteMessageEvent();
   }
+
+  // チャットエリアが下までスクロールされた状態で表示する
+  document.getElementById('chat-area').scrollIntoView(false);
 });
