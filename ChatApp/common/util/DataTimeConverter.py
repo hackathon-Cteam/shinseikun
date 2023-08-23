@@ -15,11 +15,14 @@ class DataTimeConverter:
         """
         return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
     
-    def convertStr(datetime, isEenableSeconds= False):
+    def convertStr(dt, isEenableSeconds= False):
         """Datetimeオブジェクトから文字列(yyyy/mm/dd hh:mm)に変換する
 
         Args:
-        * datetime (datetime): datetimeオブジェクト
+        * dt (datetime): datetimeオブジェクト
         * isEenableSeconds (boolean):  秒数まで有効にするかどうか。デフォルトは無効
+
+        Return (String): 日本時間に変換された文字列
         """
-        return datetime.strftime('%Y/%m/%d %H:%M:%S') if isEenableSeconds else datetime.strftime('%Y/%m/%d %H:%M')
+        dt = dt + datetime.timedelta(hours=9)
+        return dt.strftime('%Y/%m/%d %H:%M:%S') if isEenableSeconds else dt.strftime('%Y/%m/%d %H:%M')
