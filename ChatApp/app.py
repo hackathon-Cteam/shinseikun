@@ -9,7 +9,6 @@ from Entity. InformationEntity import InformationEntity
 from common.util.DataTimeConverter import DataTimeConverter
 from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta
-from jinja2 import Template
 import uuid
 
 from model.external.DBManager import DBManager
@@ -199,13 +198,6 @@ def mypage(userId):
         user = usersDB.getData(f'uid="{userId}"')[0]
         userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
 
-    # 申請中の一覧
-    reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
-    reserinfo2 = ReservationEntity('444', '2023/08/10', 'キャンセル済')
-    reserinfo3 = ReservationEntity('555', '2023/09/26', '利用予約申請中')
-    
-    reserinfo_list_sample = [reserinfo,reserinfo2,reserinfo3]
-
     channels = None
     with DBManager('channels') as channelDB:
         channels = channelDB.getDataByColumns(['id', 'name'])
@@ -218,6 +210,7 @@ def mypage(userId):
     reserinfo_list = []
     past_list = []
     if reservations:
+        reservations.sort(key= lambda reserinfo: reserinfo['start_use'])
         for reservation in reservations:
             targetName = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]['name']
             cancelDate = reservation['cancel_at']
@@ -227,19 +220,11 @@ def mypage(userId):
                 continue
 
             # 申請情報
-            reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}の予約を申請しました'))
-
-            # キャンセル情報
-            if cancelDate is not None:
-                reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(cancelDate), f'{targetName}の予約がキャンセルされました'))
-                
-            # 承認情報
-            approvaldate = reservation['approval_at'] 
-            if approvaldate is not None:
-                reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(approvaldate), f'{targetName}の予約が承認されました'))
-
-        reserinfo_list.sort(key= lambda reserinfo: reserinfo.reserve_time, reverse=True)
-        past_list.sort(key= lambda past: past.past_usege, reverse=True)
+            reserinfo_list.append(ReservationEntity(
+                reservation['id'],
+                f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"])} {targetName}',
+                'キャンセル済' if reservation['cancel_at'] is not None else '利用予約完了' if reservation['approval_at'] is not None else '利用予約申請中'
+            ))
 
     # 通知情報の一覧
     information = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
@@ -248,16 +233,7 @@ def mypage(userId):
 
     information_list = [information,information2,information3]
 
-    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list_sample, past_list= past_list, information_list=information_list)
-
-    template_str = """申請ステータスアイコン"""
-    template = Template(template_str)
-
-    list_items = ["利用予約完了", "利用予約申請中"]
-    print(template.render(list_items=list_items))
-
-
-    
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list)
 
 
 # 申請フォーム画面
@@ -363,7 +339,14 @@ def addChannel():
 # 管理者アカウント変更アクション
 
 # 申請キャンセルのアクション
-
+@app.post('/cancel-reservation')
+def cancelReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.deleteData(f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
 
 @app.errorhandler(404)
 def showError404(error):
