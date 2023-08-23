@@ -27,6 +27,8 @@
         </div>
     </div>
 
+    <p class="error-message">{{ error_message }}</p>
+    
     <div class="top-wrapper">
         <div class="btn signup-show">新規登録はこちら</div>
 </form>
@@ -41,8 +43,10 @@
                   <form action="{{ url_for('signup') }}" method="POST">
                       <input class="form-control" type="text" name="name" placeholder="name">
                       <input class="form-control" type="text" name="email" placeholder="email">
-                      <input class="form-control" type="password" name="password1" placeholder="password1">
-                      <input class="form-control" type="password" name="password2" placeholder="password2">
+                      <input class="form-control" type="password" name="password" placeholder="password">
+                      <input class="form-control" type="text" name="phone" placeholder="phone">
+                      <input class="form-control" type="text" name="group_name" placeholder="group_name">
+                      <input class="form-control" type="text" name="create_at" placeholder="create_at">
                       <button type="submit" class="submit-btn">登録</button>
                   </form>
               </div>
