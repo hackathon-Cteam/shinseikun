@@ -335,8 +335,30 @@ def deleteMessage():
         return Response(response= json.dumps({'message': error}), status= 500)
 
 # チャンネル削除のアクション
+@app.post('/delete-channel')
+def deleteChannel():
+    try:
+        with DBManager('channels') as channelDB:
+            channelDB.deleteData(f'id={request.json["channelId"]}')
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
 
 # チャンネル追加のアクション
+@app.post('/add-channel')
+def addChannel():
+    try:
+        with DBManager('channels') as channelDB:
+            channelDB.addData({
+                'name': request.json["channelName"],
+                'overview': f'{request.json["channelName"]}についてはお問い合わせください。',
+                'description': f'{request.json["channelName"]}の詳細についてはお問い合わせください。', 'img': 'no-img.jpg'
+            })
+            cid = channelDB.getDataByColumns('id', f'name="{request.json["channelName"]}"')[0]['id']
+        return Response(response= json.dumps({'channelId': cid }), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
 
 # 管理者アカウント変更アクション
 

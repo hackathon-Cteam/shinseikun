@@ -1,3 +1,18 @@
+async function requestPost(url, data) {
+  let responseData = null;
+  await fetch(url,
+    { method: 'POST', headers : { 'Content-type' : 'application/json; charset=utf-8' }, body : JSON.stringify(data) }
+  ).then((response) => {
+    if (!response.ok) {
+      return Promise.reject(new Error(`status code: ${response.status}`));
+    }
+    return response.json();
+  }).then((data) => {
+    responseData = data;
+  });
+  return responseData;
+}
+
 /*テーブル1のステータス選択ボタン（受領ボタン）*/
 function statusbtn1() {
   const statuscheck = document.getElementsByName("statuscheck");
@@ -173,18 +188,37 @@ var cell = row.cells.item(-1);
 cell.style.backgroundColor = "#A52A2A";
 */
 
+async function addChannelRequest(channelName) {
+  try {
+    const result = await requestPost('/add-channel', { channelName });
+    const table = document.getElementById("table");
+    // 行を行末に追加
+    const row = table.insertRow(-1);
+    //td分追加
+    const cell1 = row.insertCell(-1);
+    const cell2 = row.insertCell(-1);
+    // セルの内容入力
+    cell1.innerHTML = `<input type="checkbox" name="facility" data-channel-id="${result.channelId}">`;
+    cell2.innerText = channelName;
+  } catch (error) {
+    console.log(error.message);
+    alert('チャンネルが追加できませんでした');
+  }
+}
+
 //チャンネル追加機能
 function coladd() {
-  let addname = document.getElementById("channelName").value;
-  let table = document.getElementById("table");
-  // 行を行末に追加
-  let row = table.insertRow(-1);
-  //td分追加
-  let cell1 = row.insertCell(-1);
-  let cell2 = row.insertCell(-1);
-  // セルの内容入力
-  cell1.innerHTML = '<input type="checkbox" name="facility">';
-  cell2.innerHTML = addname;
+  addChannelRequest(document.getElementById("channelName").value);
+}
+
+async function deleteChannelRequest(channelId, facility) {
+  try {
+    await requestPost('/delete-channel', { channelId });
+    facility.closest('tr').remove();
+  } catch (error) {
+    console.log(error.message);
+    alert(`チャンネルが追加できませんでした`);
+  }
 }
 
 //チャンネル削除機能
@@ -192,8 +226,7 @@ function deleatRow() {
   const facility = document.getElementsByName("facility");
   for (let i = 0; i < facility.length; i++) {
     if (facility[i].checked) {
-      console.log('削除');
-      facility[i].closest(".facilityList").remove();
+      deleteChannelRequest(facility[i].getAttribute('data-channel-id'), facility[i]);
     }
   }
 }
@@ -224,7 +257,7 @@ function sortFacility() {
   const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
   const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
   for (h = 0; h < facilityList.length; h++) {    //選択肢の要素の個数分繰り返し
-    facilityNameValue = facilityName[h].textContent;    //施設名の要素から値を抽出し変数に代入
+    const facilityNameValue = facilityName[h].textContent;    //施設名の要素から値を抽出し変数に代入
     if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
       facilityList[h].style.display = "";    //選択肢の要素を表示
     } else {

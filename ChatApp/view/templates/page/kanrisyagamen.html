@@ -111,7 +111,7 @@
             {% for channel in channels %}
             <tr class="facilityList">
                 <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
-                <td><input type="checkbox" name="facility"></td> <!--id="checkfacility"-->
+                <td><input type="checkbox" name="facility" data-channel-id="{{channel.id}}"></td> <!--id="checkfacility"-->
                 <td class="facilityName">{{channel.name}}</td>
             </tr>
             {% endfor %}
