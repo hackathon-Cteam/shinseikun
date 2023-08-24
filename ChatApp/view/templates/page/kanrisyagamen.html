@@ -84,20 +84,20 @@
 <!-- チャンネル追加ボタン・削除ボタンを縦並びにするためのクラス -->  
     <div class="btn2">
 <!-- チャンネル追加ボタン -->
-        <input type="text" name="add" id="channelName" value="チャンネル名を記入">
+        <input type="text" name="add" class="addname" id="channelName" value="チャンネル名を記入">
         <input type="button" value="チャンネル追加" id="coladd" onclick="coladd()">
 <!-- チャンネル削除ボタン -->
         <input type="button" value="チャンネル削除 ※チェックをつけてからクリック" name="click" onclick="deleatRow()">
     </div>
-    <p id="msg"></p>
+
 <!-- 検索機能2 -->
         <div class="search-2">
             <!--
             <input type="search" name="s" placeholder=" ">
             <input type="submit" name="btn_search" value="検索" />
             -->
-            <input id="sortKeyword" type="search" name="search" placeholder="キーワードを入力">
-            <button id="sortButton" class="sortButton" type="button">検索</button>
+            <input type="search" id="sortKeyword" placeholder="キーワードを入力"> <!--id="sortKeyword"-->
+            <button id="sortButton" type="button">検索</button> <!--id="sortButton"-->
         </div>
         
 <!-- テーブル2 -->  
@@ -109,10 +109,10 @@
                 <th class="table-label">チャンネル</th>
             </tr>
             {% for channel in channels %}
-            <tr class="facilityList">
+            <tr class="facilityList"> <!--id="facilityList"-->
                 <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
                 <td><input type="checkbox" name="facility"></td> <!--id="checkfacility"-->
-                <td class="facilityName">{{channel.name}}</td>
+                <td class="facilityName">{{channel.name}}</td> <!--id="facilityName"-->
             </tr>
             {% endfor %}
         </table>

@@ -1,15 +1,16 @@
 /*テーブル1のステータス選択ボタン（受領ボタン）*/
-function statusbtn1() {
+function statusbtn1(f) {
 	const statuscheck = document.getElementsByName("statuscheck");
 		for (let j = 0; j < statuscheck.length; j++) {
-		  if (statuscheck[j].checked) {
+			if (statuscheck[j].checked) {
 			console.log('受領')
 			let statusbtn1 = document.getElementById("statusbtn1").value;
 			let tableA = document.getElementById("sort_table");
 			let c = j+1
 			console.log(c)
 			tableA.rows[c].cells[6].innerHTML = statusbtn1;
-		  }
+			statuscheck[j].checked = false;
+			}
 		}
 	}
 /*テーブル1のステータス選択ボタン（承認ボタン）*/
@@ -23,6 +24,7 @@ function statusbtn2() {
       let c = j+1
       console.log(c)
       tableA.rows[c].cells[6].innerHTML = statusbtn2;
+	  statuscheck[j].checked = false;
     }
     }
  }
@@ -37,6 +39,7 @@ function statusbtn3() {
 			let c = j+1
 			console.log(c)
 			tableA.rows[c].cells[6].innerHTML = statusbtn3;
+			statuscheck[j].checked = false;
 		  }
 		}
 	}
@@ -66,7 +69,9 @@ function registerSortFacilityEvent1() {
 function sortFacility1() {
 	const sortKeywordValue1 = document.getElementById("sortKeyword1").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
 	const facilityList1 = document.getElementsByClassName("facilityList1");    //選択肢（選択ボタン＋施設名）の要素を取得
+	console.log(facilityList1)
 	const facilityName1 = document.getElementsByClassName("facilityName1");    //施設名の要素を取得
+	console.log(facilityName1)
   
 	  for (i = 0; i < facilityList1.length; i++) {    //選択肢の要素の個数分繰り返し
 		facilityNameValue1 = facilityName1[i].textContent;    //施設名の要素から値を抽出し変数に代入
@@ -175,16 +180,21 @@ cell.style.backgroundColor = "#A52A2A";
 //チャンネル追加機能
 function coladd() {
 	let addname = document.getElementById("channelName").value;
+	console.log(addname);
 	let table = document.getElementById("table");
+	console.log(table);
 	// 行を行末に追加
 	let row = table.insertRow(-1);
+	console.log(row);
 	//td分追加
 	let cell1 = row.insertCell(-1);
+	console.log(cell1);
 	let cell2 = row.insertCell(-1);
+	console.log(cell2);
 	// セルの内容入力
 	cell1.innerHTML = '<input type="checkbox" name="facility">';
 	cell2.innerHTML = addname;
-    }
+	}
 
 //チャンネル削除機能
 function deleatRow() {
@@ -202,24 +212,28 @@ window.addEventListener('load', () => {
 	registerSortFacilityEvent();
 	})
 /**
- * 検索機能2  施設名の絞り込み検索機能の登録処理
- */
+ * 検索機能2  施設名の絞り込み検索機能の登録処理*/
+
 function registerSortFacilityEvent() {
 	//検索ボタンを取得
 	const sortButtonB = document.getElementById("sortButton");
+	console.log(sortButtonB);
 	   //検索ボタンクリック時
 	   sortButtonB.addEventListener("click", function() {
 		sortFacility();    //施設名の絞り込み検索処理（別途記載）を実行
 		console.log("検索の実行です。");    //挙動確認用
 	  })
-  }
+  } 
   /**
    * 施設名の絞り込み検索処理
-   */
+   
   function sortFacility() {
 	  const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
+	  console.log(sortKeywordValue);
 	  const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
+	  console.log(facilityList);//ここが問題箇所：最初からある要素しか取得していない
 	  const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
+	  console.log(facilityName);//ここが問題箇所：最初からある要素しか取得していない
 		for (h = 0; h < facilityList.length; h++) {    //選択肢の要素の個数分繰り返し
 		  facilityNameValue = facilityName[h].textContent;    //施設名の要素から値を抽出し変数に代入
 		  if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
@@ -227,5 +241,22 @@ function registerSortFacilityEvent() {
 		  } else {
 			facilityList[h].style.display = "none";   //その他の場合は選択肢の要素を非表示
 		  }
+		}
+	}*/
+
+function sortFacility() {
+	const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
+	console.log(sortKeywordValue);
+	const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
+	console.log(facilityList);//※※ここが問題箇所：最初からある要素しか取得していない※※※※※※※※※※※※※※※※※※※※※※※※
+	const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
+	console.log(facilityName);//※※ここが問題箇所：最初からある要素しか取得していない※※※※※※※※※※※※※※※※※※※※※※※※
+		for (h = 0; h < facilityList.length; h++) {    //選択肢の要素の個数分繰り返し
+		facilityNameValue = facilityName[h].textContent;    //施設名の要素から値を抽出し変数に代入
+		if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
+			facilityList[h].style.display = "";    //選択肢の要素を表示
+		} else {
+			facilityList[h].style.display = "none";   //その他の場合は選択肢の要素を非表示
+		}
 		}
 	}
