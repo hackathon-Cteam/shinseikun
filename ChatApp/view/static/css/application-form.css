@@ -154,7 +154,7 @@ td {
 /* フォーム（テキストエリア）*/
 .application-form textarea {
   width: 400px;
-  height: 150px;
+  height: 80px;
   margin-top: 5px;
   margin-bottom: 20px;
   margin-left: 5px;
