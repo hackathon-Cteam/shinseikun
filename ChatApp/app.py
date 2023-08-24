@@ -307,7 +307,7 @@ def apply():
     try:
         with DBManager('reservations') as reservationDB:
             reservationDB.addData({ 'uid': userId, 'cid': cid, 'purpose': purpose, 'start_use': start_use , 'end_use': end_use })
-        return redirect ('/mypage/<userId>')    #マイページにリダイレクト
+        return redirect ('/mypage/'+ userId)    #マイページにリダイレクト
     except  Exception as error:
         return Response(response= json.dumps({'message': error}), status= 500)
 
