@@ -13,17 +13,26 @@ async function requestPost(url, data) {
   return responseData;
 }
 
+async function changeReservationStatusRequest(action, reserinfoId, buttonId, j) {
+  try {
+    await requestPost(`/${action}-reservation`, { reserinfoId });
+    let statusbtn = document.getElementById(buttonId).value;
+    let tableA = document.getElementById("sort_table");
+    let c = j+1;
+    console.log(c);
+    tableA.rows[c].cells[5].innerText = statusbtn;
+  } catch (error) {
+    console.log(error.message);
+    alert(`操作が正常に終了できませんでした。\n一覧のステータスを確認してください。`);
+  }
+}
+
 /*テーブル1のステータス選択ボタン（受領ボタン）*/
 function statusbtn1() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      console.log('受領');
-      let statusbtn1 = document.getElementById("statusbtn1").value;
-      let tableA = document.getElementById("sort_table");
-      let c = j+1;
-      console.log(c);
-      tableA.rows[c].cells[6].innerHTML = statusbtn1;
+      changeReservationStatusRequest('received', statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn1', j);
     }
   }
 }
@@ -33,12 +42,7 @@ function statusbtn2() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      console.log('承認');
-      let statusbtn2 = document.getElementById("statusbtn2").value;
-      let tableA = document.getElementById("sort_table");
-      let c = j+1;
-      console.log(c);
-      tableA.rows[c].cells[6].innerHTML = statusbtn2;
+      changeReservationStatusRequest('approval', statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn2', j);
     }
   }
 }
@@ -48,12 +52,7 @@ function statusbtn3() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      console.log('否認');
-      let statusbtn3 = document.getElementById("statusbtn3").value;
-      let tableA = document.getElementById("sort_table");
-      let c = j+1;
-      console.log(c);
-      tableA.rows[c].cells[6].innerHTML = statusbtn3;
+      changeReservationStatusRequest('cancel', statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn3', j);
     }
   }
 }

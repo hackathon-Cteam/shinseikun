@@ -34,8 +34,7 @@
                     <th>選択</th>
                     <th>チャンネル名  ▼</th>
                     <th>申請者名  ▼</th>
-                    <th>申請日時  ▼</th>
-                    <th>申請内容  ▼</th>
+                    <th>利用日時  ▼</th>
                     <th>利用目的  ▼</th>
                     <th>ステータス  ▼</th>
                 </tr>
@@ -43,11 +42,10 @@
             <tbody>
                 {% for reserveInfo in reserveInfos %}
                 <tr class="facilityList1">
-                    <td><input type="checkbox" name="statuscheck"></td>
+                    <td><input type="checkbox" name="statuscheck" data-reserinfo-id="{{ reserveInfo.rsvId }}"></td>
                         <td class="facilityName1">{{ reserveInfo.channelName }}</td>
                         <td class="facilityName1">{{ reserveInfo.rsvUserName }}</td>
-                        <td class="facilityName1">{{ reserveInfo.submitTime }}</td>
-                        <td class="facilityName1">{{ reserveInfo.category }}</td>
+                        <td class="facilityName1">{{ reserveInfo.useDate }}</td>
                         <td class="facilityName1">{{ reserveInfo.rsvPurpose }}</td>
                         <td class="facilityName1">{{ reserveInfo.status }}</td> 
                 </tr>
