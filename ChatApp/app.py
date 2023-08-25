@@ -240,9 +240,9 @@ def apply():
     email = request.form.get('email')    #当日の利用者のメールアドレス（フォームで編集された場合は、ログイン中のユーザーのメールアドレスとイコールでない）
     phone = request.form.get('phone')    #当日の利用者の電話番号（フォームで編集された場合は、ログイン中のユーザーの電話番号とイコールでない）
 
-    #日時データの加工（かわりにDataTimeConverterが使えるか？）
-    start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute + ":00"
-    end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute +":00"
+    #日時データの加工
+    start_use = DataTimeConverter.convertDatetime(f'{year}-{month}-{day} {start_hour}:{start_minute}:00')
+    end_use = DataTimeConverter.convertDatetime(f'{year}-{month}-{day} {end_hour}:{end_minute}:00')
 
     #reservationデータベースへの追加処理
     try:

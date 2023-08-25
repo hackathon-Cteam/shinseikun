@@ -1,3 +1,4 @@
+import requestPost from './common/request.js';
 // /**
 //  * 入力エラーチェック
 //  */
@@ -88,6 +89,16 @@ function registerSubmitConfirmModalEvent() {
     //確認モーダルのsubmit時
     confirmModalForm.addEventListener("submit", function(event) {
       event.preventDefault();    //確認モーダルのフォームのsubmitは行わない
+      const channel = confirmModalForm.querySelector('#rsv-channel-confirm').innerText;
+      const date = confirmModalForm.querySelector('#rsv-date-confirm').innerText;
+      const time = confirmModalForm.querySelector('#rsv-time-confirm').innerText;
+      let channelId;
+      document.querySelectorAll('.facilityList input').forEach((radio) => {
+        if (radio.checked) {
+            channelId = radio.value
+        }
+      });
+      requestPost('/post-message', { message: `${channel}の利用を以下の日程で申請しました。\n【利用日】 ${date}\n【時間帯】${time}`, channelId });
       form.submit()    //停止していた親画面のフォームのsubmitを実施
       console.log("親画面のフォームを送信しマイページへ遷移");    //挙動確認用
     })
@@ -173,6 +184,7 @@ function createDateSelectBoxOption() {
     const selectDom = document.getElementById(id);
     let optionDom = '';
     for (let i = startNum; i <= endNum; i++) {
+        let option;
       if (i === current) {
         option = '<option value="' + i + '" selected>' + i + '</option>';
       } else {
