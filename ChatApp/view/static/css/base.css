@@ -1,88 +1,67 @@
-* {
-  float: none;
-  position: static;
-  font-family: "M PLUS 1", sans-serif;
-  font-family: "League Spartan", sans-serif;
-  font-size: 16px;
-  box-sizing: border-box;
+.page-main { background-color: #DEDDFF; }
+
+.page-sub { background-color: #EFF2FF; }
+
+#header {
+    position: fixed;
+    height: 30px;
+    width: 100%;
+    top: 0px;
+    display: flex;
+    justify-content: space-between;
 }
 
-body {
-  margin: 0 auto;
-  min-height: 100vh;
-  width: 100vw;
-  color: var(--carbon);
+#header #top-link { margin: 0px 20px; font-weight: bold; }
+
+#header #account { display: flex; }
+
+#header #account > p { margin: 0px 20px; }
+
+.textlink a {
+    position: relative;
+    color: #333;
+    text-decoration: none;
+}
+.textlink a:hover {
+    color: #6291f9;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
+.textlink a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ceb849;
+    transform: scaleX(0);
+    transition: transform 0.3s;
 }
 
-h1 {
-  font-size: 40px;
-  font-weight: 900;
+.textlink a:hover::after {
+    transform: scaleX(1);
+}
+.textlink a {
+    position: relative;
+    color: #333;
+    text-decoration: none;
+}
+.textlink a:hover {
+    color: #6291f9;
 }
 
-input,
-textarea,
-button {
-  font-size: inherit;
-  border: none;
-  outline: none;
+.textlink a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ceb849;
+    transform: scaleX(0);
+    transition: transform 0.3s;
 }
 
-textarea {
-  resize: none;
-  height: 100%;
-  width: 100%;
-  letter-spacing: 0.1em;
-  font-size: 16px;
-}
-
-input {
-  letter-spacing: 0.1em;
-}
-
-li {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: var(--snow);
-}
-
-input:hover,
-button:hover {
-  cursor: pointer;
-}
-
-button {
-  color: var(--snow);
-  border: none;
-  padding: 0.7em 3em;
-  letter-spacing: 0.1rem;
-}
-
-:hover {
-  transition: all 0.5s;
-}
-
-button.pink {
-  background-color: var(--salmon_pink);
-}
-
-button.pink:hover {
-  background-color: var(--middle_pink);
-}
-
-.main-container {
-  min-height: 100vh;
-  padding-left: 60px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: hidden;
+.textlink a:hover::after {
+    transform: scaleX(1);
 }

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/mypage.css')}}">{% endblock %}
+{% block page_script %}<script type="module" src="{{url_for('static',filename='js/mypage.js')}}" type="text/javascript"></script>{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+{% block content %}
+
+<div class="mypage">
+  <div class="aside">
+    <div class="message">
+        <div class="news">
+            <a href="#">お知らせ<span class="notice">3</span></a>
+        </div>          
+        <ul>     
+            {% for information in information_list %}
+                <li>{{information.infor_time}} {{information.infor_message}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+     <div id="account">
+    <p></p>
+
+     <ul>
+         <li><b class="item-name">名前</b>{{ user.name }}</li>
+     </ul>
+     <ul>
+         <li><b class="item-name">所属</b>{{ user.group }}</li>
+     </ul>
+     <ul>
+         <li><b class="item-name">電話番号</b>{{ user.phone }}</li>
+     </ul>
+     <ul>
+      <li><b class="item-name">メールアドレス</b>{{ user.email}}</li>
+     </ul>  
+   
+    <div class="top-wrapper">
+        <div class="btn signup-show">アカウント編集はこちら</div>
+    </div>
+    <!-- モーダル -->
+    <div class="modal-wrapper" id="signup-modal">
+      <div class="modal">
+        <div id="close-modal">×</div>
+        <div class="form">
+            <h2>アカウント編集</h2>
+            <form  action="{{ url_for('changeAccount') }}" method="POST">
+                <input class="form-control" type="text" name="name" placeholder="名前">
+                <input class="form-control" type="text" name="phone" placeholder="電話番号">
+                <input class="form-control" type="text" name="group_name" placeholder="所属">
+                <input class="form-control" type="text" name="email" placeholder="メールアドレス">
+                <input class="form-control" type="password" name="password_old" placeholder="現在のパスワード">
+                <input class="form-control" type="password" name="password_new" placeholder="新しく設定するパスワード">
+                <button type="submit" class="submit-btn">登録</button>
+            </form>
+        </div>
+      </div>
+    </div>
+     
+  </div>
+</div>
+<div class="main">
+ <h2>各施設利用申請状況</h2>
+    <div class="caution">
+        注意書き
+        <ul>
+         <li><img src="../static/img/mypage/icon_g.jpg">…ご利用可能か確認中です。通知をお待ちください。</li>
+         <li><img src="../static/img/mypage/icon_b.jpg">…予約が完了しています。予定の日時にご利用できます。</li>
+        </li>
+        </ul>
+    </div>    
+    <h2>申請状況</h2>
+    <div class="request">
+        
+        {# 画像のマッピングを定義 #}
+        {% set image_mapping = {
+            '利用予約完了': '../static/img/mypage/icon_b.jpg',
+            '利用予約申請中': '../static/img/mypage/icon_g.jpg',
+        } %}
+        
+        <ul class="req">     
+            {% for reserinfo in reserinfo_list %}
+                <li>
+                    {{reserinfo.message}} {{reserinfo.status}}
+                    
+                    {# 各単語について画像の存在をチェック #}
+                    {% for word, img_path in image_mapping.items() %}
+                        {% if word in reserinfo.status %}
+                            <img src="{{ img_path }}" alt="{{ word }}" />
+                        {% endif %}
+                    {% endfor %}
+                    {% if 'キャンセル済' not in reserinfo.status %}
+                <button class="cancelbtn" data-reserinfo-id="{{reserinfo.id}}" data-channel-id="{{reserinfo.cid}}">キャンセルする場合はこちらから</button>
+            {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <h2>過去利用歴</h2>
+    <div class="log">
+        <ul class="req">
+        {% for past in past_list %}
+            <li>{{past.past_usege}} {{past.result}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <button type="button" onclick="location.href='/form'">各施設の新規ご利用希望の申請はこちらから</button>
+  </div>   
+</div>   
+
+{% endblock %}
+
+
+
+   

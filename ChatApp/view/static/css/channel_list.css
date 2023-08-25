@@ -1,0 +1,48 @@
+
+body{
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h3{
+    border-left :solid 10px #DEDDFF;
+    border-bottom: solid 0.3px gray;
+    padding: 10px;
+}
+
+img.picture{
+    width:200px;
+    height:100px;
+}
+
+#myInput {
+    width: 90%; 
+    font-size: 14px; 
+    padding: 12px 20px 12px 20px; 
+    border: 1px solid #ddd; 
+}
+
+#myUL {
+    padding: 0px;
+    overflow: scroll;
+}
+
+#myUL li {
+    padding: 5px;
+}
+
+#myUL li a {
+    width: 60%;
+    background-color: #f6f6f6; 
+    padding: 12px; 
+    font-size: 16px; 
+    color: black;   
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#myUL li a:hover {
+    background-color: #DEDDFF; 
+}

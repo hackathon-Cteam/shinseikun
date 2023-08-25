@@ -1,0 +1,136 @@
+body { margin: 0px; }
+
+p { margin: 0px; }
+
+#channel-header, #input-message {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+}
+
+#channel-header { top: 30px; height: 53px; }
+
+#input-message { justify-content: center; bottom: 0; height: 70px; }
+
+#channel-name {
+    font-weight: bold;
+    font-size: 25px;
+    margin: auto 30px;
+    width: 20%;
+}
+
+#button-channel-info {
+    margin: 10px auto;
+    margin-right: 20px;
+}
+
+#button-channel-info p { font-size: 17px; margin: auto; }
+
+#button-channel-info > div { margin: auto; }
+
+#channel-overview {
+    margin: auto 20px;
+    width: 60%;
+    text-align: center;
+}
+
+.user {
+    margin: auto;
+    margin-right: 0px;
+    border-radius: 5px;
+    justify-content: flex-end;
+}
+
+.user .chat { background-color: #DDFFD8; }
+
+.chat-date > p { font-size: 13px; }
+
+.message .name { font-size: 15px; }
+
+.message { margin: 0px 5px; }
+
+.chat-message { display: flex; align-items: flex-end; padding: 10px;}
+
+.chat { padding: 10px; border-radius: 5px; }
+
+.admin .chat { background-color: #AEF0FF; }
+
+.admin { justify-content: flex-start; }
+
+.date-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-line > div {
+    width: 45%;
+    height: 0px;
+    border: 1px solid #CACACA;
+}
+
+.date-line p.date {
+    margin: auto 10px;
+    color: #9a9a9a;
+}
+
+textarea {
+    width: 90%;
+    height: 60%;
+    margin: auto 20px;
+    font-size: 15px;
+}
+
+svg {
+    width: 50px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+#chat-area { margin-top: 30px; padding: 70px 0px; overflow-y: scroll; }
+
+#channel-info {
+    background-color: #ffffff;
+    border-left: 2px solid #886fab;
+    position: fixed;
+    opacity: 1;
+    top: 0px;
+    width: 400px;
+    height: 100%;
+    right: 0px;
+}
+
+.close-channel-info { display: none; }
+
+#channel-info-heder {
+    background-color: #DEDDFF;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#channel-description {
+    width: 85%;
+    height: 70%;
+    border-radius: 15px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+#channel-info-heder > p { font-size: 30px; }
+
+#channel-info > #channel-id { float: right; margin-right: 15px; }
+
+.delete-chat {
+    position: relative;
+    z-index: 2;
+}
+#overlay {
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: fixed;
+}

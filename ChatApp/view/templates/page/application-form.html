@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block page_style %}<link rel="stylesheet" href="{{url_for('static',filename='css/application-form.css')}}">{% endblock %}
+{% block page_script %}<script type="module" src="{{url_for('static',filename='js/application-form.js')}}" type="text/javascript"></script>{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block content %}
+ <!----- 全体背景 ----->
+ <div class="page-sub application-form-background">
+  <!----- フォーム格納コンテナ ----->
+  <div class="page-sub application-form-wrapper">
+      <!----- ここからフォーム適用　----->
+      <form action="{{url_for('apply')}}" method="POST" id="form" class="application-form" name="application_form">
+
+          <!----- フォームエリア（タイトル） ----->
+          <div class="application-form-area-title">
+              <h3 class="application-form-title">予約申請フォーム</h3>
+                <p>必要事項を入力して送信してください。<br>
+                管理者が内容を確認のうえ承認いたします。</p>
+          </div>
+          <!----- /フォームエリア（タイトル） ----->
+
+          <!----- フォームエリア（利用施設・備品等） ----->
+          <div class="application-form-area-category">
+            <div>
+              <h3 class="application-form-category">利用施設・備品等</h3>
+                  <label for="purpose" class="application-form-category-label">利用施設・備品等【必須】</label>
+                  <!-- <ul class="application-form-flashes">※利用施設・備品等を選択してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <p class="application-form-category-message">スクロールしていずれか一つを選択してください（キーワード検索で絞り込みができます）。</p>
+                  <input id="sortKeyword" type="search" name="search" placeholder="キーワードを入力">
+                  <button id="sortButton" class="sortButton" type="button">検索</button>
+                  <br>
+                  <div class="listScroll">
+                    <table>
+                        <tr>
+                          <!--テーブルの項目名-->
+                            <th>選択</th>
+                            <th class="table-label">施設・備品等</th>
+                        </tr>
+                        {% for channel in channels %}
+                        <tr class="facilityList">
+                          <!--テーブルにチャンネル（施設・備品）名のリストを表示-->
+                            <td><input type="radio" name="facility" value="{{channel.id}}" required></td>
+                            <td class="facilityName">{{channel.name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                  </div>
+            </div>
+          </div>
+          <!----- フォームエリア（利用施設・備品等） ----->
+
+          <!----- フォームエリア（利用日時） ----->
+          <div class="application-form-area-category">
+            <div>
+              <h3 class="application-form-category">利用日時</h3>
+                  <label for="date">利用日【必須】</label>
+                  <!-- <ul class="application-form-flashes">※利用日を選択してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <select id="rsv-year" name="date" required></select>    <!-- 選択肢はjsで生成 -->
+                  年
+                  <select id="rsv-month" name="date" required></select>    <!-- 選択肢はjsで生成 -->
+                  月
+                  <select id="rsv-day" name="date" required></select>    <!-- 選択肢はjsで生成 -->
+                  日
+                  <br>
+                  <label for="time">利用時間【必須】</label>
+                  <!-- <ul class="application-form-flashes">※利用時間を選択してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <select id="rsv-time-start-hour" name="time" required>
+                    <option hidden></option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option>13</option>
+                    <option>14</option>
+                    <option>15</option>
+                    <option>16</option>
+                    <option>17</option>
+                    <option>18</option>
+                    <option>19</option>
+                    <option>20</option>
+                    <option>21</option>
+                  </select>
+                  時
+                  <select id="rsv-time-start-minute" name="time" required>
+                    <option hidden></option>
+                    <option>00</option>
+                    <option>30</option>
+                  </select>
+                  分　〜　
+                  <select id="rsv-time-end-hour" name="time" required>
+                    <option hidden></option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option>13</option>
+                    <option>14</option>
+                    <option>15</option>
+                    <option>16</option>
+                    <option>17</option>
+                    <option>18</option>
+                    <option>19</option>
+                    <option>20</option>
+                    <option>21</option>
+                  </select>
+                  時
+                  <select id="rsv-time-end-minute" name="time" required>
+                    <option hidden></option>
+                    <option>00</option>
+                    <option>30</option>
+                  </select>
+                  分
+            </div>
+          </div>
+          <!----- /フォームエリア（利用日時） ----->
+
+          <!----- フォームエリア（利用目的等） ----->
+          <div class="application-form-area-category">
+            <div>
+              <h3 class="application-form-category">利用目的等</h3>
+                  <label for="purpose">利用目的等【必須】</label>
+                  <!-- <ul class="application-form-flashes">※30文字以上200文字以内で入力してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <!----- 自由入力フォームにデフォルト表示させるテンプレート　 ----->
+                  <textarea id="purpose" name="purpose" placeholder="例：ミーティング" required></textarea>
+                  <!----- /自由入力フォームにデフォルト表示させるテンプレート　 ----->
+            </div>
+          </div>
+          <!----- /フォームエリア（利用目的等） ----->
+
+          <!----- フォームエリア（利用者情報） ----->
+          <div class="application-form-area-category">
+            <div>
+              <h3 class="application-form-category">利用者情報</h3>
+                <p class="application-form-category-message">当日の利用者（代表者）の情報を入力してください。<br>
+                申請内容に関する問い合わせや当日の緊急連絡先として利用することがあります。</p>
+                  <label for="application-form-name-input">利用者氏名【必須】</label>
+                  <!-- <ul class="application-form-flashes">※正しい氏名を入力してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <input
+                  type="text"
+                  value={{user.name}}
+                  name="name"
+                  id="application-form-name-input"
+                  required
+                  />
+                  <br>
+                  <label for="application-form-email-input">利用者メールアドレス【必須】</label>
+                  <!-- <ul class="application-form-flashes">※正しいメールアドレスを入力してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <input
+                  type="email"
+                  value={{user.email}}
+                  name="email"
+                  id="application-form-email-input"
+                  required
+                  />
+                  <br>
+                  <label for="application-form-phone-input">利用者電話番号【必須】</label>
+                  <!-- <ul class="application-form-flashes">※正しい電話番号を入力してください</ul>　　--- 出し分け処理必要 --- -->
+                  <br>
+                  <input
+                  type="text"
+                  value={{user.phone}}
+                  name="phone"
+                  id="application-form-phone-input"
+                  required
+                  />
+            </div>
+          </div>
+          <!----- /フォームエリア（利用者情報） ----->
+
+          <!----- 申請ボタン ----->
+          <div>
+            <div>
+              <button class="submitButton" type="submit">確認画面へ</button>
+              <!-- <ul class="application-form-flashes">※入力に不備がある項目があります</ul>　　--- 出し分け処理必要 --- -->
+            </div>
+          </div>
+          <!----- /申請ボタン ----->
+
+      </form>
+      <!----- /ここまでフォーム適用　----->
+  </div>
+  <!----- /フォーム格納コンテナ ----->
+ </div>
+  <!----- /全体背景 ----->
+
+
+ <!-- モーダル -->
+ <div class="modal-wrapper" id="confirm-modal">
+  <div class="modal">
+    <div id="confirm-modal-close">戻って修正する</div>
+    <div class="modal-form">
+        <h2>この内容で申請しますか？</h2>
+        <form id="confirm-modal-form">
+            <p id="rsv-channel-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
+            <p id="rsv-date-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
+            <p id="rsv-time-confirm"></p>     <!-- フォームの入力値をjsで取得し表示させる -->
+            <button class="submit-btn">申請する<br>（マイページへ遷移します）</button>
+            <p>申請の受理状況はマイページでご確認ください</p>
+        </form>
+    </div>
+  </div>
+</div>
+ <!-- /モーダル -->
+
+
+{% endblock %}

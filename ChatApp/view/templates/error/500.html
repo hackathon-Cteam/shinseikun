@@ -1,5 +1,5 @@
-{% extends 'error/base.html' %} {% block title %} error {% endblock %} {% block
-body %}
+{% extends 'error/base.html' %} {% block title %} error {% endblock %} 
+{% block body %}
 <body class="error">
   <div class="error-wrapper">
     <div class="error-content">
@@ -22,7 +22,8 @@ body %}
     class="error-gif"
   />
 </body>
-{% endblock %} {% block script %}
+{% endblock %}
+{% block script %}
 <script
   src="{{url_for('static',filename='js/error.js')}}"
   type="text/javascript"

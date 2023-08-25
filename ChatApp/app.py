@@ -1,213 +1,360 @@
-import uuid
-import re
-from flask import Flask, request, redirect, render_template, session, flash, abort
+import hashlib
+import json
+from entity.ChannelEntity import ChannelEntity
+from entity.ChatMessageEntity import ChatMessageEntity
+from entity.ReservationEntity import ReservationEntity
+from entity.UserEntity import UserEntity
+from entity.ReserveInfoEntity import ReserveInfoEntity
+from entity. PastUsageEntity import PastUsageEntity
+from entity. InformationEntity import InformationEntity
+from common.util.DataTimeConverter import DataTimeConverter
+from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta
-from common.ErrorMessage import ErrorMessage
-from model.service.UserService import UserService
-from model.service.MessageService import MessageService
-from model.service.ChannelService import ChannelService
+import uuid
 
-USER_SERVICE = UserService()
-"""ユーザーテーブルにアクセスするクラス"""
+from model.external.DBManager import DBManager
 
-MESSAGE_SERVICE = MessageService()
-"""メッセージテーブルにアクセスするクラス"""
-
-CHANNEL_SERVICE = ChannelService()
-"""チャンネルテーブルにアクセスするクラス"""
-
-PATTERN_MAIL = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-"""メール形式"""
-
-# エラーメッセージ
-ERROR_MESSAGE_FOR_FOAM_ENPTY = '空のフォームがあるようです'
-"""空のフォームがある場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_SIGNUP_DIFFERENT_PASWORD = '二つのパスワードの値が違っています'
-"""登録するパスワードが一致しない場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_SIGNUP_IRREGULAR_MAIL = '正しいメールアドレスの形式ではありません'
-"""登録するメール形式が不正な場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_SIGNUP_EXIST = '既に登録されているようです'
-"""すでにユーザー登録されている場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_LOGIN_NOT_EXIST = 'このユーザーは存在しません'
-"""ユーザー情報がなかった場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_LOGIN_MISTAKE_PASSWORD = 'パスワードが間違っています！'
-"""パスワード認証に失敗した場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_ADD_CHANNEL_EXIST = '既に同じ名前のチャンネルが存在しています'
-"""すでにチャンネルが存在している場合に表示するエラーメッセージ"""
-
-ERROR_MESSAGE_FOR_DELETE_CHANNEL_NOT_PERMISSION = 'チャンネルは作成者のみ削除可能です'
-"""作成者以外がチャンネル削除を実行した場合に表示するエラーメッセージ"""
-
-
+# アプリの設定
 app = Flask(__name__, static_folder='view/static', template_folder='view/templates')
 app.secret_key = uuid.uuid4().hex
 app.permanent_session_lifetime = timedelta(days=30)
 
-
-@app.route('/signup')
-def signup():
-    """サインアップページの表示"""
-    return render_template('registration/signup.html')
-
-
-@app.post('/signup')
-def userSignup():
-    """サインアップ処理"""
-    name = request.form.get('name')
-    email = request.form.get('email')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2') 
-    if not name or not email or not password1 or not password2:
-        flash(ERROR_MESSAGE_FOR_FOAM_ENPTY)
-        return redirect('/signup')
-    if password1 != password2:
-        flash(ERROR_MESSAGE_FOR_SIGNUP_DIFFERENT_PASWORD)
-        return redirect('/signup')
-    if re.match(PATTERN_MAIL, email) is None:
-        flash(ERROR_MESSAGE_FOR_SIGNUP_IRREGULAR_MAIL)
-        return redirect('/signup')
-    try:
-        userId = uuid.uuid4()
-        USER_SERVICE.createNewUser(name, email, password1, userId)
-        session['uid'] = str(userId)
-        return redirect('/')
-    except ValueError as e:
-        print(e)
-        flash(ERROR_MESSAGE_FOR_SIGNUP_EXIST)
-        return redirect('/signup')
-
-
-@app.route('/login')
+# 画面表示の呼び出し
+# ログイン画面のルート
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    """ログインページの表示"""
-    return render_template('registration/login.html')
+    error_message = ''
+    if request.method == 'POST':
+        mail = request.form.get('mail')
+        password = request.form.get('password')
 
+        usertable = None
+        with DBManager('users') as userDB:
+            usertable = userDB.getData()
 
-@app.post('/login')
-def userLogin():
-    """ログイン処理"""
-    mail = request.form.get('email')
-    password = request.form.get('password')
-    if not mail or not password :
-        flash(ERROR_MESSAGE_FOR_FOAM_ENPTY)
-        return redirect('/login')
-    try:
-        print('call UserService.login.')
-        session['uid'] = USER_SERVICE.login(mail, password)
-        return redirect('/')
-    except ValueError as e:
-        print(e)
-        if e == ErrorMessage.FAILD_LOGIN_NOT_EXIST:
-            flash(ERROR_MESSAGE_FOR_LOGIN_NOT_EXIST)
-        elif e == ErrorMessage.FAILD_LOGIN_MISTAKE_PASSWORD:
-            flash(ERROR_MESSAGE_FOR_LOGIN_MISTAKE_PASSWORD)
-        return redirect('/login')
+        for user in usertable:
+            email = user['email']
+            uid = user['uid']
+            pass_word = user['password']
+            if mail == email and hashlib.sha256(password.encode('utf-8')).hexdigest() == pass_word:
+                session['uid'] = uid # セッションにユーザー情報を保存
+                session['userType'] = user['user_type']
+                return redirect('/')
+            else:
+                error_message = '入力されたIDもしくはパスワードが誤っています'
 
+    return render_template('/page/login.html',error_message=error_message)
 
+# ログアウト
 @app.route('/logout')
 def logout():
-    """ログアウト処理"""
     session.clear()
-    return redirect('/login')
+    return redirect('login')
 
 
+# チャンネル一覧ページのルート
 @app.route('/')
 def index():
-    """チャンネル一覧ページの表示"""
-    userId = session.get('uid')
-    if userId is None:
+    uid = session.get('uid')
+    if uid is None:
         return redirect('/login')
-    return render_template('index.html', channels = CHANNEL_SERVICE.getChannelList(), uid = userId)
+    else:
+        try:
+            with DBManager('channels') as channelDB:
+                channels = channelDB.getData()
+        except ValueError:
+            print('エラー')
+       
+        return render_template('/page/channel_list.html',channels=channels, userId= uid, userType=session['userType'])
 
+# サインアップ
+@app.route('/signup',methods=['POST'])
+def signup():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    phone = request.form.get('phone')
+    group_name = request.form.get('group_name')
 
-@app.post('/')
-def addChannel():
-    """チャンネルの追加"""
-    userId = session.get('uid')
-    if userId is None:
-        return redirect('/login')
-    try:
-        CHANNEL_SERVICE.addChannel(userId, request.form.get('channelTitle'), request.form.get('channelDescription'))
-        return redirect('/')
-    except ValueError as e:
-        print(e)
-        render_template('error/error.html', error_message = ERROR_MESSAGE_FOR_ADD_CHANNEL_EXIST)
-
-
-@app.post('/update_channel')
-def updateChannel():
-    """チャンネルの更新"""
-    userId = session.get('uid')
-    if userId is None:
-        return redirect('/login')
-
-    channelId = request.form.get('cid')
-    CHANNEL_SERVICE.updateChannel(userId, request.form.get('channelTitle'), request.form.get('channelDescription'), channelId)
-    return redirect('/detail/{channelId}'.format(channelId = channelId))
-
-
-# チャンネルの削除
-@app.route('/delete/<channelId>')
-def deleteChannel(channelId):
-    """チャンネルの削除
+    user_id = str(uuid.uuid4())
     
-    Args:
-    - channelId (String): チャンネルID
-    """
-    userId = session.get('uid')
-    if userId is None:
-        return redirect('/login')
-    try:
-        CHANNEL_SERVICE.deleteChannel(channelId, userId)
-        return redirect('/')
-    except ValueError as e:
-        flash(ERROR_MESSAGE_FOR_DELETE_CHANNEL_NOT_PERMISSION)
-        return redirect ('/')
-
-
-@app.route('/detail/<channelId>')
-def detail(channelId):
-    """チャンネル詳細ページの表示
+    print(f'PW: {hashlib.sha256(password.encode("utf-8")).hexdigest()}')
+    user_data = {
+        'uid' : user_id,
+        'user_name': name,
+        'email': email,
+        'password': hashlib.sha256(password.encode('utf-8')).hexdigest(),
+        'phone': phone,
+        'group_name': group_name,
+    }
     
-    Args:
-    - channelId (String): チャンネルID
-    """
-    userId = session.get('uid')
-    if userId is None:
+    with DBManager('users') as userDB:
+        userDB.addData(user_data)
+
+    session['uid'] = user_id  # セッションにユーザー情報を保存
+    session['userType'] = 'user'
+    return redirect('/')
+
+
+# チャット画面ルート
+@app.route('/talk/<channelId>')
+def talk(channelId):
+    if session.get('uid') is None:
         return redirect('/login')
+    channel = None
+    with DBManager('channels') as channelDB:
+        channel = channelDB.getDataByColumns(['id', 'name', 'overview', 'description'], f'id="{channelId}"')[0]
+
+    messages = None
+    with DBManager('messages') as messageDB:
+        messages = messageDB.getData(f'cid="{channelId}"')
+
+    users = None
+    with DBManager('users') as usersDB:
+        users = usersDB.getDataByColumns(['uid', 'user_name', 'user_type'])
+    
+    chatList = []
+    for message in messages:
+        user = list(filter(lambda user : user['uid'] == message['uid'], users))[0]
+        chatList.append(
+            ChatMessageEntity(message['id'], user['user_name'], user['user_type'], message['message'], DataTimeConverter.convertStr(message['created_at']))
+        )
+
     return render_template(
-        'detail.html', messages = MESSAGE_SERVICE.getMessages(channelId), channel = CHANNEL_SERVICE.getChannelById(channelId), uid = userId
+        'page/chat.html', userType= session['userType'], channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], ''),
+        messages= chatList, userId= session['uid']
     )
 
 
-@app.post('/message')
-def add_message():
-    """メッセージの投稿"""
+# 管理者画面のルート
+@app.route('/admin')
+def admin():
+    if session.get('uid') is None:
+        return redirect('/login')
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getData()
+
+    users = None
+    with DBManager('users') as usersDB:
+        users = usersDB.getData()
+
+    channelList = []
+    for channel in channels:
+        channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
+        
+    reservations = None
+    with DBManager('reservations') as reservationDB:
+        reservations = reservationDB.getData()
+
+    reservationList = []
+    for reservation in reservations:
+        user = list(filter(lambda user : user['uid'] == reservation['uid'], users))[0]
+        channel = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]
+
+        status = 'キャンセル' if reservation['cancel_at'] is not None else '承認' if reservation['approval_at'] is not None else '受領' if reservation['received_at'] is not None else '未受領'
+        reservationList.append(ReserveInfoEntity(
+            user['uid'], reservation['id'], channel['id'], channel['name'], f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"]).split()[1]}',
+            reservation['purpose'], user['user_name'], status
+        ))
+
+    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reservationList, userId= session['uid'])
+
+
+# ユーザー画面
+@app.route('/mypage/<userId>')
+def mypage(userId):
     userId = session.get('uid')
     if userId is None:
         return redirect('/login')
-    message = request.form.get('message')
-    channelId = request.form.get('cid')
-    if message:
-        MESSAGE_SERVICE.addMessage(userId, channelId, message)
-    return redirect('/detail/{channelId}'.format(channelId = channelId))
+
+    # ユーザー情報
+    userInfo = None
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{userId}"')[0]
+        userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
+
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getDataByColumns(['id', 'name'])
+
+    # 申請中の一覧
+    reservations = None
+    with DBManager('reservations') as reservationDB:
+        reservations = reservationDB.getData(f'uid="{userId}"')
+
+    reserinfo_list = []
+    past_list = []
+    if reservations:
+        reservations.sort(key= lambda reserinfo: reserinfo['start_use'])
+        for reservation in reservations:
+            targetName = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]['name']
+            cancelDate = reservation['cancel_at']
+            # 過去の利用歴
+            if DataTimeConverter.createDatetimeNow() > reservation['end_use']:
+                past_list.append(PastUsageEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}を利用しました' if cancelDate is None else f'{targetName}をキャンセルしました'))
+                continue
+
+            # 申請情報
+            reserinfo_list.append(ReservationEntity(
+                reservation['id'],
+                f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"]).split()[1]} {targetName}',
+                'キャンセル済' if reservation['cancel_at'] is not None else '利用予約完了' if reservation['approval_at'] is not None else '利用予約申請中',
+                reservation['cid'],
+            ))
+
+    # 通知情報の一覧
+    information = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
+    information2 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
+    information3 = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
+
+    information_list = [information,information2,information3]
+
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list, userId=userId)
 
 
-@app.post('/delete_message')
-def deleteMessage():
-    """メッセージの削除"""
-    if session.get('uid') is None:
+# 申請フォーム画面
+@app.route('/form')
+def form():
+    userId = session.get('uid')
+    if userId is None:
         return redirect('/login')
-    messageId = request.form.get('message_id')
-    if messageId:
-        dbConnect.deleteMessage(messageId)
-    return redirect('/detail/{channelId}'.format(channelId = request.form.get('cid')))
+
+    # チャンネル情報
+    channels = None
+    with DBManager('channels') as channelDB:
+        channels = channelDB.getData()
+
+    channelList = []
+    for channel in channels:
+        channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
+
+    # ユーザー情報
+    userInfo = None
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{userId}"')[0]
+        userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
+
+    return render_template('page/application-form.html', channels=channelList, user=userInfo, userId=userId, userType= session['userType'])
+
+# POST(処理の呼び出し)
+# 申請フォームのルート
+@app.post('/apply')
+def apply():
+    userId = session['uid']
+    cid = request.form.get('facility')
+    year, month, day = request.form.getlist('date')
+    start_hour, start_minute, end_hour, end_minute = request.form.getlist('time')
+    purpose = request.form.get('purpose')
+    name = request.form.get('name')    #当日の利用者名（フォームで編集された場合は、ログイン中のユーザー名とイコールでない）
+    email = request.form.get('email')    #当日の利用者のメールアドレス（フォームで編集された場合は、ログイン中のユーザーのメールアドレスとイコールでない）
+    phone = request.form.get('phone')    #当日の利用者の電話番号（フォームで編集された場合は、ログイン中のユーザーの電話番号とイコールでない）
+
+    #日時データの加工
+    start_use = DataTimeConverter.convertDatetime(f'{year}-{month}-{day} {start_hour}:{start_minute}:00')
+    end_use = DataTimeConverter.convertDatetime(f'{year}-{month}-{day} {end_hour}:{end_minute}:00')
+
+    #reservationデータベースへの追加処理
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.addData({ 'uid': userId, 'cid': cid, 'purpose': purpose, 'start_use': start_use , 'end_use': end_use })
+        return redirect ('/mypage/'+ userId)    #マイページにリダイレクト
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+# メッセージ投稿のアクション
+@app.post('/post-message')
+def postMessage():
+    try:
+        with DBManager('messages') as messageDB:
+            messageDB.addData({ 'uid': session['uid'], 'cid': request.json['channelId'], 'message': request.json['message'] })
+        return Response(response= json.dumps({'message': 'successfully posted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+
+# メッセージ削除
+@app.post('/delete-message')
+def deleteMessage():
+    try:
+        with DBManager('messages') as messageDB:
+            messageDB.deleteData(f'id={request.json["messageId"]}')
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+# チャンネル削除のアクション
+@app.post('/delete-channel')
+def deleteChannel():
+    try:
+        with DBManager('channels') as channelDB:
+            channelDB.deleteData(f'id={request.json["channelId"]}')
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+# チャンネル追加のアクション
+@app.post('/add-channel')
+def addChannel():
+    try:
+        with DBManager('channels') as channelDB:
+            channelDB.addData({
+                'name': request.json["channelName"],
+                'overview': f'{request.json["channelName"]}についてはお問い合わせください。',
+                'description': f'{request.json["channelName"]}の詳細についてはお問い合わせください。', 'img': 'no-img.jpg'
+            })
+            cid = channelDB.getDataByColumns('id', f'name="{request.json["channelName"]}"')[0]['id']
+        return Response(response= json.dumps({'channelId': cid }), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+
+# 管理者アカウント変更アクション
+# 申請受領のアクション
+@app.post('/received-reservation')
+def receivedReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.updateData({ 'received_at': DataTimeConverter.createDatetimeNow()}, f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully received'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+    
+
+# 申請承認のアクション
+@app.post('/approval-reservation')
+def approvalReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.updateData({ 'approval_at': DataTimeConverter.createDatetimeNow()}, f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully approval'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
+
+# 申請キャンセルのアクション
+@app.post('/cancel-reservation')
+def cancelReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.updateData({ 'cancel_at': DataTimeConverter.createDatetimeNow()}, f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully cancel'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+    
+@app.post('/change-account')
+def changeAccount():
+    data = {}
+    data['user_name'] = request.form.get('name')
+    data['email'] = request.form.get('email')
+    data['password'] = hashlib.sha256(request.form.get('password_new').encode('utf-8')).hexdigest()
+    data['phone'] = request.form.get('phone')
+    data['group_name'] = request.form.get('group_name')
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{session["uid"]}"')[0]
+        if hashlib.sha256(request.form.get('password_old').encode('utf-8')).hexdigest() == user['password']:
+            usersDB.updateData(dict(filter(lambda item: item[1], data.items())), f'uid="{user["uid"]}"')
+    return redirect(f'/mypage/{session["uid"]}')
 
 
 @app.errorhandler(404)
@@ -221,6 +368,6 @@ def showError500(error):
     """500エラーページの表示"""
     return render_template('error/500.html'),500
 
-
+# アプリの起動
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=False)
