@@ -99,6 +99,8 @@ def signup():
 # チャット画面ルート
 @app.route('/talk/<channelId>')
 def talk(channelId):
+    if session.get('uid') is None:
+        return redirect('/login')
     channel = None
     with DBManager('channels') as channelDB:
         channel = channelDB.getDataByColumns(['id', 'name', 'overview', 'description'], f'id="{channelId}"')[0]
@@ -127,6 +129,8 @@ def talk(channelId):
 # 管理者画面のルート
 @app.route('/admin')
 def admin():
+    if session.get('uid') is None:
+        return redirect('/login')
     channels = None
     with DBManager('channels') as channelDB:
         channels = channelDB.getData()
@@ -138,7 +142,7 @@ def admin():
     channelList = []
     for channel in channels:
         channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
-    
+        
     reservations = None
     with DBManager('reservations') as reservationDB:
         reservations = reservationDB.getData()
@@ -160,7 +164,10 @@ def admin():
 # ユーザー画面
 @app.route('/mypage/<userId>')
 def mypage(userId):
-    userId = session['uid']
+    userId = session.get('uid')
+    if userId is None:
+        return redirect('/login')
+
     # ユーザー情報
     userInfo = None
     with DBManager('users') as usersDB:
@@ -209,6 +216,10 @@ def mypage(userId):
 # 申請フォーム画面
 @app.route('/form')
 def form():
+    userId = session.get('uid')
+    if userId is None:
+        return redirect('/login')
+
     # チャンネル情報
     channels = None
     with DBManager('channels') as channelDB:
@@ -218,7 +229,6 @@ def form():
     for channel in channels:
         channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
 
-    userId = session['uid']
     # ユーザー情報
     userInfo = None
     with DBManager('users') as usersDB:
