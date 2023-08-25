@@ -24,7 +24,8 @@ async function changeReservationStatus(action, buttonId, j, checkBox) {
     checkBox.checked = false;
 
     const record = checkBox.closest('tr');
-    const message = `${record.cells[3].innerText}の${record.cells[1].innerText}の利用について。\n${record.cells[2].innerText}さんの申請が${record.cells[5].innerText}されました。`;
+    const date = record.cells[3].innerText.split(' ');
+    const message = `以下の利用についての申請を${record.cells[5].innerText}しました。\n【申請者】${record.cells[2].innerText}\n【利用日】${date[0]}\n【時間帯】${date[1]}`;
     requestPost('/post-message', { message, channelId: record.getAttribute('data-channel-id') });
   } catch (error) {
     console.log(error.message);

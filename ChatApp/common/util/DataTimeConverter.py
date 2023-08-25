@@ -13,7 +13,8 @@ class DataTimeConverter:
         Args:
         * str (String): 日時データを表す文字列
         """
-        return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+        dt = datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+        return dt + datetime.timedelta(hours=-9)
     
     def convertStr(dt, isEenableSeconds= False):
         """Datetimeオブジェクトから文字列(yyyy/mm/dd hh:mm)に変換する
