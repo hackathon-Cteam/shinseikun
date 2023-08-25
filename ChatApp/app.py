@@ -20,31 +20,30 @@ app.permanent_session_lifetime = timedelta(days=30)
 
 # 画面表示の呼び出し
 
-
 # ログイン画面のルート
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error_message = ''
     if request.method == 'POST':
         userid = request.form.get('userid')
         password = request.form.get('password')
         
-        
         with DBManager('users') as userDB:
-            users = userDB.getData()
+            usertable = userDB.getData()
             
-        for user in users:
+        for user in usertable:
             uid = user['uid']
             pass_word = user['password']
             
-        if userid == uid and password == pass_word:
-            user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
-            session['uid'] = user_id  # セッションにユーザー情報を保存
-            return redirect(url_for('index'))
-        else:
-            return "Invalid credentials. Please try again."  # 画面にエラーを表示して再入力を促すよう修正したい
+            if userid == uid and password == pass_word:
+                user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
+                session['uid'] = user_id  # セッションにユーザー情報を保存
+                return redirect(url_for('index'))
+        
+            else:
+                error_message = '入力されたIDもしくはパスワードが誤っています'
 
-    return render_template('/page/login.html')
-
+    return render_template('/page/login.html',error_message=error_message)
 
 # ログアウト
 @app.route('/logout')
@@ -73,32 +72,34 @@ def index():
 def signup():
     name = request.form.get('name')
     email = request.form.get('email')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2')
+    password = request.form.get('password')
+    phone = request.form.get('phone')
+    group_name = request.form.get('group_name')
+    create_at = request.form.get('create_at')
     
-    # user_data = {
-    #     'uid': ,
-    #     'user_name': name,
-    #     'email': email,
-    #     'password': password1
-    #     'phone': ,  
-    #     'user_type': ,  
-    #     'group_name': ,  
-    #     'created_at': 
-    # }
+    user_id = str(uuid.uuid4())
     
-    # with DBManager('users') as userDB:
-    #     userDB.addData(user_data)
-    
-    # 仮でユーザー情報をセッションに保存 
-    session['new_user_info'] = {
-        'name': name,
+    user_data = {
+        'uid' : user_id,
+        'user_name': name,
         'email': email,
-        'password1': password1,
-        'password2': password2
+        'password': password,
+        'phone': phone,
+        'group_name': group_name,
+        'created_at': create_at
     }
     
-    user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
+    with DBManager('users') as userDB:
+        userDB.addData(user_data)
+    
+    # 仮でユーザー情報をセッションに保存 
+    # session['new_user_info'] = {
+    #     'name': name,
+    #     'email': email,
+    #     'password1': password1,
+    #     'password2': password2
+    # }
+    
     session['uid'] = user_id  # セッションにユーザー情報を保存
     return redirect('/')
 
@@ -267,7 +268,7 @@ def apply():
     try:
         with DBManager('reservations') as reservationDB:
             reservationDB.addData({ 'uid': userId, 'cid': cid, 'purpose': purpose, 'start_use': start_use , 'end_use': end_use })
-        return redirect ('/mypage/<userId>')    #マイページにリダイレクト
+        return redirect ('/mypage/'+ userId)    #マイページにリダイレクト
     except  Exception as error:
         return Response(response= json.dumps({'message': error}), status= 500)
 

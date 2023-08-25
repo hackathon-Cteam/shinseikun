@@ -13,15 +13,17 @@ async function requestPost(url, data) {
   return responseData;
 }
 
-async function changeReservationStatus(action, reserinfoId, buttonId, j, record) {
+async function changeReservationStatus(action, buttonId, j, checkBox) {
   try {
-    await requestPost(`/${action}-reservation`, { reserinfoId });
+    await requestPost(`/${action}-reservation`, { reserinfoId: checkBox.getAttribute('data-reserinfo-id') });
     let statusbtn = document.getElementById(buttonId).value;
     let tableA = document.getElementById("sort_table");
     let c = j+1;
     console.log(c);
     tableA.rows[c].cells[5].innerText = statusbtn;
+    checkBox.checked = false;
 
+    const record = checkBox.closest('tr');
     const message = `${record.cells[3].innerText}の${record.cells[1].innerText}の利用について。\n${record.cells[2].innerText}さんの申請が${record.cells[5].innerText}されました。`;
     requestPost('/post-message', { message, channelId: record.getAttribute('data-channel-id') });
   } catch (error) {
@@ -35,7 +37,7 @@ function statusbtn1() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-        changeReservationStatus('received',statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn1', j, statuscheck[j].closest('tr'));
+        changeReservationStatus('received', 'statusbtn1', j, statuscheck[j]);
     }
   }
 }
@@ -45,7 +47,7 @@ function statusbtn2() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      changeReservationStatus('approval', statuscheck[j].getAttribute('data-reserinfo-id'), statuscheck[j].getAttribute('data-channel-id'), 'statusbtn2', j);
+      changeReservationStatus('approval', 'statusbtn2', j, statuscheck[j]);
     }
   }
 }
@@ -55,7 +57,7 @@ function statusbtn3() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      changeReservationStatus('cancel', statuscheck[j].getAttribute('data-reserinfo-id'), statuscheck[j].getAttribute('data-channel-id'), 'statusbtn3', j);
+      changeReservationStatus('cancel', 'statusbtn3', j, statuscheck[j]);
     }
   }
 }
@@ -239,8 +241,8 @@ window.addEventListener('load', () => {
 });
 
 /**
- * 検索機能2  施設名の絞り込み検索機能の登録処理
- */
+ * 検索機能2  施設名の絞り込み検索機能の登録処理*/
+
 function registerSortFacilityEvent() {
   //検索ボタンを取得
   const sortButtonB = document.getElementById("sortButton");
@@ -256,7 +258,9 @@ function registerSortFacilityEvent() {
  */
 function sortFacility() {
   const sortKeywordValue = document.getElementById("sortKeyword").value.toUpperCase();    //検索フォームに入力されたキーワードをの値を取得（大文字に揃える）
+  // ここが問題箇所：最初からある要素しか取得していない
   const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
+  // ここが問題箇所：最初からある要素しか取得していない
   const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
   for (h = 0; h < facilityList.length; h++) {    //選択肢の要素の個数分繰り返し
     const facilityNameValue = facilityName[h].textContent;    //施設名の要素から値を抽出し変数に代入
