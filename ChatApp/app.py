@@ -1,12 +1,12 @@
 import hashlib
 import json
-from Entity.ChannelEntity import ChannelEntity
-from Entity.ChatMessageEntity import ChatMessageEntity
-from Entity.ReservationEntity import ReservationEntity
-from Entity.UserEntity import UserEntity
-from Entity.ReserveInfoEntity import ReserveInfoEntity
-from Entity. PastUsageEntity import PastUsageEntity
-from Entity. InformationEntity import InformationEntity
+from entity.ChannelEntity import ChannelEntity
+from entity.ChatMessageEntity import ChatMessageEntity
+from entity.ReservationEntity import ReservationEntity
+from entity.UserEntity import UserEntity
+from entity.ReserveInfoEntity import ReserveInfoEntity
+from entity. PastUsageEntity import PastUsageEntity
+from entity. InformationEntity import InformationEntity
 from common.util.DataTimeConverter import DataTimeConverter
 from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta

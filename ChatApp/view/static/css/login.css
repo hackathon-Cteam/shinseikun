@@ -84,6 +84,6 @@
     font-weight: bold;
 }
 
-input[type="text"] {margin-right: 30px;}
+.width_alignment input[type="text"] {margin-right: 30px;}
 
 #header #account {display: none;}

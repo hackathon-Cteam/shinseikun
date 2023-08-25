@@ -1,5 +1,5 @@
-{% extends 'error/base.html' %} {% block title %} error {% endblock %} {% block
-body %}
+{% extends 'error/base.html' %} {% block title %} error {% endblock %} 
+{% block body %}
 <body class="error">
   <div class="error-wrapper">
     <div class="error-content">
@@ -12,7 +12,7 @@ body %}
         <p>エラーが発生しました。</p>
         <p>管理者にお問い合わせください。</p>
         <button class="error-button pink">
-          <a href="{{ url_for('channel_list') }}">戻る</a>
+          <a href="{{ url_for('index') }}">戻る</a>
         </button>
       </div>
     </div>
@@ -22,7 +22,8 @@ body %}
     class="error-gif"
   />
 </body>
-{% endblock %} {% block script %}
+{% endblock %}
+{% block script %}
 <script
   src="{{url_for('static',filename='js/error.js')}}"
   type="text/javascript"
