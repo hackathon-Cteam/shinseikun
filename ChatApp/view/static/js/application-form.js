@@ -112,8 +112,8 @@ function sortFacility() {
   const facilityList = document.getElementsByClassName("facilityList");    //選択肢（選択ボタン＋施設名）の要素を取得
   const facilityName = document.getElementsByClassName("facilityName");    //施設名の要素を取得
 
-    for (i = 0; i < facilityList.length; i++) {    //選択肢の要素の個数分繰り返し
-      facilityNameValue = facilityName[i].textContent;    //施設名の要素から値を抽出し変数に代入
+    for (let i = 0; i < facilityList.length; i++) {    //選択肢の要素の個数分繰り返し
+      const facilityNameValue = facilityName[i].textContent;    //施設名の要素から値を抽出し変数に代入
       if (facilityNameValue.toUpperCase().search(sortKeywordValue) > -1) {    //施設名の値とキーワードの値が不一致でなければ（施設名の値は大文字に揃える）
         facilityList[i].style.display = "";    //選択肢の要素を表示
       } else {
