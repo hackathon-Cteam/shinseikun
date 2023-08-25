@@ -9,7 +9,6 @@ from Entity. InformationEntity import InformationEntity
 from common.util.DataTimeConverter import DataTimeConverter
 from flask import Flask, request, redirect, render_template, session, flash, abort, Response
 from datetime import timedelta
-from jinja2 import Template
 import uuid
 
 from model.external.DBManager import DBManager
@@ -143,21 +142,6 @@ def admin():
     with DBManager('users') as usersDB:
         users = usersDB.getData()
 
-    reserveInfos = [
-        ReserveInfoEntity('usr-123456710', 'rsv-123456710', '会議室A', '2024/1/2/12:00', '2024/1/3/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456711', 'rsv-123456711', '会議室B', '2024/1/3/12:00', '2024/1/4/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456712', 'rsv-123456712', '会議室C', '2024/1/4/12:00', '2024/1/5/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456713', 'rsv-123456713', '会議室D', '2024/1/5/12:00', '2024/1/6/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456714', 'rsv-123456714', '会議室E', '2024/1/6/12:00', '2024/1/7/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456715', 'rsv-123456715', '会議室F', '2024/1/7/12:00', '2024/1/8/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456716', 'rsv-123456716', '会議室G', '2024/1/8/12:00', '2024/1/9/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456717', 'rsv-123456717', '会議室H', '2024/1/9/12:00', '2024/1/10/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456718', 'rsv-123456718', '会議室I', '2024/1/10/12:00', '2024/1/11/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456719', 'rsv-123456719', '会議室J', '2024/1/11/12:00', '2024/1/12/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456712', 'rsv-123456713', '会議室K', '2024/1/12/12:00', '2024/1/13/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領'),
-        ReserveInfoEntity('usr-123456713', 'rsv-123456714', '会議室M', '2024/1/13/12:00', '2024/1/14/14:00', '【利用目的】会議での利用のため', '申請太郎', 'taro.shinsei@gmail.com', '09099999991', '2023/12/1/12:34', '予約', '未受領')
-    ]
-
     channelList = []
     for channel in channels:
         channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
@@ -166,20 +150,18 @@ def admin():
     with DBManager('reservations') as reservationDB:
         reservations = reservationDB.getData()
 
-    # TODO: htmlに予約情報が反映できる状態になったらテンプレートへ渡すようにする
     reservationList = []
     for reservation in reservations:
         user = list(filter(lambda user : user['uid'] == reservation['uid'], users))[0]
         channel = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]
 
-        status = '承認' if reservation['approval_at'] is None else 'キャンセル' if reservation['cancel_at'] is None else '受領'
-        # TODO: 渡す情報をもっと絞ってもいいかもしれない。htmlはまだ未反映なので必要な情報が不明確
+        status = 'キャンセル' if reservation['cancel_at'] is not None else '承認' if reservation['approval_at'] is not None else '受領' if reservation['received_at'] is not None else '未受領'
         reservationList.append(ReserveInfoEntity(
-            user['uid'], reservation['id'], channel['name'], DataTimeConverter.convertStr(reservation['start_use']), DataTimeConverter.convertStr(reservation['end_use']),
-            reservation['purpose'], user['user_name'], user['email'], user['phone'],  DataTimeConverter.convertStr(reservation['created_at']), '', status
+            user['uid'], reservation['id'], channel['id'], channel['name'], f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"])}',
+            reservation['purpose'], user['user_name'], status
         ))
 
-    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reserveInfos)
+    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reservationList)
 
 
 # 管理者アカウント編集画面
@@ -200,13 +182,6 @@ def mypage(userId):
         user = usersDB.getData(f'uid="{userId}"')[0]
         userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
 
-    # 申請中の一覧
-    reserinfo = ReservationEntity('333', '2023/08/11', '利用予約完了')
-    reserinfo2 = ReservationEntity('444', '2023/08/10', 'キャンセル済')
-    reserinfo3 = ReservationEntity('555', '2023/09/26', '利用予約申請中')
-    
-    reserinfo_list_sample = [reserinfo,reserinfo2,reserinfo3]
-
     channels = None
     with DBManager('channels') as channelDB:
         channels = channelDB.getDataByColumns(['id', 'name'])
@@ -219,6 +194,7 @@ def mypage(userId):
     reserinfo_list = []
     past_list = []
     if reservations:
+        reservations.sort(key= lambda reserinfo: reserinfo['start_use'])
         for reservation in reservations:
             targetName = list(filter(lambda channel : channel['id'] == reservation['cid'], channels))[0]['name']
             cancelDate = reservation['cancel_at']
@@ -228,19 +204,12 @@ def mypage(userId):
                 continue
 
             # 申請情報
-            reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(reservation['created_at']), f'{targetName}の予約を申請しました'))
-
-            # キャンセル情報
-            if cancelDate is not None:
-                reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(cancelDate), f'{targetName}の予約がキャンセルされました'))
-                
-            # 承認情報
-            approvaldate = reservation['approval_at'] 
-            if approvaldate is not None:
-                reserinfo_list.append(ReservationEntity(reservation['id'], DataTimeConverter.convertStr(approvaldate), f'{targetName}の予約が承認されました'))
-
-        reserinfo_list.sort(key= lambda reserinfo: reserinfo.reserve_time, reverse=True)
-        past_list.sort(key= lambda past: past.past_usege, reverse=True)
+            reserinfo_list.append(ReservationEntity(
+                reservation['id'],
+                f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"])} {targetName}',
+                'キャンセル済' if reservation['cancel_at'] is not None else '利用予約完了' if reservation['approval_at'] is not None else '利用予約申請中',
+                reservation['cid'],
+            ))
 
     # 通知情報の一覧
     information = InformationEntity('111','2023/8/24','第一体育館修理のため休館のお知らせ')
@@ -249,16 +218,7 @@ def mypage(userId):
 
     information_list = [information,information2,information3]
 
-    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list_sample, past_list= past_list, information_list=information_list)
-
-    template_str = """申請ステータスアイコン"""
-    template = Template(template_str)
-
-    list_items = ["利用予約完了", "利用予約申請中"]
-    print(template.render(list_items=list_items))
-
-
-    
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list)
 
 
 # 申請フォーム画面
@@ -336,13 +296,63 @@ def deleteMessage():
         return Response(response= json.dumps({'message': error}), status= 500)
 
 # チャンネル削除のアクション
+@app.post('/delete-channel')
+def deleteChannel():
+    try:
+        with DBManager('channels') as channelDB:
+            channelDB.deleteData(f'id={request.json["channelId"]}')
+        return Response(response= json.dumps({'message': 'successfully deleted'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
 
 # チャンネル追加のアクション
+@app.post('/add-channel')
+def addChannel():
+    try:
+        with DBManager('channels') as channelDB:
+            channelDB.addData({
+                'name': request.json["channelName"],
+                'overview': f'{request.json["channelName"]}についてはお問い合わせください。',
+                'description': f'{request.json["channelName"]}の詳細についてはお問い合わせください。', 'img': 'no-img.jpg'
+            })
+            cid = channelDB.getDataByColumns('id', f'name="{request.json["channelName"]}"')[0]['id']
+        return Response(response= json.dumps({'channelId': cid }), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
 
 # 管理者アカウント変更アクション
+# 申請受領のアクション
+@app.post('/received-reservation')
+def receivedReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.updateData({ 'received_at': DataTimeConverter.createDatetimeNow()}, f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully received'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+    
+
+# 申請承認のアクション
+@app.post('/approval-reservation')
+def approvalReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.updateData({ 'approval_at': DataTimeConverter.createDatetimeNow()}, f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully approval'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
+
 
 # 申請キャンセルのアクション
-
+@app.post('/cancel-reservation')
+def cancelReservation():
+    try:
+        with DBManager('reservations') as reservationDB:
+            reservationDB.updateData({ 'cancel_at': DataTimeConverter.createDatetimeNow()}, f'id={request.json["reserinfoId"]}')
+        return Response(response= json.dumps({'message': 'successfully cancel'}), status= 200)
+    except  Exception as error:
+        return Response(response= json.dumps({'message': error}), status= 500)
 
 @app.errorhandler(404)
 def showError404(error):

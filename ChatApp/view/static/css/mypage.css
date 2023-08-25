@@ -222,7 +222,7 @@ img {
   height: 18px;
 }
 
-#cancelbtn {
+.cancelbtn {
   background-color: #ffffff;
     height: auto;
     width: auto;
