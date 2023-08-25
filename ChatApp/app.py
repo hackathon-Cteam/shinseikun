@@ -150,7 +150,7 @@ def admin():
 
         status = 'キャンセル' if reservation['cancel_at'] is not None else '承認' if reservation['approval_at'] is not None else '受領' if reservation['received_at'] is not None else '未受領'
         reservationList.append(ReserveInfoEntity(
-            user['uid'], reservation['id'], channel['id'], channel['name'], f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"])}',
+            user['uid'], reservation['id'], channel['id'], channel['name'], f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"]).split()[1]}',
             reservation['purpose'], user['user_name'], status
         ))
 
@@ -191,7 +191,7 @@ def mypage(userId):
             # 申請情報
             reserinfo_list.append(ReservationEntity(
                 reservation['id'],
-                f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"])} {targetName}',
+                f'{DataTimeConverter.convertStr(reservation["start_use"])}〜{DataTimeConverter.convertStr(reservation["end_use"]).split()[1]} {targetName}',
                 'キャンセル済' if reservation['cancel_at'] is not None else '利用予約完了' if reservation['approval_at'] is not None else '利用予約申請中',
                 reservation['cid'],
             ))

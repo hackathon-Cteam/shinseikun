@@ -98,7 +98,7 @@ function registerSubmitConfirmModalEvent() {
             channelId = radio.value
         }
       });
-      requestPost('/post-message', { message: `${channel}の利用を以下の日程で申請しました。\n【利用日】 ${date}\n【時間帯】${time}`, channelId });
+      requestPost('/post-message', { message: `${channel}の利用を以下の日程で申請しました。\n【利用日】${date}\n【時間帯】${time}`, channelId });
       form.submit()    //停止していた親画面のフォームのsubmitを実施
       console.log("親画面のフォームを送信しマイページへ遷移");    //挙動確認用
     })
@@ -149,7 +149,7 @@ function showSubmitInfo() {
 
       //モーダル画面へ値を表示
       document.getElementById("rsv-channel-confirm").textContent = checkedValue;
-      document.getElementById("rsv-date-confirm").textContent = `${year}年${month}月${day}日`;
+      document.getElementById("rsv-date-confirm").textContent = `${year}/${month}/${day}`;
       document.getElementById("rsv-time-confirm").textContent = `${startHour}:${startMinute}〜${endHour}:${endMinute}`;
 }
 

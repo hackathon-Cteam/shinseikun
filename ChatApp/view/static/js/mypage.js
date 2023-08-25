@@ -4,7 +4,7 @@ async function cancelReservation(target) {
   try {
     await requestPost('/cancel-reservation', { 'reserinfoId': target.getAttribute('data-reserinfo-id')});
     const strList = target.closest('li').innerText.split(' ');
-    const message = `${strList[0]} ${strList[1]} ${strList[2]}の${strList[3]}の利用を\nキャンセルしました。`;
+    const message = `以下の日程の利用をキャンセルしました。\n【利用日】${strList[0]}\n【時間帯】${strList[1]}`;
     requestPost('/post-message', { message, channelId: target.getAttribute('data-channel-id')});
   } catch (error) {
     console.log(error.message);
