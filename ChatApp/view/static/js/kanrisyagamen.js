@@ -13,7 +13,7 @@ async function requestPost(url, data) {
   return responseData;
 }
 
-async function changeReservationStatusRequest(action, reserinfoId, buttonId, j) {
+async function changeReservationStatus(action, reserinfoId, buttonId, j, record) {
   try {
     await requestPost(`/${action}-reservation`, { reserinfoId });
     let statusbtn = document.getElementById(buttonId).value;
@@ -21,6 +21,9 @@ async function changeReservationStatusRequest(action, reserinfoId, buttonId, j) 
     let c = j+1;
     console.log(c);
     tableA.rows[c].cells[5].innerText = statusbtn;
+
+    const message = `${record.cells[3].innerText}の${record.cells[1].innerText}の利用について。\n${record.cells[2].innerText}さんの申請が${record.cells[5].innerText}されました。`;
+    requestPost('/post-message', { message, channelId: record.getAttribute('data-channel-id') });
   } catch (error) {
     console.log(error.message);
     alert(`操作が正常に終了できませんでした。\n一覧のステータスを確認してください。`);
@@ -32,7 +35,7 @@ function statusbtn1() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      changeReservationStatusRequest('received', statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn1', j);
+        changeReservationStatus('received',statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn1', j, statuscheck[j].closest('tr'));
     }
   }
 }
@@ -42,7 +45,7 @@ function statusbtn2() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      changeReservationStatusRequest('approval', statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn2', j);
+      changeReservationStatus('approval', statuscheck[j].getAttribute('data-reserinfo-id'), statuscheck[j].getAttribute('data-channel-id'), 'statusbtn2', j);
     }
   }
 }
@@ -52,7 +55,7 @@ function statusbtn3() {
   const statuscheck = document.getElementsByName("statuscheck");
   for (let j = 0; j < statuscheck.length; j++) {
     if (statuscheck[j].checked) {
-      changeReservationStatusRequest('cancel', statuscheck[j].getAttribute('data-reserinfo-id'), 'statusbtn3', j);
+      changeReservationStatus('cancel', statuscheck[j].getAttribute('data-reserinfo-id'), statuscheck[j].getAttribute('data-channel-id'), 'statusbtn3', j);
     }
   }
 }

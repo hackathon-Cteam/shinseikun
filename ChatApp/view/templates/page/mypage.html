@@ -90,7 +90,7 @@
                         {% endif %}
                     {% endfor %}
                     {% if 'キャンセル済' not in reserinfo.status %}
-                <button class="cancelbtn" data-reserinfo-id="{{reserinfo.id}}">キャンセルする場合はこちらから</button>
+                <button class="cancelbtn" data-reserinfo-id="{{reserinfo.id}}" data-channel-id="{{reserinfo.cid}}">キャンセルする場合はこちらから</button>
             {% endif %}
                 </li>
             {% endfor %}

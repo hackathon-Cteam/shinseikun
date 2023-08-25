@@ -5,6 +5,7 @@ class ReserveInfoEntity:
             self,
             userId,
             rsvId,
+            cid,
             channelName,
             useDate,
             rsvPurpose,
@@ -16,6 +17,7 @@ class ReserveInfoEntity:
         Args:
         * userId (String): 申請をしたユーザーのID
         * rsvId (String): 申請ID
+        * cid (String): チャンネルID
         * channelName (String): 申請対象のチャンネル（施設等）の名称
         * userDate (String): 予約時間
         * rsvPurpose (String): 利用目的
@@ -24,6 +26,7 @@ class ReserveInfoEntity:
         """
         self.userId = userId
         self.rsvId = rsvId
+        self.cid = cid
         self.channelName = channelName
         self.useDate = useDate
         self.rsvPurpose = rsvPurpose

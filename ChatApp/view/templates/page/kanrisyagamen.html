@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 {% for reserveInfo in reserveInfos %}
-                <tr class="facilityList1">
+                <tr class="facilityList1"  data-channel-id="{{ reserveInfo.cid }}">
                     <td><input type="checkbox" name="statuscheck" data-reserinfo-id="{{ reserveInfo.rsvId }}"></td>
                         <td class="facilityName1">{{ reserveInfo.channelName }}</td>
                         <td class="facilityName1">{{ reserveInfo.rsvUserName }}</td>
