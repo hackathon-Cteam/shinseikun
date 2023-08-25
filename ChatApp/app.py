@@ -37,8 +37,9 @@ def login():
             uid = user['uid']
             pass_word = user['password']
             if mail == email and hashlib.sha256(password.encode('utf-8')).hexdigest() == pass_word:
-                 session['uid'] = uid # セッションにユーザー情報を保存
-                 return redirect('/')
+                session['uid'] = uid # セッションにユーザー情報を保存
+                session['userType'] = user['user_type']
+                return redirect('/')
             else:
                 error_message = '入力されたIDもしくはパスワードが誤っています'
 
@@ -64,7 +65,7 @@ def index():
         except ValueError:
             print('エラー')
        
-        return render_template('/page/channel_list.html',channels=channels)
+        return render_template('/page/channel_list.html',channels=channels, userId= uid, userType=session['userType'])
 
 # サインアップ
 @app.route('/signup',methods=['POST'])
@@ -77,6 +78,7 @@ def signup():
 
     user_id = str(uuid.uuid4())
     
+    print(f'PW: {hashlib.sha256(password.encode("utf-8")).hexdigest()}')
     user_data = {
         'uid' : user_id,
         'user_name': name,
@@ -90,6 +92,7 @@ def signup():
         userDB.addData(user_data)
 
     session['uid'] = user_id  # セッションにユーザー情報を保存
+    session['userType'] = 'user'
     return redirect('/')
 
 
@@ -116,7 +119,8 @@ def talk(channelId):
         )
 
     return render_template(
-        'page/chat.html', userType= 'admin', channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], ''), messages= chatList
+        'page/chat.html', userType= session['userType'], channel= ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], ''),
+        messages= chatList, userId= session['uid']
     )
 
 
@@ -150,14 +154,13 @@ def admin():
             reservation['purpose'], user['user_name'], status
         ))
 
-    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reservationList)
+    return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reservationList, userId= session['uid'])
 
 
 # ユーザー画面
 @app.route('/mypage/<userId>')
 def mypage(userId):
-    # TODO: userIDはリクエストurlに含めるようにする
-    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
+    userId = session['uid']
     # ユーザー情報
     userInfo = None
     with DBManager('users') as usersDB:
@@ -200,7 +203,7 @@ def mypage(userId):
 
     information_list = [information,information2,information3]
 
-    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list)
+    return render_template('/page/mypage.html', userType= 'user', user= userInfo, reserinfo_list= reserinfo_list, past_list= past_list, information_list=information_list, userId=userId)
 
 
 # 申請フォーム画面
@@ -215,22 +218,20 @@ def form():
     for channel in channels:
         channelList.append(ChannelEntity(channel['id'], channel['name'], channel['overview'], channel['description'], channel['img']))
 
-    # TODO: userIDはリクエストurlに含めるようにする(？)
-    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
+    userId = session['uid']
     # ユーザー情報
     userInfo = None
     with DBManager('users') as usersDB:
         user = usersDB.getData(f'uid="{userId}"')[0]
         userInfo = UserEntity(user['uid'], user['user_name'], user['email'], user['password'], user['phone'], user['group_name'])
 
-    return render_template('page/application-form.html', channels=channelList, user=userInfo)
+    return render_template('page/application-form.html', channels=channelList, user=userInfo, userId=userId, userType= session['userType'])
 
 # POST(処理の呼び出し)
 # 申請フォームのルート
 @app.post('/apply')
 def apply():
-    # TODO: userIDはリクエストurlに含めるようにする(？)
-    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
+    userId = session['uid']
     cid = request.form.get('facility')
     year, month, day = request.form.getlist('date')
     start_hour, start_minute, end_hour, end_minute = request.form.getlist('time')
@@ -254,11 +255,9 @@ def apply():
 # メッセージ投稿のアクション
 @app.post('/post-message')
 def postMessage():
-    # TODO: userIDはセッション情報から取得する予定
-    userId = '970af84c-dd40-47ff-af23-282b72b7cca8'
     try:
         with DBManager('messages') as messageDB:
-            messageDB.addData({ 'uid': userId, 'cid': request.json['channelId'], 'message': request.json['message'] })
+            messageDB.addData({ 'uid': session['uid'], 'cid': request.json['channelId'], 'message': request.json['message'] })
         return Response(response= json.dumps({'message': 'successfully posted'}), status= 200)
     except  Exception as error:
         return Response(response= json.dumps({'message': error}), status= 500)
