@@ -44,14 +44,14 @@
         <div id="close-modal">×</div>
         <div class="form">
             <h2>アカウント編集</h2>
-            <form action="#">
-                <input class="form-control" type="text" placeholder="名前">
-                <input class="form-control" type="text" placeholder="電話番号">
-                <input class="form-control" type="text" placeholder="所属">
-                <input class="form-control" type="text" placeholder="メールアドレス">
-                <input class="form-control" type="password" placeholder="現在設定中のパスワード">
-                <input class="form-control" type="password" placeholder="新しく設定するパスワード">
-                <div class="submit-btn">登録</div>
+            <form  action="{{ url_for('changeAccount') }}" method="POST">
+                <input class="form-control" type="text" name="name" placeholder="名前">
+                <input class="form-control" type="text" name="phone" placeholder="電話番号">
+                <input class="form-control" type="text" name="group_name" placeholder="所属">
+                <input class="form-control" type="text" name="email" placeholder="メールアドレス">
+                <input class="form-control" type="password" name="password_old" placeholder="現在のパスワード">
+                <input class="form-control" type="password" name="password_new" placeholder="新しく設定するパスワード">
+                <button type="submit" class="submit-btn">登録</button>
             </form>
         </div>
       </div>

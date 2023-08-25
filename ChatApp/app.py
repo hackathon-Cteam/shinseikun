@@ -341,6 +341,21 @@ def cancelReservation():
         return Response(response= json.dumps({'message': 'successfully cancel'}), status= 200)
     except  Exception as error:
         return Response(response= json.dumps({'message': error}), status= 500)
+    
+@app.post('/change-account')
+def changeAccount():
+    data = {}
+    data['user_name'] = request.form.get('name')
+    data['email'] = request.form.get('email')
+    data['password'] = hashlib.sha256(request.form.get('password_new').encode('utf-8')).hexdigest()
+    data['phone'] = request.form.get('phone')
+    data['group_name'] = request.form.get('group_name')
+    with DBManager('users') as usersDB:
+        user = usersDB.getData(f'uid="{session["uid"]}"')[0]
+        if hashlib.sha256(request.form.get('password_old').encode('utf-8')).hexdigest() == user['password']:
+            usersDB.updateData(dict(filter(lambda item: item[1], data.items())), f'uid="{user["uid"]}"')
+    return redirect(f'/mypage/{session["uid"]}')
+
 
 @app.errorhandler(404)
 def showError404(error):
