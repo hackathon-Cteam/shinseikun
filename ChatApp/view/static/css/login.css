@@ -83,3 +83,5 @@
     color: red;
     font-weight: bold;
 }
+
+input[type="text"] {margin-right: 30px;}

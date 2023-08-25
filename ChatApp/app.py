@@ -1,3 +1,4 @@
+import hashlib
 import json
 from Entity.ChannelEntity import ChannelEntity
 from Entity.ChatMessageEntity import ChatMessageEntity
@@ -19,27 +20,25 @@ app.secret_key = uuid.uuid4().hex
 app.permanent_session_lifetime = timedelta(days=30)
 
 # 画面表示の呼び出し
-
 # ログイン画面のルート
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error_message = ''
     if request.method == 'POST':
-        userid = request.form.get('userid')
+        mail = request.form.get('mail')
         password = request.form.get('password')
-        
+
+        usertable = None
         with DBManager('users') as userDB:
             usertable = userDB.getData()
-            
+
         for user in usertable:
+            email = user['email']
             uid = user['uid']
             pass_word = user['password']
-            
-            if userid == uid and password == pass_word:
-                user_id = str(uuid.uuid4())  # ランダムなユーザーIDを生成
-                session['uid'] = user_id  # セッションにユーザー情報を保存
-                return redirect(url_for('index'))
-        
+            if mail == email and hashlib.sha256(password.encode('utf-8')).hexdigest() == pass_word:
+                 session['uid'] = uid # セッションにユーザー情報を保存
+                 return redirect('/')
             else:
                 error_message = '入力されたIDもしくはパスワードが誤っています'
 
@@ -75,31 +74,21 @@ def signup():
     password = request.form.get('password')
     phone = request.form.get('phone')
     group_name = request.form.get('group_name')
-    create_at = request.form.get('create_at')
-    
+
     user_id = str(uuid.uuid4())
     
     user_data = {
         'uid' : user_id,
         'user_name': name,
         'email': email,
-        'password': password,
+        'password': hashlib.sha256(password.encode('utf-8')).hexdigest(),
         'phone': phone,
         'group_name': group_name,
-        'created_at': create_at
     }
     
     with DBManager('users') as userDB:
         userDB.addData(user_data)
-    
-    # 仮でユーザー情報をセッションに保存 
-    # session['new_user_info'] = {
-    #     'name': name,
-    #     'email': email,
-    #     'password1': password1,
-    #     'password2': password2
-    # }
-    
+
     session['uid'] = user_id  # セッションにユーザー情報を保存
     return redirect('/')
 
@@ -162,13 +151,6 @@ def admin():
         ))
 
     return render_template('page/kanrisyagamen.html', channels= channelList, userType= 'admin', reserveInfos= reservationList)
-
-
-# 管理者アカウント編集画面
-#@app.route('/admin-edit')
-#def adminEdit():
-    # 管理者情報
-#    return render_template('page/kanrisya-edit.html')
 
 
 # ユーザー画面
@@ -244,8 +226,6 @@ def form():
     return render_template('page/application-form.html', channels=channelList, user=userInfo)
 
 # POST(処理の呼び出し)
-# ログイン処理のルート
-
 # 申請フォームのルート
 @app.post('/apply')
 def apply():
@@ -262,7 +242,6 @@ def apply():
     #日時データの加工（かわりにDataTimeConverterが使えるか？）
     start_use = year + "-" + month + "-" + day + " " + start_hour + ":" + start_minute + ":00"
     end_use = year + "-" + month + "-" + day + " " + end_hour + ":" + end_minute +":00"
-    # reserve_data = cid + "//" + start_use + "//" + end_use + "//" + purpose + "//" + name + "//" + email + "//" + phone
 
     #reservationデータベースへの追加処理
     try:
