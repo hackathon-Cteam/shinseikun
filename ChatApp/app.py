@@ -27,12 +27,16 @@ def login():
     if request.method == 'POST':
         mail = request.form.get('mail')
         password = request.form.get('password')
+        
+        print(f' email: {email}, pw: {password}')
+
 
         usertable = None
         with DBManager('users') as userDB:
             usertable = userDB.getData()
 
         for user in usertable:
+            print(user)
             email = user['email']
             uid = user['uid']
             pass_word = user['password']
@@ -76,6 +80,8 @@ def signup():
     phone = request.form.get('phone')
     group_name = request.form.get('group_name')
 
+    print(f'name: {name}, email: {email}, pw: {password}, phone: {phone}, group_name: {group_name}')
+
     user_id = str(uuid.uuid4())
     
     print(f'PW: {hashlib.sha256(password.encode("utf-8")).hexdigest()}')
@@ -88,6 +94,7 @@ def signup():
         'group_name': group_name,
     }
     
+    print(user_data)
     with DBManager('users') as userDB:
         userDB.addData(user_data)
 
